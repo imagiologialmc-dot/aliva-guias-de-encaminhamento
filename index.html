@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Informação Clínica - Aliva Saúde</title>
+  <title>Encaminhamento de Actos Médicos/Exames</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,9 +13,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
+    /* Variáveis de Cores Aliva Saúde */
     :root {
-      --primary: #c0392b;
-      --primary-hover: #a93226;
+      --primary: #00abb2; 
+      --primary-hover: #26748a;
       --bg-color: #f5f7f9;
       --surface: #ffffff;
       --text-main: #202124;
@@ -28,8 +29,8 @@
     }
 
     [data-theme="dark"] {
-      --primary: #e74c3c;
-      --primary-hover: #c0392b;
+      --primary: #49c2c4;
+      --primary-hover: #00abb2;
       --bg-color: #121212;
       --surface: #1e1e1e;
       --text-main: #e8eaed;
@@ -41,35 +42,39 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Roboto', sans-serif; background-color: var(--bg-color); color: var(--text-main); transition: all 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
 
+    /* Barra Superior */
     .top-app-bar { background-color: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
-    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.2rem; }
-    .brand img { height: 32px; object-fit: contain; } /* Logo na barra superior */
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.1rem; }
+    .brand img { height: 35px; object-fit: contain; }
 
     .nav-actions { display: flex; align-items: center; gap: 16px; }
-    .btn-icon { background: none; border: none; color: var(--text-sec); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px; }
-    .btn-icon:hover { background-color: rgba(192, 57, 43, 0.1); color: var(--primary); }
+    .btn-icon { background: none; border: none; color: var(--text-sec); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px; transition: 0.2s; }
+    .btn-icon:hover { background-color: rgba(0, 171, 178, 0.1); color: var(--primary); }
 
-    .btn-primary { background-color: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 24px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow); transition: background 0.2s; }
+    .btn-primary { background-color: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 24px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow); transition: 0.2s; }
     .btn-primary:hover { background-color: var(--primary-hover); }
     .btn-primary:disabled { background-color: var(--text-sec); cursor: not-allowed; }
     
+    /* Separadores (Tabs) */
     .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
     .tab-btn { background: none; border: none; padding: 12px 24px; font-size: 1rem; font-weight: 500; color: var(--text-sec); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
     .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-    main { flex: 1; width: 100%; max-width: 900px; margin: 0 auto; padding: 32px 20px; display: flex; flex-direction: column; gap: 24px; }
+    main { flex: 1; width: 100%; max-width: 950px; margin: 0 auto; padding: 32px 20px; display: flex; flex-direction: column; gap: 24px; }
 
+    /* Cartões e Formulários */
     .card { background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
     .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
     
     .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; text-align: left; }
     label { font-size: 0.8rem; font-weight: 500; color: var(--text-sec); text-transform: uppercase; }
     input, select, textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-color); color: var(--text-main); outline: none; font-family: inherit; }
-    input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.1); }
+    input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0, 171, 178, 0.1); }
 
+    /* Tabelas */
     table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
     th { text-align: left; padding: 12px; color: var(--text-sec); border-bottom: 2px solid var(--border); }
-    td { padding: 12px; border-bottom: 1px solid var(--border); }
+    td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
     
     .status-chip { padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
     .status-pendente { background: rgba(249, 171, 0, 0.1); color: var(--warning); }
@@ -79,53 +84,42 @@
     #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #323232; color: white; padding: 12px 24px; border-radius: 8px; opacity: 0; transition: all 0.3s; z-index: 1000; display: flex; align-items: center; gap: 8px; }
     #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-    .login-logo { height: 80px; margin-bottom: 16px; object-fit: contain; } /* Logo no Login */
+    .login-logo { height: 90px; margin-bottom: 10px; object-fit: contain; }
 
-    /* ======== ESTILOS DO PDF (Ocultos na App) ======== */
+    /* ======== ESTILOS DO PDF (Ocultos na Interface) ======== */
     #pdf-wrapper { position: absolute; left: -9999px; top: 0; width: 210mm; background: white; z-index: -1; }
     .pdoc { width: 210mm; padding: 14mm 16mm; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10pt; color: #000; box-sizing: border-box; }
     .pdoc .hdr { margin-bottom: 14px; }
-    .pdoc .hdr img { height: 55px; object-fit: contain; display: block; margin-bottom: 5px; }
-    .pdoc .hdr-sub { font-size: 8pt; color: #444; }
-    .pdoc h1 { font-size: 10.5pt; font-weight: 700; text-align: center; text-transform: uppercase; line-height: 1.45; margin: 10px 0 14px; letter-spacing: 0.01em; }
-    .pdoc .fld { display: flex; align-items: baseline; border-bottom: 1px solid #ccc; padding: 3px 0; gap: 6px; }
-    .pdoc .fld-lbl { font-size: 8.5pt; font-weight: 700; text-transform: uppercase; white-space: nowrap; color: #222; }
-    .pdoc .fld-val { font-size: 9.5pt; font-weight: 600; color: #000; flex: 1; }
-    .pdoc .sec-title { font-size: 9pt; font-weight: 700; text-transform: uppercase; text-align: center; margin: 12px 0 6px; letter-spacing: 0.04em; }
-    .pdoc .services { font-size: 8.5pt; color: #333; line-height: 1.6; text-align: center; margin-bottom: 12px; }
-    .pdoc .decl { font-size: 9pt; line-height: 1.6; text-align: justify; margin: 10px 0; }
-    .pdoc .sig-row { display: flex; gap: 24px; margin-top: 16px; }
-    .pdoc .sig-box { flex: 1; }
-    .pdoc .sig-lbl { font-size: 8pt; font-weight: 600; line-height: 1.4; margin-bottom: 5px; }
-    .pdoc .sig-area { border: 1px solid #999; min-height: 88px; display: flex; align-items: center; justify-content: center; padding: 6px; }
-    .pdoc .sig-area img { max-height: 76px; max-width: 100%; object-fit: contain; mix-blend-mode: multiply; }
-    .pdoc .sig-date { font-size: 8pt; text-align: right; padding: 4px 6px 0; }
-    .pdoc .nota { margin-top: 14px; font-size: 8pt; line-height: 1.5; }
+    .pdoc h1 { font-size: 10.5pt; font-weight: 700; text-align: center; text-transform: uppercase; line-height: 1.45; margin: 10px 0 14px; }
+    .pdoc .fld { display: flex; align-items: baseline; border-bottom: 1px solid #ccc; padding: 4px 0; gap: 6px; }
+    .pdoc .fld-lbl { font-size: 8.5pt; font-weight: 700; text-transform: uppercase; color: #222; }
+    .pdoc .fld-val { font-size: 9.5pt; font-weight: 600; flex: 1; }
+    .pdoc .sig-area { border: 1px solid #999; min-height: 95px; display: flex; align-items: center; justify-content: center; padding: 8px; margin-top: 10px; }
+    .pdoc .sig-area img { max-height: 85px; mix-blend-mode: multiply; }
   </style>
 </head>
 <body>
 
   <header class="top-app-bar">
     <div class="brand">
-      <img src="Hlogo.png" alt="Logo Aliva">
-      Informação Clínica
+      <img src="Hlogo.png" alt="Aliva Saúde">
+      <span>Encaminhamento de Actos Médicos/Exames</span>
     </div>
     <div class="nav-actions">
       <span id="user-badge" class="hidden" style="font-size: 0.8rem; color: var(--text-sec);"></span>
-      <button class="btn-icon" id="btn-theme"><span class="material-symbols-outlined" id="theme-icon">dark_mode</span></button>
-      <button class="btn-icon hidden" id="btn-logout"><span class="material-symbols-outlined">logout</span></button>
+      <button class="btn-icon" id="btn-theme" title="Alternar Tema"><span class="material-symbols-outlined" id="theme-icon">dark_mode</span></button>
+      <button class="btn-icon hidden" id="btn-logout" title="Sair"><span class="material-symbols-outlined">logout</span></button>
     </div>
   </header>
 
   <main>
-    <div id="login-view" class="card" style="max-width: 400px; margin: 40px auto; text-align: center;">
-      <img src="Hlogo.png" alt="Logo Aliva" class="login-logo">
-      <h2 style="margin-bottom: 8px;">Acesso Restrito</h2>
-      <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 0.9rem;">Introduza as suas credenciais para aceder ao sistema de guias.</p>
+    <div id="login-view" class="card" style="max-width: 450px; margin: 40px auto; text-align: center;">
+      <img src="Hlogo.png" alt="Aliva Saúde" class="login-logo">
+      <p style="color: var(--text-sec); margin-bottom: 24px; margin-top: 10px; font-size: 0.9rem;">Introduza as suas credenciais para aceder ao sistema de guias.</p>
       
       <form id="form-login">
         <div class="form-group">
-          <label>E-mail</label>
+          <label>E-mail Institucional</label>
           <input type="email" id="l-email" required placeholder="exemplo@alivasaude.com">
         </div>
         <div class="form-group">
@@ -146,7 +140,7 @@
 
       <div id="view-rececao">
         <div class="card" style="margin-bottom: 24px;">
-          <div class="card-header"><span class="material-symbols-outlined">add_task</span><h2 style="font-size: 1rem;">Novo Pedido de TC</h2></div>
+          <div class="card-header"><span class="material-symbols-outlined">add_task</span><h2 style="font-size: 1rem;">Novo Pedido de Exame</h2></div>
           <form id="form-rececao">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
               <div class="form-group"><label>Paciente</label><input type="text" id="f-nome" required></div>
@@ -154,7 +148,7 @@
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
               <div class="form-group"><label>Nascimento</label><input type="date" id="f-nascimento" required></div>
-              <div class="form-group"><label>Data Exame</label><input type="date" id="f-data-exame" required></div>
+              <div class="form-group"><label>Data Prevista Exame</label><input type="date" id="f-data-exame" required></div>
             </div>
             <div class="form-group"><label>Exame Requerido</label><input type="text" id="f-exame" required></div>
             <div class="form-group"><label>Médico Prescritor</label><input type="text" id="f-medico" required></div>
@@ -166,7 +160,7 @@
           <div class="card-header"><span class="material-symbols-outlined">list_alt</span><h2 style="font-size: 1rem;">Estado dos Pedidos</h2></div>
           <div style="overflow-x: auto;">
             <table>
-              <thead><tr><th>Paciente</th><th>Exame</th><th>Estado</th><th>Guia</th></tr></thead>
+              <thead><tr><th>Paciente</th><th>Exame</th><th>Estado</th><th>Aprovado por</th><th>Ações</th></tr></thead>
               <tbody id="pedidos-rececao-tabela"></tbody>
             </table>
           </div>
@@ -178,7 +172,7 @@
           <div class="card-header"><span class="material-symbols-outlined">verified_user</span><h2 style="font-size: 1rem;">Pedidos Pendentes</h2></div>
           <div style="overflow-x: auto;">
             <table>
-              <thead><tr><th>Paciente</th><th>Exame</th><th>Destino</th><th>Ação</th></tr></thead>
+              <thead><tr><th>Paciente</th><th>Exame</th><th>Destino</th><th>Acção</th></tr></thead>
               <tbody id="pedidos-admin-tabela"></tbody>
             </table>
           </div>
@@ -193,34 +187,17 @@
     <div class="pdoc" id="pdf-template-vitrea">
       <div class="hdr">
         <h2 style="color: #c0392b; margin-bottom: 4px;">VÍTREA SAÚDE</h2>
-        <div class="hdr-sub">Centro de diagnóstico por imagem e cirurgia de ambulatório</div>
+        <div style="font-size: 8pt; color: #444;">Centro de diagnóstico por imagem e cirurgia de ambulatório</div>
       </div>
-      <h1>Termo de Responsabilidade e Autorização para a Realização de Exames na Vítrea</h1>
-      <div class="fld"><span class="fld-lbl">Nome Completo do Paciente:</span><span class="fld-val" id="p-nome"></span></div>
-      <div class="fld"><span class="fld-lbl">Contacto Telefónico:</span><span class="fld-val" id="p-contacto"></span></div>
-      <div class="fld"><span class="fld-lbl">Data Autorização:</span><span class="fld-val" id="p-dataAut"></span></div>
-      <div class="fld"><span class="fld-lbl">Data da Realização do Exame:</span><span class="fld-val" id="p-dataReal"></span></div>
-      <div class="fld"><span class="fld-lbl">Exame Requerido:</span><span class="fld-val" id="p-exame"></span></div>
-      <div class="sec-title">Parceiro para a Área de Imagiologia</div>
-      <div class="services">RADIOLOGIA- RX, RADIOLOGIA DE INTERVENÇAO, ECOGRAFIA DOPLLER,<br>ECOCARDIOGRAMA, ELETROCARDIOGRAMA, MAPA, HOLTER, PROVA DE ESFORÇO<br>ANGIO TAC CORONÁRIO, TOMOGRAFIA AXIAL COMPUTORIZADA.</div>
-      <div class="decl">
-        <p style="margin-bottom:10px">A Aliva Saúde autoriza a realização do ato médico acima descrito e responsabiliza-se pelo seu pagamento à Vítrea, nos termos do contrato estabelecido entre as duas instituições.</p>
-        <p>Procedimento: A Aliva Saúde, compromete-se a enviar o termo de responsabilidade preenchido em todos os campos, para o endereço de correio eletrónico, <span style="text-decoration:underline;color:#1a0dab">administrativo@vitreasaude.com</span> em data prévia à realização do exame.</p>
+      <h1>Termo de Responsabilidade - Vítrea</h1>
+      <div class="fld"><span class="fld-lbl">Paciente:</span><span class="fld-val" id="p-nome"></span></div>
+      <div class="fld"><span class="fld-lbl">Contacto:</span><span class="fld-val" id="p-contacto"></span></div>
+      <div class="fld"><span class="fld-lbl">Exame:</span><span class="fld-val" id="p-exame"></span></div>
+      <div class="fld"><span class="fld-lbl">Data Realização:</span><span class="fld-val" id="p-dataReal"></span></div>
+      <div style="margin-top: 30px; border: 1px solid #ccc; padding: 15px;">
+        <div style="font-size: 8pt; font-weight: 600; margin-bottom: 10px;">Assinatura e Carimbo Aliva Saúde</div>
+        <div class="sig-area"><img id="pdf-assinatura" src="" alt="Assinatura"></div>
       </div>
-      <div class="sig-row">
-        <div class="sig-box">
-          <div class="sig-lbl">Assinatura e carimbo do<br>responsável que autoriza o exame</div>
-          <div class="sig-area">
-            <img id="pdf-assinatura" src="" alt="Assinatura Dra. Vera">
-          </div>
-        </div>
-        <div class="sig-box">
-          <div class="sig-lbl">Assinatura do Paciente<br>Assinar na data da realização do exame</div>
-          <div class="sig-area"></div>
-          <div class="sig-date">Data:___/___/___</div>
-        </div>
-      </div>
-      <div class="nota"><strong>Nota:</strong> Este termo de responsabilidade não dispensa a entrega da requisição médica por parte do paciente no momento da realização do exame.</div>
     </div>
   </div>
 
@@ -229,15 +206,16 @@
     import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
     import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
+    // Email com permissões de Administrador
     const EMAILS_ADMIN = ["carlos.martins@alivasaude.com"];
     let userEmail = "";
 
-    // Tema
-    document.getElementById('btn-theme').addEventListener('click', () => {
+    // Gestão de Tema
+    document.getElementById('btn-theme').onclick = () => {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
       document.getElementById('theme-icon').textContent = isDark ? 'dark_mode' : 'light_mode';
-    });
+    };
 
     function showToast(msg) {
       const t = document.getElementById('toast');
@@ -246,24 +224,22 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-    // Login
-    document.getElementById('form-login').addEventListener('submit', async (e) => {
+    // Lógica de Login
+    document.getElementById('form-login').onsubmit = async (e) => {
       e.preventDefault();
-      const email = document.getElementById('l-email').value;
-      const pass = document.getElementById('l-password').value;
       const btn = document.getElementById('btn-entrar');
       try {
         btn.disabled = true; btn.textContent = "A autenticar...";
-        await signInWithEmailAndPassword(auth, email, pass);
+        await signInWithEmailAndPassword(auth, document.getElementById('l-email').value, document.getElementById('l-password').value);
       } catch (err) {
         btn.disabled = false; btn.textContent = "Entrar no Sistema";
-        alert("Erro no login: Verifique o e-mail e a palavra-passe.");
+        alert("Acesso negado. Verifique o e-mail e a palavra-passe.");
       }
-    });
+    };
 
-    document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+    document.getElementById('btn-logout').onclick = () => signOut(auth);
 
-    // Tabs
+    // Navegação por Separadores
     const tabRec = document.getElementById('tab-btn-rececao');
     const tabAdm = document.getElementById('tab-btn-admin');
     const vRec = document.getElementById('view-rececao');
@@ -272,6 +248,7 @@
     tabRec.onclick = () => { tabRec.classList.add('active'); tabAdm.classList.remove('active'); vRec.classList.remove('hidden'); vAdm.classList.add('hidden'); };
     tabAdm.onclick = () => { tabAdm.classList.add('active'); tabRec.classList.remove('active'); vAdm.classList.remove('hidden'); vRec.classList.add('hidden'); };
 
+    // Monitorização da Sessão
     onAuthStateChanged(auth, (user) => {
       if (user) {
         userEmail = user.email;
@@ -280,9 +257,7 @@
         document.getElementById('btn-logout').classList.remove('hidden');
         document.getElementById('user-badge').classList.remove('hidden');
         document.getElementById('user-badge').textContent = user.email;
-        
-        if (EMAILS_ADMIN.includes(userEmail)) { tabAdm.classList.remove('hidden'); }
-        else { tabAdm.classList.add('hidden'); tabRec.click(); }
+        if (EMAILS_ADMIN.includes(userEmail)) tabAdm.classList.remove('hidden');
         carregarPedidos();
       } else {
         document.getElementById('login-view').classList.remove('hidden');
@@ -292,7 +267,7 @@
       }
     });
 
-    // Submeter Pedido
+    // Envio de Novo Pedido (Receção)
     document.getElementById('form-rececao').onsubmit = async (e) => {
       e.preventDefault();
       try {
@@ -305,11 +280,12 @@
           medico: document.getElementById('f-medico').value,
           status: "pendente", instituicao: "", criadoPor: userEmail, timestamp: serverTimestamp()
         });
-        showToast("Pedido enviado!");
+        showToast("Pedido submetido com sucesso!");
         e.target.reset();
       } catch (err) { console.error(err); }
     };
 
+    // Carregamento de Dados em Tempo Real
     function carregarPedidos() {
       const q = query(collection(db, "pedidos"), orderBy("timestamp", "desc"));
       onSnapshot(q, (snapshot) => {
@@ -321,79 +297,69 @@
           const p = docSnap.data();
           const id = docSnap.id;
 
+          const aprovador = p.aprovadoPor ? `<span style="font-size: 0.8rem; color: var(--text-sec);">${p.aprovadoPor}</span>` : '<span style="color: var(--border);">-</span>';
+
+          // Tabela Receção
           tbodyRec.innerHTML += `
             <tr>
               <td><strong>${p.nome}</strong></td>
-              <td>${p.exame}${p.status === 'aprovado' ? `<br><small>Destino: ${p.instituicao}</small>` : ''}</td>
+              <td>${p.exame}${p.status === 'aprovado' ? `<br><small>Clínica: ${p.instituicao}</small>` : ''}</td>
               <td><span class="status-chip status-${p.status}">${p.status}</span></td>
-              <td><button style="border:1px solid var(--primary); background:none; color:var(--primary); padding:4px 8px; border-radius:4px; cursor:pointer;" ${p.status !== 'aprovado' ? 'disabled' : ''} onclick="window.gerarGuia('${id}', '${p.instituicao}')">PDF</button></td>
-            </tr>
-          `;
+              <td>${aprovador}</td>
+              <td><button style="border:1px solid var(--primary); background:none; color:var(--primary); padding:4px 10px; border-radius:4px; cursor:pointer;" ${p.status !== 'aprovado' ? 'disabled' : ''} onclick="window.gerarGuia('${id}', '${p.instituicao}')">PDF</button></td>
+            </tr>`;
 
+          // Tabela Admin (Apenas pendentes)
           if (p.status === "pendente") {
             tbodyAdm.innerHTML += `
               <tr>
                 <td><strong>${p.nome}</strong></td>
                 <td>${p.exame}</td>
                 <td><select id="sel-${id}"><option value="Vítrea">Vítrea</option><option value="Cligest">Cligest</option></select></td>
-                <td><button style="background:var(--success); color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;" onclick="window.aprovarPedido('${id}')">Aprovar</button></td>
-              </tr>
-            `;
+                <td><button style="background:var(--success); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;" onclick="window.aprovarPedido('${id}')">Aprovar</button></td>
+              </tr>`;
           }
         });
       });
     }
 
+    // Aprovação do Pedido (Admin)
     window.aprovarPedido = async (id) => {
       const inst = document.getElementById(`sel-${id}`).value;
-      await updateDoc(doc(db, "pedidos", id), { status: "aprovado", instituicao: inst });
-      showToast("Pedido aprovado!");
+      await updateDoc(doc(db, "pedidos", id), { 
+        status: "aprovado", 
+        instituicao: inst,
+        aprovadoPor: userEmail
+      });
+      showToast("Aprovado com sucesso!");
     };
 
-    // ======== LÓGICA DE GERAÇÃO DO PDF ========
+    // Geração do PDF
     window.gerarGuia = async (id, instituicao) => {
-      if (instituicao !== "Vítrea") {
-        alert("A geração de guias para a " + instituicao + " será implementada na próxima fase.");
-        return;
-      }
-
+      if (instituicao !== "Vítrea") { alert("Guia da " + instituicao + " em desenvolvimento."); return; }
       try {
-        showToast("A transferir PDF da Vítrea...");
+        showToast("A gerar PDF...");
+        const pSnap = await getDoc(doc(db, "pedidos", id));
+        const sSnap = await getDoc(doc(db, "configuracoes", "direcao"));
+        const p = pSnap.data();
         
-        // 1. Ir buscar os dados do paciente ao Firebase
-        const docSnap = await getDoc(doc(db, "pedidos", id));
-        if (!docSnap.exists()) return;
-        const p = docSnap.data();
-
-        // 2. Ir buscar a assinatura trancada na base de dados
-        const sigSnap = await getDoc(doc(db, "configuracoes", "direcao"));
-        let assinaturaB64 = "";
-        if (sigSnap.exists()) { assinaturaB64 = sigSnap.data().assinatura_base64; }
-
-        // 3. Injetar os dados no molde escondido
         document.getElementById('p-nome').textContent = p.nome;
         document.getElementById('p-contacto').textContent = p.contacto;
-        document.getElementById('p-dataAut').textContent = new Date().toLocaleDateString('pt-PT');
-        document.getElementById('p-dataReal').textContent = p.dataExame.split('-').reverse().join('.');
+        document.getElementById('p-dataReal').textContent = p.dataExame;
         document.getElementById('p-exame').textContent = p.exame;
-        document.getElementById('pdf-assinatura').src = assinaturaB64;
-
-        // 4. Transformar em PDF e Descarregar
-        const element = document.getElementById('pdf-template-vitrea');
-        const opt = {
-            margin: 0,
-            filename: `Termo_${instituicao}_${p.nome.replace(/\s+/g,'_')}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        document.getElementById('pdf-assinatura').src = sSnap.exists() ? sSnap.data().assinatura_base64 : "";
+        
+        const opt = { 
+          margin: 0, 
+          filename: `Guia_Vitrea_${p.nome.replace(/\s+/g, '_')}.pdf`, 
+          html2canvas: { scale: 2 }, 
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
         };
-
-        await html2pdf().set(opt).from(element).save();
-        showToast("PDF gerado com sucesso!");
-
-      } catch (error) {
-        console.error("Erro ao gerar PDF:", error);
-        alert("Ocorreu um erro a gerar o PDF.");
+        await html2pdf().set(opt).from(document.getElementById('pdf-template-vitrea')).save();
+        showToast("PDF descarregado!");
+      } catch (e) { 
+        console.error(e); 
+        alert("Erro ao gerar PDF.");
       }
     };
   </script>
