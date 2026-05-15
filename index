@@ -21,6 +21,8 @@
       --border: #dadce0;
       --shadow: 0 2px 6px rgba(0,0,0,0.08);
       --radius: 12px;
+      --success: #1e8e3e;
+      --warning: #f9ab00;
     }
 
     [data-theme="dark"] {
@@ -35,103 +37,49 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      transition: background-color 0.3s, color 0.3s;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    body { font-family: 'Roboto', sans-serif; background-color: var(--bg-color); color: var(--text-main); transition: all 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
 
-    .top-app-bar {
-      background-color: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: var(--shadow);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      font-size: 1.2rem;
-      color: var(--text-main);
-    }
-
-    .brand .material-symbols-outlined { color: var(--primary); font-size: 28px; }
+    .top-app-bar { background-color: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.2rem; }
+    .brand span { color: var(--primary); font-size: 28px; }
 
     .nav-actions { display: flex; align-items: center; gap: 16px; }
-
-    .btn-icon {
-      background: none; border: none; color: var(--text-sec);
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      border-radius: 50%; width: 40px; height: 40px;
-      transition: background 0.2s, color 0.2s;
-    }
+    .btn-icon { background: none; border: none; color: var(--text-sec); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px; }
     .btn-icon:hover { background-color: rgba(192, 57, 43, 0.1); color: var(--primary); }
 
-    .btn-primary {
-      background-color: var(--primary); color: white; border: none;
-      padding: 12px 24px; border-radius: 24px; font-size: 0.95rem; font-weight: 500;
-      cursor: pointer; display: flex; align-items: center; gap: 8px;
-      transition: background 0.2s, transform 0.1s; box-shadow: var(--shadow);
-    }
-    .btn-primary:hover { background-color: var(--primary-hover); }
-    .btn-primary:active { transform: scale(0.97); }
+    .btn-primary { background-color: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 24px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow); }
+    
+    main { flex: 1; width: 100%; max-width: 900px; margin: 0 auto; padding: 32px 20px; display: flex; flex-direction: column; gap: 24px; }
 
-    main { flex: 1; width: 100%; max-width: 800px; margin: 0 auto; padding: 32px 20px; }
+    .card { background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
+    .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .card-header h2 { font-weight: 500; font-size: 1.1rem; }
 
-    .card {
-      background-color: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow);
-    }
+    /* Estilos do Formulário */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 0.8rem; font-weight: 500; color: var(--text-sec); text-transform: uppercase; }
+    input, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-color); color: var(--text-main); outline: none; }
+    input:focus { border-color: var(--primary); }
 
-    .card-header {
-      display: flex; align-items: center; gap: 12px; margin-bottom: 24px; color: var(--primary);
-      border-bottom: 1px solid var(--border); padding-bottom: 16px;
-    }
-    .card-header h2 { font-weight: 500; font-size: 1.3rem; color: var(--text-main); }
+    /* Estilos da Tabela */
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.9rem; }
+    th { text-align: left; padding: 12px; color: var(--text-sec); font-weight: 500; border-bottom: 2px solid var(--border); }
+    td { padding: 12px; border-bottom: 1px solid var(--border); }
+    
+    .status-chip { padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+    .status-pendente { background: rgba(249, 171, 0, 0.1); color: var(--warning); }
+    .status-aprovado { background: rgba(30, 142, 62, 0.1); color: var(--success); }
+
+    .btn-download { background: none; border: 1px solid var(--primary); color: var(--primary); padding: 4px 8px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 0.8rem; }
+    .btn-download:disabled { border-color: var(--border); color: var(--text-sec); cursor: not-allowed; opacity: 0.5; }
 
     .hidden { display: none !important; }
     
-    #user-badge { font-size: 0.85rem; color: var(--text-sec); font-weight: 500; }
-
-    /* Estilos do Formulário */
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-    .form-group.full-width { grid-column: 1 / -1; }
-    
-    label { font-size: 0.85rem; font-weight: 500; color: var(--text-sec); }
-    
-    input, textarea {
-      width: 100%; padding: 12px 16px; font-size: 1rem; font-family: inherit;
-      color: var(--text-main); background-color: var(--bg-color);
-      border: 1px solid var(--border); border-radius: 8px;
-      transition: all 0.2s; outline: none;
-    }
-    
-    input:focus, textarea:focus {
-      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
-    }
-
-    /* Alertas Toast */
-    .toast {
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
-      background-color: #323232; color: white; padding: 12px 24px; border-radius: 8px;
-      font-size: 0.95rem; opacity: 0; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px;
-    }
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #323232; color: white; padding: 12px 24px; border-radius: 8px; opacity: 0; transition: all 0.3s; z-index: 1000; display: flex; align-items: center; gap: 8px; }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   </style>
 </head>
 <body>
@@ -142,136 +90,95 @@
       Informação Clínica
     </div>
     <div class="nav-actions">
-      <span id="user-badge" class="hidden"></span>
-      <button class="btn-icon" id="btn-theme" title="Alternar Tema">
-        <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
-      </button>
-      <button class="btn-icon hidden" id="btn-logout" title="Sair">
-        <span class="material-symbols-outlined">logout</span>
-      </button>
+      <span id="user-badge" class="hidden" style="font-size: 0.8rem; color: var(--text-sec);"></span>
+      <button class="btn-icon" id="btn-theme"><span class="material-symbols-outlined" id="theme-icon">dark_mode</span></button>
+      <button class="btn-icon hidden" id="btn-logout"><span class="material-symbols-outlined">logout</span></button>
     </div>
   </header>
 
   <main>
-    <div id="login-view" class="card" style="text-align: center;">
-      <span class="material-symbols-outlined" style="font-size: 48px; color: var(--primary); margin-bottom: 16px;">admin_panel_settings</span>
-      <h2 style="margin-bottom: 12px; font-weight: 500;">Acesso Restrito</h2>
-      <p style="color: var(--text-sec); margin-bottom: 24px; line-height: 1.5;">Plataforma de gestão e encaminhamento de Guias de TC.<br>Faça login com o seu email institucional para continuar.</p>
-      <button class="btn-primary" id="btn-login" style="margin: 0 auto;">
-        <span class="material-symbols-outlined">login</span>
-        Entrar com Google
-      </button>
+    <div id="login-view" class="card" style="text-align: center; padding: 48px;">
+      <span class="material-symbols-outlined" style="font-size: 64px; color: var(--primary); margin-bottom: 16px;">account_circle</span>
+      <h2>Bem-vindo</h2>
+      <p style="color: var(--text-sec); margin-bottom: 24px;">Aceda com a sua conta Aliva Saúde.</p>
+      <button class="btn-primary" id="btn-login" style="margin: 0 auto;">Login com Google</button>
     </div>
 
     <div id="app-view" class="hidden">
-      
       <div class="card">
-        <div class="card-header">
-          <span class="material-symbols-outlined">note_add</span>
-          <h2>Novo Pedido de Guia</h2>
-        </div>
-
+        <div class="card-header"><span class="material-symbols-outlined">add_task</span><h2>Novo Pedido</h2></div>
         <form id="form-rececao">
-          <div class="form-group full-width">
-            <label>Nome do Paciente *</label>
-            <input type="text" id="f-nome" required placeholder="Nome completo">
-          </div>
-
+          <div class="form-group full"><label>Paciente</label><input type="text" id="f-nome" required></div>
           <div class="form-grid">
-            <div class="form-group">
-              <label>Data de Nascimento *</label>
-              <input type="date" id="f-nascimento" required>
-            </div>
-            <div class="form-group">
-              <label>Data de Realização do Exame *</label>
-              <input type="date" id="f-data-exame" required>
-            </div>
+            <div class="form-group"><label>Nascimento</label><input type="date" id="f-nascimento" required></div>
+            <div class="form-group"><label>Data Exame</label><input type="date" id="f-data-exame" required></div>
           </div>
-
-          <div class="form-group full-width">
-            <label>Exame Requerido *</label>
-            <input type="text" id="f-exame" required placeholder="Ex: TC Crânio">
-          </div>
-
-          <div class="form-group full-width">
-            <label>Médico Prescritor *</label>
-            <input type="text" id="f-medico" required placeholder="Nome do médico">
-          </div>
-
-          <div class="form-group full-width">
-            <label>Informação Clínica</label>
-            <textarea id="f-info" rows="3" placeholder="Breve resumo clínico (opcional)"></textarea>
-          </div>
-
-          <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-            <button type="submit" class="btn-primary" id="btn-submit">
-              <span class="material-symbols-outlined">send</span>
-              Enviar Pedido
-            </button>
-          </div>
+          <div class="form-group full"><label>Exame Requerido</label><input type="text" id="f-exame" required></div>
+          <div class="form-group full"><label>Médico Prescritor</label><input type="text" id="f-medico" required></div>
+          <button type="submit" class="btn-primary" id="btn-submit" style="width: 100%; justify-content: center;">Submeter Pedido</button>
         </form>
       </div>
 
+      <div class="card">
+        <div class="card-header"><span class="material-symbols-outlined">list_alt</span><h2>Estado dos Pedidos</h2></div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Paciente</th>
+                <th>Exame</th>
+                <th>Estado</th>
+                <th>Guia</th>
+              </tr>
+            </thead>
+            <tbody id="pedidos-tabela">
+              </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </main>
 
-  <div id="toast" class="toast">
-    <span class="material-symbols-outlined" id="toast-icon">info</span>
-    <span id="toast-msg">Mensagem</span>
-  </div>
+  <div id="toast"><span class="material-symbols-outlined">info</span><span id="toast-msg"></span></div>
 
   <script type="module">
     import { auth, provider, db } from './firebase.js';
     import { signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-    import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+    import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
     const DOMINIO_PERMITIDO = "@alivasaude.com";
-    let utilizadorAtual = null;
+    let userEmail = "";
 
-    // --- Interface & Tema ---
-    function toggleTheme() {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', newTheme);
-      document.getElementById('theme-icon').textContent = newTheme === 'light' ? 'dark_mode' : 'light_mode';
-      localStorage.setItem('temaInfoClinica', newTheme);
-    }
-    const savedTheme = localStorage.getItem('temaInfoClinica') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    document.getElementById('theme-icon').textContent = savedTheme === 'light' ? 'dark_mode' : 'light_mode';
-    document.getElementById('btn-theme').addEventListener('click', toggleTheme);
+    // --- Gestão de Interface ---
+    const btnTheme = document.getElementById('btn-theme');
+    btnTheme.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      document.getElementById('theme-icon').textContent = isDark ? 'dark_mode' : 'light_mode';
+    });
 
-    function showToast(msg, icon = 'check_circle') {
-      const toast = document.getElementById('toast');
+    function showToast(msg) {
+      const t = document.getElementById('toast');
       document.getElementById('toast-msg').textContent = msg;
-      document.getElementById('toast-icon').textContent = icon;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
     }
 
     // --- Autenticação ---
-    document.getElementById('btn-login').addEventListener('click', async () => {
-      try {
-        const result = await signInWithPopup(auth, provider);
-        if (!result.user.email.endsWith(DOMINIO_PERMITIDO)) {
-          await signOut(auth);
-          alert("Acesso negado! Use o seu email da Aliva Saúde.");
-        }
-      } catch (e) { console.error(e); }
-    });
-
+    document.getElementById('btn-login').addEventListener('click', () => signInWithPopup(auth, provider));
     document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
     onAuthStateChanged(auth, (user) => {
       if (user && user.email.endsWith(DOMINIO_PERMITIDO)) {
-        utilizadorAtual = user;
+        userEmail = user.email;
         document.getElementById('login-view').classList.add('hidden');
         document.getElementById('app-view').classList.remove('hidden');
         document.getElementById('btn-logout').classList.remove('hidden');
         document.getElementById('user-badge').classList.remove('hidden');
         document.getElementById('user-badge').textContent = user.email;
+        carregarPedidos();
       } else {
-        utilizadorAtual = null;
+        if (user) { signOut(auth); alert("Domínio não autorizado."); }
         document.getElementById('login-view').classList.remove('hidden');
         document.getElementById('app-view').classList.add('hidden');
         document.getElementById('btn-logout').classList.add('hidden');
@@ -279,40 +186,54 @@
       }
     });
 
-    // --- Submissão do Formulário para o Firestore ---
+    // --- Gravar Pedido ---
     document.getElementById('form-rececao').addEventListener('submit', async (e) => {
-      e.preventDefault(); // Evita que a página recarregue
-      const btnSubmit = document.getElementById('btn-submit');
-      
+      e.preventDefault();
       try {
-        btnSubmit.disabled = true;
-        btnSubmit.innerHTML = '<span class="material-symbols-outlined">hourglass_empty</span> A Guardar...';
-
-        // Cria o registo na base de dados
         await addDoc(collection(db, "pedidos"), {
-          nome: document.getElementById('f-nome').value.trim(),
-          dataNascimento: document.getElementById('f-nascimento').value,
-          dataRealizacao: document.getElementById('f-data-exame').value,
-          exame: document.getElementById('f-exame').value.trim(),
-          medicoPrescritor: document.getElementById('f-medico').value.trim(),
-          infoClinica: document.getElementById('f-info').value.trim(),
-          status: "pendente", // O Admin depois muda para aprovado e escolhe a clínica
-          instituicao: "",
-          criadoPor: utilizadorAtual.email,
-          dataCriacao: serverTimestamp()
+          nome: document.getElementById('f-nome').value,
+          nascimento: document.getElementById('f-nascimento').value,
+          dataExame: document.getElementById('f-data-exame').value,
+          exame: document.getElementById('f-exame').value,
+          medico: document.getElementById('f-medico').value,
+          status: "pendente",
+          criadoPor: userEmail,
+          timestamp: serverTimestamp()
         });
-
-        showToast('Pedido submetido com sucesso!');
-        document.getElementById('form-rececao').reset(); // Limpa o formulário
-
-      } catch (error) {
-        console.error("Erro a guardar:", error);
-        showToast('Erro ao submetido o pedido.', 'error');
-      } finally {
-        btnSubmit.disabled = false;
-        btnSubmit.innerHTML = '<span class="material-symbols-outlined">send</span> Enviar Pedido';
-      }
+        showToast("Pedido enviado!");
+        e.target.reset();
+      } catch (err) { console.error(err); }
     });
+
+    // --- Carregar Pedidos em Tempo Real ---
+    function carregarPedidos() {
+      const q = query(collection(db, "pedidos"), orderBy("timestamp", "desc"));
+      onSnapshot(q, (snapshot) => {
+        const tbody = document.getElementById('pedidos-tabela');
+        tbody.innerHTML = "";
+        snapshot.forEach((doc) => {
+          const p = doc.data();
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${p.nome}</strong></td>
+            <td>${p.exame}</td>
+            <td><span class="status-chip status-${p.status}">${p.status}</span></td>
+            <td>
+              <button class="btn-download" ${p.status !== 'aprovado' ? 'disabled' : ''} onclick="gerarGuia('${doc.id}')">
+                <span class="material-symbols-outlined" style="font-size:16px">download</span> PDF
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+    }
+
+    // Função global para o botão da tabela (será ligada à lógica dos HTMLs da Vítrea/Cligest)
+    window.gerarGuia = (id) => {
+      showToast("A preparar guia para download...");
+      // Próximo passo: Injetar aqui a lógica de preenchimento automático do PDF
+    };
   </script>
 </body>
 </html>
