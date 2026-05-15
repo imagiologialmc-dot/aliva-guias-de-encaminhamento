@@ -200,73 +200,29 @@
       </div>
     </div>
   </div>
-// Geração do PDF (Vítrea e Cligest)
-    window.gerarGuia = async (id, instituicao) => {
-      try {
-        showToast(`A gerar guia para a ${instituicao}...`);
-        
-        // 1. Ir buscar os dados do paciente e a assinatura ao Firebase
-        const pSnap = await getDoc(doc(db, "pedidos", id));
-        const sSnap = await getDoc(doc(db, "configuracoes", "direcao"));
-        if (!pSnap.exists()) return;
-        
-        const p = pSnap.data();
-        const assinaturaB64 = sSnap.exists() ? sSnap.data().assinatura_base64 : "";
-        
-        let templateId = "";
-        let filename = "";
 
-        // 2. Preencher o molde correto consoante a instituição
-        if (instituicao === "Vítrea") {
-          document.getElementById('pdf-template-vitrea').style.display = 'block';
-          document.getElementById('pdf-template-cligest').style.display = 'none';
-          
-          document.getElementById('p-nome').textContent = p.nome;
-          document.getElementById('p-contacto').textContent = p.contacto;
-          document.getElementById('p-dataReal').textContent = p.dataExame;
-          document.getElementById('p-exame').textContent = p.exame;
-          document.getElementById('pdf-assinatura').src = assinaturaB64;
-          
-          templateId = 'pdf-template-vitrea';
-          filename = `Guia_Vitrea_${p.nome.replace(/\s+/g, '_')}.pdf`;
-          
-        } else if (instituicao === "Cligest") {
-          document.getElementById('pdf-template-vitrea').style.display = 'none';
-          document.getElementById('pdf-template-cligest').style.display = 'block';
-          
-          document.getElementById('c-nome').textContent = p.nome;
-          // Inverte a data de nascimento de YYYY-MM-DD para DD/MM/YYYY
-          document.getElementById('c-nascimento').textContent = p.nascimento ? p.nascimento.split('-').reverse().join('/') : '';
-          document.getElementById('c-contacto').textContent = p.contacto;
-          document.getElementById('c-medico').textContent = p.medico;
-          document.getElementById('c-exame').textContent = p.exame;
-          document.getElementById('c-dataReal').textContent = p.dataExame ? p.dataExame.split('-').reverse().join('/') : '';
-          document.getElementById('pdf-assinatura-cligest').src = assinaturaB64;
-          
-          templateId = 'pdf-template-cligest';
-          filename = `Guia_Cligest_${p.nome.replace(/\s+/g, '_')}.pdf`;
-          
-        } else {
-          alert("Instituição desconhecida.");
-          return;
-        }
+  <div class="pdoc" id="pdf-template-cligest" style="display: none;">
+      <div class="hdr">
+        <h2 style="color: #2980b9; margin-bottom: 4px;">CLIGEST</h2>
+        <div style="font-size: 8pt; color: #444;">Clínica Geral e Especialidades, Lda.</div>
+      </div>
+      <h1>Termo de Responsabilidade - Cligest</h1>
+      <div class="fld"><span class="fld-lbl">Nome do Paciente:</span><span class="fld-val" id="c-nome"></span></div>
+      <div class="fld"><span class="fld-lbl">Data de Nascimento:</span><span class="fld-val" id="c-nascimento"></span></div>
+      <div class="fld"><span class="fld-lbl">Contacto Telefónico:</span><span class="fld-val" id="c-contacto"></span></div>
+      <div class="fld"><span class="fld-lbl">Médico Prescritor:</span><span class="fld-val" id="c-medico"></span></div>
+      <div class="fld"><span class="fld-lbl">Exame Solicitado:</span><span class="fld-val" id="c-exame"></span></div>
+      <div class="fld"><span class="fld-lbl">Data Prevista:</span><span class="fld-val" id="c-dataReal"></span></div>
+      
+      <div style="margin-top: 20px; font-size: 9pt; line-height: 1.5; text-align: justify;">
+        <p>A Aliva Saúde autoriza a realização do exame acima descrito na Cligest e responsabiliza-se pelos respetivos encargos associados ao ato clínico, conforme acordo estabelecido.</p>
+      </div>
 
-        // 3. Gerar o PDF e forçar o download
-        const opt = { 
-          margin: 0, 
-          filename: filename, 
-          html2canvas: { scale: 2 }, 
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
-        };
-        await html2pdf().set(opt).from(document.getElementById(templateId)).save();
-        showToast("PDF descarregado com sucesso!");
-        
-      } catch (e) { 
-        console.error(e); 
-        alert("Erro ao gerar PDF.");
-      }
-    };
-  
+      <div style="margin-top: 30px; border: 1px solid #ccc; padding: 15px;">
+        <div style="font-size: 8pt; font-weight: 600; margin-bottom: 10px;">Assinatura e Carimbo - Direção Clínica Aliva Saúde</div>
+        <div class="sig-area"><img id="pdf-assinatura-cligest" src="" alt="Assinatura"></div>
+      </div>
+    </div>
   <script type="module">
     import { auth, db } from './firebase.js';
     import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
