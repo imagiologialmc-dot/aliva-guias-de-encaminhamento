@@ -47,37 +47,33 @@
     .btn-icon { background: none; border: none; color: var(--text-sec); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px; }
     .btn-icon:hover { background-color: rgba(192, 57, 43, 0.1); color: var(--primary); }
 
-    .btn-primary { background-color: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 24px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow); }
+    .btn-primary { background-color: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 24px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow); transition: background 0.2s; }
+    .btn-primary:hover { background-color: var(--primary-hover); }
+    .btn-primary:disabled { background-color: var(--text-sec); cursor: not-allowed; }
     
+    .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
+    .tab-btn { background: none; border: none; padding: 12px 24px; font-size: 1rem; font-weight: 500; color: var(--text-sec); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
     main { flex: 1; width: 100%; max-width: 900px; margin: 0 auto; padding: 32px 20px; display: flex; flex-direction: column; gap: 24px; }
 
     .card { background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
     .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-    .card-header h2 { font-weight: 500; font-size: 1.1rem; }
-
-    /* Estilos do Formulário */
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-    .form-group.full { grid-column: 1 / -1; }
+    
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; text-align: left; }
     label { font-size: 0.8rem; font-weight: 500; color: var(--text-sec); text-transform: uppercase; }
-    input, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-color); color: var(--text-main); outline: none; }
-    input:focus { border-color: var(--primary); }
+    input, select, textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-color); color: var(--text-main); outline: none; font-family: inherit; }
+    input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.1); }
 
-    /* Estilos da Tabela */
-    .table-container { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.9rem; }
-    th { text-align: left; padding: 12px; color: var(--text-sec); font-weight: 500; border-bottom: 2px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { text-align: left; padding: 12px; color: var(--text-sec); border-bottom: 2px solid var(--border); }
     td { padding: 12px; border-bottom: 1px solid var(--border); }
     
-    .status-chip { padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+    .status-chip { padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
     .status-pendente { background: rgba(249, 171, 0, 0.1); color: var(--warning); }
     .status-aprovado { background: rgba(30, 142, 62, 0.1); color: var(--success); }
 
-    .btn-download { background: none; border: 1px solid var(--primary); color: var(--primary); padding: 4px 8px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 0.8rem; }
-    .btn-download:disabled { border-color: var(--border); color: var(--text-sec); cursor: not-allowed; opacity: 0.5; }
-
     .hidden { display: none !important; }
-    
     #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #323232; color: white; padding: 12px 24px; border-radius: 8px; opacity: 0; transition: all 0.3s; z-index: 1000; display: flex; align-items: center; gap: 8px; }
     #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   </style>
@@ -85,10 +81,7 @@
 <body>
 
   <header class="top-app-bar">
-    <div class="brand">
-      <span class="material-symbols-outlined">medical_information</span>
-      Informação Clínica
-    </div>
+    <div class="brand"><span class="material-symbols-outlined">medical_information</span> Informação Clínica</div>
     <div class="nav-actions">
       <span id="user-badge" class="hidden" style="font-size: 0.8rem; color: var(--text-sec);"></span>
       <button class="btn-icon" id="btn-theme"><span class="material-symbols-outlined" id="theme-icon">dark_mode</span></button>
@@ -97,43 +90,67 @@
   </header>
 
   <main>
-    <div id="login-view" class="card" style="text-align: center; padding: 48px;">
-      <span class="material-symbols-outlined" style="font-size: 64px; color: var(--primary); margin-bottom: 16px;">account_circle</span>
-      <h2>Bem-vindo</h2>
-      <p style="color: var(--text-sec); margin-bottom: 24px;">Aceda com a sua conta Aliva Saúde.</p>
-      <button class="btn-primary" id="btn-login" style="margin: 0 auto;">Login com Google</button>
+    <div id="login-view" class="card" style="max-width: 400px; margin: 40px auto; text-align: center;">
+      <span class="material-symbols-outlined" style="font-size: 56px; color: var(--primary); margin-bottom: 16px;">lock_person</span>
+      <h2 style="margin-bottom: 8px;">Acesso Restrito</h2>
+      <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 0.9rem;">Introduza as suas credenciais para aceder ao sistema de guias.</p>
+      
+      <form id="form-login">
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email" id="l-email" required placeholder="exemplo@alivasaude.com">
+        </div>
+        <div class="form-group">
+          <label>Palavra-passe</label>
+          <input type="password" id="l-password" required placeholder="••••••">
+        </div>
+        <button type="submit" class="btn-primary" id="btn-entrar" style="width: 100%; justify-content: center; margin-top: 8px;">
+          Entrar no Sistema
+        </button>
+      </form>
     </div>
 
     <div id="app-view" class="hidden">
-      <div class="card">
-        <div class="card-header"><span class="material-symbols-outlined">add_task</span><h2>Novo Pedido</h2></div>
-        <form id="form-rececao">
-          <div class="form-group full"><label>Paciente</label><input type="text" id="f-nome" required></div>
-          <div class="form-grid">
-            <div class="form-group"><label>Nascimento</label><input type="date" id="f-nascimento" required></div>
-            <div class="form-group"><label>Data Exame</label><input type="date" id="f-data-exame" required></div>
-          </div>
-          <div class="form-group full"><label>Exame Requerido</label><input type="text" id="f-exame" required></div>
-          <div class="form-group full"><label>Médico Prescritor</label><input type="text" id="f-medico" required></div>
-          <button type="submit" class="btn-primary" id="btn-submit" style="width: 100%; justify-content: center;">Submeter Pedido</button>
-        </form>
+      <div class="tabs" id="app-tabs">
+        <button class="tab-btn active" id="tab-btn-rececao">Área da Receção</button>
+        <button class="tab-btn hidden" id="tab-btn-admin">Aprovação (Admin)</button>
       </div>
 
-      <div class="card">
-        <div class="card-header"><span class="material-symbols-outlined">list_alt</span><h2>Estado dos Pedidos</h2></div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Paciente</th>
-                <th>Exame</th>
-                <th>Estado</th>
-                <th>Guia</th>
-              </tr>
-            </thead>
-            <tbody id="pedidos-tabela">
-              </tbody>
-          </table>
+      <div id="view-rececao">
+        <div class="card" style="margin-bottom: 24px;">
+          <div class="card-header"><span class="material-symbols-outlined">add_task</span><h2 style="font-size: 1rem;">Novo Pedido de TC</h2></div>
+          <form id="form-rececao">
+            <div class="form-group"><label>Paciente</label><input type="text" id="f-nome" required></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="form-group"><label>Nascimento</label><input type="date" id="f-nascimento" required></div>
+              <div class="form-group"><label>Data Exame</label><input type="date" id="f-data-exame" required></div>
+            </div>
+            <div class="form-group"><label>Exame Requerido</label><input type="text" id="f-exame" required></div>
+            <div class="form-group"><label>Médico Prescritor</label><input type="text" id="f-medico" required></div>
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Enviar Pedido</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="material-symbols-outlined">list_alt</span><h2 style="font-size: 1rem;">Estado dos Pedidos</h2></div>
+          <div style="overflow-x: auto;">
+            <table>
+              <thead><tr><th>Paciente</th><th>Exame</th><th>Estado</th><th>Guia</th></tr></thead>
+              <tbody id="pedidos-rececao-tabela"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="view-admin" class="hidden">
+        <div class="card">
+          <div class="card-header"><span class="material-symbols-outlined">verified_user</span><h2 style="font-size: 1rem;">Pedidos Pendentes</h2></div>
+          <div style="overflow-x: auto;">
+            <table>
+              <thead><tr><th>Paciente</th><th>Exame</th><th>Destino</th><th>Ação</th></tr></thead>
+              <tbody id="pedidos-admin-tabela"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -142,16 +159,15 @@
   <div id="toast"><span class="material-symbols-outlined">info</span><span id="toast-msg"></span></div>
 
   <script type="module">
-    import { auth, provider, db } from './firebase.js';
-    import { signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-    import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+    import { auth, db } from './firebase.js';
+    import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+    import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-    const DOMINIO_PERMITIDO = "@alivasaude.com";
+    const EMAILS_ADMIN = ["carlos.martins@alivasaude.com"];
     let userEmail = "";
 
-    // --- Gestão de Interface ---
-    const btnTheme = document.getElementById('btn-theme');
-    btnTheme.addEventListener('click', () => {
+    // --- Tema ---
+    document.getElementById('btn-theme').addEventListener('click', () => {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
       document.getElementById('theme-icon').textContent = isDark ? 'dark_mode' : 'light_mode';
@@ -164,21 +180,48 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-    // --- Autenticação ---
-    document.getElementById('btn-login').addEventListener('click', () => signInWithPopup(auth, provider));
+    // --- Login Manual ---
+    document.getElementById('form-login').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('l-email').value;
+      const pass = document.getElementById('l-password').value;
+      const btn = document.getElementById('btn-entrar');
+      
+      try {
+        btn.disabled = true;
+        btn.textContent = "A autenticar...";
+        await signInWithEmailAndPassword(auth, email, pass);
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = "Entrar no Sistema";
+        alert("Erro no login: Verifique o e-mail e a palavra-passe.");
+      }
+    });
+
     document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
+    // --- Tabs ---
+    const tabRec = document.getElementById('tab-btn-rececao');
+    const tabAdm = document.getElementById('tab-btn-admin');
+    const vRec = document.getElementById('view-rececao');
+    const vAdm = document.getElementById('view-admin');
+
+    tabRec.onclick = () => { tabRec.classList.add('active'); tabAdm.classList.remove('active'); vRec.classList.remove('hidden'); vAdm.classList.add('hidden'); };
+    tabAdm.onclick = () => { tabAdm.classList.add('active'); tabRec.classList.remove('active'); vAdm.classList.remove('hidden'); vRec.classList.add('hidden'); };
+
     onAuthStateChanged(auth, (user) => {
-      if (user && user.email.endsWith(DOMINIO_PERMITIDO)) {
+      if (user) {
         userEmail = user.email;
         document.getElementById('login-view').classList.add('hidden');
         document.getElementById('app-view').classList.remove('hidden');
         document.getElementById('btn-logout').classList.remove('hidden');
         document.getElementById('user-badge').classList.remove('hidden');
         document.getElementById('user-badge').textContent = user.email;
+        
+        if (EMAILS_ADMIN.includes(userEmail)) { tabAdm.classList.remove('hidden'); }
+        else { tabAdm.classList.add('hidden'); tabRec.click(); }
         carregarPedidos();
       } else {
-        if (user) { signOut(auth); alert("Domínio não autorizado."); }
         document.getElementById('login-view').classList.remove('hidden');
         document.getElementById('app-view').classList.add('hidden');
         document.getElementById('btn-logout').classList.add('hidden');
@@ -186,8 +229,8 @@
       }
     });
 
-    // --- Gravar Pedido ---
-    document.getElementById('form-rececao').addEventListener('submit', async (e) => {
+    // --- Dados ---
+    document.getElementById('form-rececao').onsubmit = async (e) => {
       e.preventDefault();
       try {
         await addDoc(collection(db, "pedidos"), {
@@ -196,44 +239,54 @@
           dataExame: document.getElementById('f-data-exame').value,
           exame: document.getElementById('f-exame').value,
           medico: document.getElementById('f-medico').value,
-          status: "pendente",
-          criadoPor: userEmail,
-          timestamp: serverTimestamp()
+          status: "pendente", instituicao: "", criadoPor: userEmail, timestamp: serverTimestamp()
         });
         showToast("Pedido enviado!");
         e.target.reset();
       } catch (err) { console.error(err); }
-    });
+    };
 
-    // --- Carregar Pedidos em Tempo Real ---
     function carregarPedidos() {
       const q = query(collection(db, "pedidos"), orderBy("timestamp", "desc"));
       onSnapshot(q, (snapshot) => {
-        const tbody = document.getElementById('pedidos-tabela');
-        tbody.innerHTML = "";
-        snapshot.forEach((doc) => {
-          const p = doc.data();
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td><strong>${p.nome}</strong></td>
-            <td>${p.exame}</td>
-            <td><span class="status-chip status-${p.status}">${p.status}</span></td>
-            <td>
-              <button class="btn-download" ${p.status !== 'aprovado' ? 'disabled' : ''} onclick="gerarGuia('${doc.id}')">
-                <span class="material-symbols-outlined" style="font-size:16px">download</span> PDF
-              </button>
-            </td>
+        const tbodyRec = document.getElementById('pedidos-rececao-tabela');
+        const tbodyAdm = document.getElementById('pedidos-admin-tabela');
+        tbodyRec.innerHTML = ""; tbodyAdm.innerHTML = "";
+
+        snapshot.forEach((docSnap) => {
+          const p = docSnap.data();
+          const id = docSnap.id;
+
+          tbodyRec.innerHTML += `
+            <tr>
+              <td><strong>${p.nome}</strong></td>
+              <td>${p.exame}${p.status === 'aprovado' ? `<br><small>Destino: ${p.instituicao}</small>` : ''}</td>
+              <td><span class="status-chip status-${p.status}">${p.status}</span></td>
+              <td><button style="border:1px solid var(--primary); background:none; color:var(--primary); padding:4px 8px; border-radius:4px; cursor:pointer;" ${p.status !== 'aprovado' ? 'disabled' : ''} onclick="window.gerarGuia('${id}', '${p.instituicao}')">PDF</button></td>
+            </tr>
           `;
-          tbody.appendChild(tr);
+
+          if (p.status === "pendente") {
+            tbodyAdm.innerHTML += `
+              <tr>
+                <td><strong>${p.nome}</strong></td>
+                <td>${p.exame}</td>
+                <td><select id="sel-${id}"><option value="Vítrea">Vítrea</option><option value="Cligest">Cligest</option></select></td>
+                <td><button style="background:var(--success); color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;" onclick="window.aprovarPedido('${id}')">Aprovar</button></td>
+              </tr>
+            `;
+          }
         });
       });
     }
 
-    // Função global para o botão da tabela (será ligada à lógica dos HTMLs da Vítrea/Cligest)
-    window.gerarGuia = (id) => {
-      showToast("A preparar guia para download...");
-      // Próximo passo: Injetar aqui a lógica de preenchimento automático do PDF
+    window.aprovarPedido = async (id) => {
+      const inst = document.getElementById(`sel-${id}`).value;
+      await updateDoc(doc(db, "pedidos", id), { status: "aprovado", instituicao: inst });
+      showToast("Pedido aprovado!");
     };
+
+    window.gerarGuia = (id, inst) => { showToast(`A gerar guia para ${inst}...`); };
   </script>
 </body>
 </html>
