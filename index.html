@@ -356,7 +356,7 @@
       showToast("Aprovado com sucesso!");
     };
 
-    // Geração do PDF (Vítrea e Cligest)
+    // Geração do PDF
     window.gerarGuia = async (id, instituicao) => {
       try {
         showToast(`A gerar guia para a ${instituicao}...`);
@@ -391,7 +391,6 @@
           document.getElementById('pdf-template-cligest').style.display = 'block';
           
           document.getElementById('c-nome').textContent = p.nome;
-          // Inverte a data de nascimento de YYYY-MM-DD para DD/MM/YYYY
           document.getElementById('c-nascimento').textContent = p.nascimento ? p.nascimento.split('-').reverse().join('/') : '';
           document.getElementById('c-contacto').textContent = p.contacto;
           document.getElementById('c-medico').textContent = p.medico;
