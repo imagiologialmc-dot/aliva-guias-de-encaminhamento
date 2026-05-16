@@ -291,15 +291,36 @@
     tabRec.onclick = () => { tabRec.classList.add('active'); tabAdm.classList.remove('active'); vRec.classList.remove('hidden'); vAdm.classList.add('hidden'); };
     tabAdm.onclick = () => { tabAdm.classList.add('active'); tabRec.classList.remove('active'); vAdm.classList.remove('hidden'); vRec.classList.add('hidden'); };
 
-    onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, (user) => {
       if (user) {
-        userEmail = user.email;
+        // Limpa espaços em branco nas pontas e força tudo para minúsculas
+        userEmail = user.email.trim().toLowerCase();
+        
+        console.log("=== DIAGNÓSTICO EM MODO PRIVADO ===");
+        console.log("E-mail que o Firebase entregou:", user.email);
+        console.log("E-mail processado e limpo:", userEmail);
+        
         document.getElementById('login-view').classList.add('hidden');
         document.getElementById('app-view').classList.remove('hidden');
         document.getElementById('btn-logout').classList.remove('hidden');
         document.getElementById('user-badge').classList.remove('hidden');
-        document.getElementById('user-badge').textContent = user.email;
-        if (EMAILS_ADMIN.includes(userEmail)) tabAdm.classList.remove('hidden');
+        document.getElementById('user-badge').textContent = userEmail;
+        
+        // Normaliza também a lista de admins para garantir correspondência exata
+        const listaAdminsNormalizada = EMAILS_ADMIN.map(email => email.trim().toLowerCase());
+        const eAdmin = listaAdminsNormalizada.includes(userEmail);
+        
+        console.log("Lista de Admins autorizados:", listaAdminsNormalizada);
+        console.log("O utilizador atual é Admin?", eAdmin);
+        
+        if (eAdmin) {
+          document.getElementById('tab-btn-admin').classList.remove('hidden');
+          console.log("Sucesso: Separador Admin foi exibido.");
+        } else {
+          document.getElementById('tab-btn-admin').classList.add('hidden');
+          console.log("Aviso: Separador Admin ficou oculto por falta de correspondência.");
+        }
+        
         carregarPedidos();
       } else {
         document.getElementById('login-view').classList.remove('hidden');
