@@ -377,20 +377,26 @@
       }
     };
 
-    function carregarPedidos() {
+   function carregarPedidos() {
       const q = query(collection(db, "pedidos"), orderBy("timestamp", "desc"));
       onSnapshot(q, (snapshot) => {
         const tbodyRec = document.getElementById('pedidos-rececao-tabela');
         const tbodyAdm = document.getElementById('pedidos-admin-tabela');
         tbodyRec.innerHTML = ""; tbodyAdm.innerHTML = "";
 
+        // ---- OS NOSSOS DETETIVES ----
+        console.log("--- NOVA LEITURA DA BASE DE DADOS ---");
+        console.log("E-mail reconhecido pelo sistema:", userEmail);
+
         snapshot.forEach((docSnap) => {
           const p = docSnap.data();
           const id = docSnap.id;
 
+          // ---- DETETIVE PARA CADA PEDIDO ----
+          console.log("A ler pedido do paciente:", p.nome, "| Estado exato gravado:", p.status);
+
           const aprovador = p.aprovadoPor ? `<span style="font-size: 0.8rem; color: var(--text-sec);">${p.aprovadoPor}</span>` : '<span style="color: var(--border);">-</span>';
           
-          // Ícone e link de anexo se existir
           const linkAnexo = p.anexoUrl ? `<br><a href="${p.anexoUrl}" target="_blank" style="color:var(--primary); font-size:0.8rem; text-decoration:none; display:inline-flex; align-items:center; gap:2px;"><span class="material-symbols-outlined" style="font-size:14px;">attach_file</span> Ver Anexo</a>` : '';
 
           tbodyRec.innerHTML += `
