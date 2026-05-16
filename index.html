@@ -135,7 +135,7 @@
       <div id="view-rececao">
         <div class="card" style="margin-bottom: 24px;">
           <div class="card-header"><span class="material-symbols-outlined">add_task</span><h2 style="font-size: 1rem;">Novo Pedido de Exame</h2></div>
-         <form id="form-rececao">
+          <form id="form-rececao">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
               <div class="form-group"><label>Paciente</label><input type="text" id="f-nome" required></div>
               <div class="form-group"><label>Contacto (Tlm)</label><input type="text" id="f-contacto" required></div>
@@ -166,6 +166,7 @@
 
             <button type="submit" class="btn-primary" id="btn-submit-rececao" style="width: 100%; justify-content: center; margin-top: 8px;">Enviar Pedido</button>
           </form>
+        </div>
 
         <div class="card">
           <div class="card-header"><span class="material-symbols-outlined">list_alt</span><h2 style="font-size: 1rem;">Estado dos Pedidos</h2></div>
@@ -247,13 +248,13 @@
       <div style="font-size: 10pt; font-weight: 700; margin-bottom: 5px;">Assinatura e Carimbo do Médico:</div>
       <div class="sig-area" style="border: none; padding: 0; min-height: auto; justify-content: flex-start;"><img id="pdf-assinatura-cligest" src="" alt="Assinatura" style="max-height: 80px;"></div>
     </div>
+  </div>
 
-<script type="module">
+  <script type="module">
     import { auth, db } from './firebase.js';
     import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
     import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-    const EMAILS_ADMIN = ["carlos.martins@alivasaude.com"];
     let userEmail = "";
 
     document.getElementById('btn-theme').onclick = () => {
@@ -269,14 +270,14 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-  document.getElementById('form-login').onsubmit = async (e) => {
+    document.getElementById('form-login').onsubmit = async (e) => {
       e.preventDefault();
       const btn = document.getElementById('btn-entrar');
       try {
         btn.disabled = true; 
         btn.textContent = "A autenticar...";
         
-        // A MAGIA: Remove automaticamente os espaços invisíveis antes e depois do e-mail
+        // Remove automaticamente os espaços invisíveis antes e depois do e-mail
         const emailLimpo = document.getElementById('l-email').value.trim();
         const pass = document.getElementById('l-password').value;
         
@@ -284,8 +285,6 @@
       } catch (err) {
         btn.disabled = false; 
         btn.textContent = "Entrar no Sistema";
-        
-        // Agora, em vez de uma mensagem genérica, vai mostrar-lhe a mensagem exata do sistema!
         alert("Erro ao entrar: " + err.message);
       }
     };
@@ -300,7 +299,7 @@
     tabRec.onclick = () => { tabRec.classList.add('active'); tabAdm.classList.remove('active'); vRec.classList.remove('hidden'); vAdm.classList.add('hidden'); };
     tabAdm.onclick = () => { tabAdm.classList.add('active'); tabRec.classList.remove('active'); vAdm.classList.remove('hidden'); vRec.classList.add('hidden'); };
 
-onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         // Pega no e-mail e garante que está minúsculo
         userEmail = user.email.toLowerCase();
@@ -311,8 +310,7 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById('user-badge').classList.remove('hidden');
         document.getElementById('user-badge').textContent = userEmail;
         
-        // A NOVA REGRA À PROVA DE FANTASMAS
-        // Basta que o e-mail contenha a palavra "carlos.martins" ou "admin"
+        // Regra de validação flexível para Admin
         const eAdmin = userEmail.includes("carlos.martins") || userEmail.includes("admin");
         
         if (eAdmin) {
@@ -321,7 +319,98 @@ onAuthStateChanged(auth, (user) => {
           document.getElementById('tab-btn-admin').classList.add('hidden');
         }
         
-      function carregarPedidos() {
+        carregarPedidos();
+      } else {
+        document.getElementById('login-view').classList.remove('hidden');
+        document.getElementById('app-view').classList.add('hidden');
+        document.getElementById('btn-logout').classList.add('hidden');
+        document.getElementById('user-badge').classList.add('hidden');
+      }
+    });
+
+    document.getElementById('form-rececao').onsubmit = async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit-rececao');
+      btn.disabled = true;
+      btn.textContent = "A processar...";
+
+      try {
+        let anexoUrl = "";
+        const fileInput = document.getElementById('f-anexo');
+        const file = fileInput.files[0];
+
+        // Lógica de envio para o Google Drive
+        if (file) {
+          if (file.size > 5 * 1024 * 1024) {
+            alert("Atenção: O anexo é muito grande (máx 5MB). Por favor, escolha um ficheiro menor.");
+            btn.disabled = false;
+            btn.textContent = "Enviar Pedido";
+            return;
+          }
+
+          showToast("A fazer upload do anexo para o Drive...");
+          
+          try {
+            const base64Data = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(reader.result.split(',')[1]);
+              reader.onerror = error => reject(error);
+              reader.readAsDataURL(file);
+            });
+
+            // Envia para o seu Google Apps Script
+            const response = await fetch("https://script.google.com/macros/s/AKfycbw15VjPIeLAt15c8GO6hT6tKUwVjc_M1lk6RL3t0tbNd5oqadYIpPOfWHpyevnlb76DOA/exec", {
+              method: "POST",
+              body: JSON.stringify({
+                fileName: file.name,
+                mimeType: file.type,
+                base64: base64Data
+              })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+              anexoUrl = result.url;
+              showToast("Anexo guardado com sucesso!");
+            } else {
+              console.error(result.error);
+              alert("Aviso: Falha ao guardar anexo no Drive. O pedido será registado na mesma.");
+            }
+          } catch (uploadError) {
+             console.error("Erro de comunicação:", uploadError);
+             alert("Aviso: Falha ao ligar ao Google Drive. O pedido será gravado sem anexo.");
+          }
+        }
+
+        // Grava no Firebase
+        await addDoc(collection(db, "pedidos"), {
+          nome: document.getElementById('f-nome').value,
+          contacto: document.getElementById('f-contacto').value,
+          nascimento: document.getElementById('f-nascimento').value,
+          sexo: document.getElementById('f-sexo').value,
+          dataExame: document.getElementById('f-data-exame').value,
+          exame: document.getElementById('f-exame').value,
+          hipotese: document.getElementById('f-hipotese').value,
+          medico: document.getElementById('f-medico').value,
+          anexoUrl: anexoUrl,
+          status: "pendente", 
+          instituicao: "", 
+          criadoPor: userEmail, 
+          timestamp: serverTimestamp()
+        });
+        
+        showToast("Pedido submetido com sucesso!");
+        e.target.reset();
+      } catch (err) { 
+        console.error(err);
+        alert("Erro ao enviar pedido: " + err.message); 
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Enviar Pedido";
+      }
+    };
+
+    function carregarPedidos() {
       const q = query(collection(db, "pedidos"), orderBy("timestamp", "desc"));
       onSnapshot(q, (snapshot) => {
         const tbodyRec = document.getElementById('pedidos-rececao-tabela');
@@ -347,120 +436,8 @@ onAuthStateChanged(auth, (user) => {
               <td><button style="border:1px solid var(--primary); background:none; color:var(--primary); padding:4px 10px; border-radius:4px; cursor:pointer;" ${statusLimpo !== 'aprovado' ? 'disabled' : ''} onclick="window.gerarGuia('${id}', '${p.instituicao}')">PDF</button></td>
             </tr>`;
 
-          // Agora a tabela Admin preenche sempre, independentemente de espaços ou maiúsculas!
+          // Tabela Admin preenche sempre, independentemente de espaços ou maiúsculas
           if (statusLimpo === "pendente") {
-            tbodyAdm.innerHTML += `
-              <tr>
-                <td><strong>${p.nome}</strong></td>
-                <td>${p.exame}${linkAnexo}</td>
-                <td><select id="sel-${id}"><option value="Vítrea">Vítrea</option><option value="Cligest">Cligest</option></select></td>
-                <td><button style="background:var(--success); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;" onclick="window.aprovarPedido('${id}')">Aprovar</button></td>
-              </tr>`;
-          }
-        });
-      });
-    }
-
-    document.getElementById('form-rececao').onsubmit = async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('btn-submit-rececao');
-      btn.disabled = true;
-      btn.textContent = "A processar...";
-
-      try {
-        let anexoUrl = "";
-        const fileInput = document.getElementById('f-anexo');
-        const file = fileInput.files[0];
-
-        // Lógica de envio para o Google Drive
-        if (file) {
-          showToast("A fazer upload do anexo para o Drive...");
-          const base64Data = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result.split(',')[1]);
-            reader.onerror = error => reject(error);
-            reader.readAsDataURL(file);
-          });
-
-          // Envia para o seu Google Apps Script
-          const response = await fetch("https://script.google.com/macros/s/AKfycbw15VjPIeLAt15c8GO6hT6tKUwVjc_M1lk6RL3t0tbNd5oqadYIpPOfWHpyevnlb76DOA/exec", {
-            method: "POST",
-            body: JSON.stringify({
-              fileName: file.name,
-              mimeType: file.type,
-              base64: base64Data
-            })
-          });
-
-          const result = await response.json();
-          if (result.success) {
-            anexoUrl = result.url;
-          } else {
-            console.error(result.error);
-            alert("Aviso: Falha ao guardar anexo no Drive. O pedido será registado na mesma.");
-          }
-        }
-
-        // Grava no Firebase
-        await addDoc(collection(db, "pedidos"), {
-          nome: document.getElementById('f-nome').value,
-          contacto: document.getElementById('f-contacto').value,
-          nascimento: document.getElementById('f-nascimento').value,
-          sexo: document.getElementById('f-sexo').value,
-          dataExame: document.getElementById('f-data-exame').value,
-          exame: document.getElementById('f-exame').value,
-          hipotese: document.getElementById('f-hipotese').value,
-          medico: document.getElementById('f-medico').value,
-          anexoUrl: anexoUrl,
-          status: "pendente", 
-          instituicao: "", 
-          criadoPor: userEmail, 
-          timestamp: serverTimestamp()
-        });
-        
-        showToast("Pedido submetido com sucesso!");
-        e.target.reset();
-      } catch (err) { 
-        console.error(err);
-        alert("Erro ao enviar pedido."); 
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Enviar Pedido";
-      }
-    };
-
-   function carregarPedidos() {
-      const q = query(collection(db, "pedidos"), orderBy("timestamp", "desc"));
-      onSnapshot(q, (snapshot) => {
-        const tbodyRec = document.getElementById('pedidos-rececao-tabela');
-        const tbodyAdm = document.getElementById('pedidos-admin-tabela');
-        tbodyRec.innerHTML = ""; tbodyAdm.innerHTML = "";
-
-        // ---- OS NOSSOS DETETIVES ----
-        console.log("--- NOVA LEITURA DA BASE DE DADOS ---");
-        console.log("E-mail reconhecido pelo sistema:", userEmail);
-
-        snapshot.forEach((docSnap) => {
-          const p = docSnap.data();
-          const id = docSnap.id;
-
-          // ---- DETETIVE PARA CADA PEDIDO ----
-          console.log("A ler pedido do paciente:", p.nome, "| Estado exato gravado:", p.status);
-
-          const aprovador = p.aprovadoPor ? `<span style="font-size: 0.8rem; color: var(--text-sec);">${p.aprovadoPor}</span>` : '<span style="color: var(--border);">-</span>';
-          
-          const linkAnexo = p.anexoUrl ? `<br><a href="${p.anexoUrl}" target="_blank" style="color:var(--primary); font-size:0.8rem; text-decoration:none; display:inline-flex; align-items:center; gap:2px;"><span class="material-symbols-outlined" style="font-size:14px;">attach_file</span> Ver Anexo</a>` : '';
-
-          tbodyRec.innerHTML += `
-            <tr>
-              <td><strong>${p.nome}</strong></td>
-              <td>${p.exame}${linkAnexo}${p.status === 'aprovado' ? `<br><small>Clínica: ${p.instituicao}</small>` : ''}</td>
-              <td><span class="status-chip status-${p.status}">${p.status}</span></td>
-              <td>${aprovador}</td>
-              <td><button style="border:1px solid var(--primary); background:none; color:var(--primary); padding:4px 10px; border-radius:4px; cursor:pointer;" ${p.status !== 'aprovado' ? 'disabled' : ''} onclick="window.gerarGuia('${id}', '${p.instituicao}')">PDF</button></td>
-            </tr>`;
-
-          if (p.status === "pendente") {
             tbodyAdm.innerHTML += `
               <tr>
                 <td><strong>${p.nome}</strong></td>
@@ -537,159 +514,6 @@ onAuthStateChanged(auth, (user) => {
           margin: 0, 
           filename: filename, 
           html2canvas: { scale: 2, useCORS: true }, 
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
-        };
-        await html2pdf().set(opt).from(document.getElementById(templateId)).save();
-        showToast("PDF descarregado com sucesso!");
-        
-      } catch (e) { 
-        console.error(e); 
-        alert("Erro ao gerar PDF.");
-      }
-    };
-  </script>
-    
-    document.getElementById('btn-logout').onclick = () => signOut(auth);
-
-    const tabRec = document.getElementById('tab-btn-rececao');
-    const tabAdm = document.getElementById('tab-btn-admin');
-    const vRec = document.getElementById('view-rececao');
-    const vAdm = document.getElementById('view-admin');
-
-    tabRec.onclick = () => { tabRec.classList.add('active'); tabAdm.classList.remove('active'); vRec.classList.remove('hidden'); vAdm.classList.add('hidden'); };
-    tabAdm.onclick = () => { tabAdm.classList.add('active'); tabRec.classList.remove('active'); vAdm.classList.remove('hidden'); vRec.classList.add('hidden'); };
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        userEmail = user.email;
-        document.getElementById('login-view').classList.add('hidden');
-        document.getElementById('app-view').classList.remove('hidden');
-        document.getElementById('btn-logout').classList.remove('hidden');
-        document.getElementById('user-badge').classList.remove('hidden');
-        document.getElementById('user-badge').textContent = user.email;
-        if (EMAILS_ADMIN.includes(userEmail)) tabAdm.classList.remove('hidden');
-        carregarPedidos();
-      } else {
-        document.getElementById('login-view').classList.remove('hidden');
-        document.getElementById('app-view').classList.add('hidden');
-        document.getElementById('btn-logout').classList.add('hidden');
-        document.getElementById('user-badge').classList.add('hidden');
-      }
-    });
-
-    document.getElementById('form-rececao').onsubmit = async (e) => {
-      e.preventDefault();
-      try {
-        await addDoc(collection(db, "pedidos"), {
-          nome: document.getElementById('f-nome').value,
-          contacto: document.getElementById('f-contacto').value,
-          nascimento: document.getElementById('f-nascimento').value,
-          dataExame: document.getElementById('f-data-exame').value,
-          exame: document.getElementById('f-exame').value,
-          medico: document.getElementById('f-medico').value,
-          status: "pendente", instituicao: "", criadoPor: userEmail, timestamp: serverTimestamp()
-        });
-        showToast("Pedido submetido com sucesso!");
-        e.target.reset();
-      } catch (err) { console.error(err); }
-    };
-
-    function carregarPedidos() {
-      const q = query(collection(db, "pedidos"), orderBy("timestamp", "desc"));
-      onSnapshot(q, (snapshot) => {
-        const tbodyRec = document.getElementById('pedidos-rececao-tabela');
-        const tbodyAdm = document.getElementById('pedidos-admin-tabela');
-        tbodyRec.innerHTML = ""; tbodyAdm.innerHTML = "";
-
-        snapshot.forEach((docSnap) => {
-          const p = docSnap.data();
-          const id = docSnap.id;
-
-          const aprovador = p.aprovadoPor ? `<span style="font-size: 0.8rem; color: var(--text-sec);">${p.aprovadoPor}</span>` : '<span style="color: var(--border);">-</span>';
-
-          tbodyRec.innerHTML += `
-            <tr>
-              <td><strong>${p.nome}</strong></td>
-              <td>${p.exame}${p.status === 'aprovado' ? `<br><small>Clínica: ${p.instituicao}</small>` : ''}</td>
-              <td><span class="status-chip status-${p.status}">${p.status}</span></td>
-              <td>${aprovador}</td>
-              <td><button style="border:1px solid var(--primary); background:none; color:var(--primary); padding:4px 10px; border-radius:4px; cursor:pointer;" ${p.status !== 'aprovado' ? 'disabled' : ''} onclick="window.gerarGuia('${id}', '${p.instituicao}')">PDF</button></td>
-            </tr>`;
-
-          if (p.status === "pendente") {
-            tbodyAdm.innerHTML += `
-              <tr>
-                <td><strong>${p.nome}</strong></td>
-                <td>${p.exame}</td>
-                <td><select id="sel-${id}"><option value="Vítrea">Vítrea</option><option value="Cligest">Cligest</option></select></td>
-                <td><button style="background:var(--success); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;" onclick="window.aprovarPedido('${id}')">Aprovar</button></td>
-              </tr>`;
-          }
-        });
-      });
-    }
-
-    window.aprovarPedido = async (id) => {
-      const inst = document.getElementById(`sel-${id}`).value;
-      await updateDoc(doc(db, "pedidos", id), { 
-        status: "aprovado", 
-        instituicao: inst,
-        aprovadoPor: userEmail
-      });
-      showToast("Aprovado com sucesso!");
-    };
-
-    window.gerarGuia = async (id, instituicao) => {
-      try {
-        showToast(`A gerar guia para a ${instituicao}...`);
-        
-        const pSnap = await getDoc(doc(db, "pedidos", id));
-        const sSnap = await getDoc(doc(db, "configuracoes", "direcao"));
-        if (!pSnap.exists()) return;
-        
-        const p = pSnap.data();
-        const assinaturaB64 = sSnap.exists() ? sSnap.data().assinatura_base64 : "";
-        
-        let templateId = "";
-        let filename = "";
-
-        if (instituicao === "Vítrea") {
-          document.getElementById('pdf-template-vitrea').style.display = 'block';
-          document.getElementById('pdf-template-cligest').style.display = 'none';
-          
-          document.getElementById('p-nome').textContent = p.nome;
-          document.getElementById('p-contacto').textContent = p.contacto;
-          document.getElementById('p-dataReal').textContent = p.dataExame;
-          document.getElementById('p-exame').textContent = p.exame;
-          document.getElementById('pdf-assinatura').src = assinaturaB64;
-          
-          templateId = 'pdf-template-vitrea';
-          filename = `Guia_Vitrea_${p.nome.replace(/\s+/g, '_')}.pdf`;
-          
-        } else if (instituicao === "Cligest") {
-          document.getElementById('pdf-template-vitrea').style.display = 'none';
-          document.getElementById('pdf-template-cligest').style.display = 'block';
-          
-          document.getElementById('c-nome').textContent = p.nome;
-          document.getElementById('c-nascimento').textContent = p.nascimento ? p.nascimento.split('-').reverse().join('/') : '';
-          document.getElementById('c-contacto').textContent = p.contacto;
-          document.getElementById('c-medico').textContent = p.medico;
-          document.getElementById('c-exame').textContent = p.exame;
-          document.getElementById('c-dataReal').textContent = p.dataExame ? p.dataExame.split('-').reverse().join('/') : '';
-          document.getElementById('pdf-assinatura-cligest').src = assinaturaB64;
-          
-          templateId = 'pdf-template-cligest';
-          filename = `Guia_Cligest_${p.nome.replace(/\s+/g, '_')}.pdf`;
-          
-        } else {
-          alert("Instituição desconhecida.");
-          return;
-        }
-
-        const opt = { 
-          margin: 0, 
-          filename: filename, 
-          html2canvas: { scale: 2 }, 
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
         };
         await html2pdf().set(opt).from(document.getElementById(templateId)).save();
