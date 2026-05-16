@@ -293,12 +293,8 @@
 
 onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Limpa espaços em branco nas pontas e força tudo para minúsculas
-        userEmail = user.email.trim().toLowerCase();
-        
-        console.log("=== DIAGNÓSTICO EM MODO PRIVADO ===");
-        console.log("E-mail que o Firebase entregou:", user.email);
-        console.log("E-mail processado e limpo:", userEmail);
+        // Pega no e-mail e garante que está minúsculo
+        userEmail = user.email.toLowerCase();
         
         document.getElementById('login-view').classList.add('hidden');
         document.getElementById('app-view').classList.remove('hidden');
@@ -306,19 +302,14 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById('user-badge').classList.remove('hidden');
         document.getElementById('user-badge').textContent = userEmail;
         
-        // Normaliza também a lista de admins para garantir correspondência exata
-        const listaAdminsNormalizada = EMAILS_ADMIN.map(email => email.trim().toLowerCase());
-        const eAdmin = listaAdminsNormalizada.includes(userEmail);
-        
-        console.log("Lista de Admins autorizados:", listaAdminsNormalizada);
-        console.log("O utilizador atual é Admin?", eAdmin);
+        // A NOVA REGRA À PROVA DE FANTASMAS
+        // Basta que o e-mail contenha a palavra "carlos.martins" ou "admin"
+        const eAdmin = userEmail.includes("carlos.martins") || userEmail.includes("admin");
         
         if (eAdmin) {
           document.getElementById('tab-btn-admin').classList.remove('hidden');
-          console.log("Sucesso: Separador Admin foi exibido.");
         } else {
           document.getElementById('tab-btn-admin').classList.add('hidden');
-          console.log("Aviso: Separador Admin ficou oculto por falta de correspondência.");
         }
         
         carregarPedidos();
