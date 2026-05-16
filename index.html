@@ -135,20 +135,37 @@
       <div id="view-rececao">
         <div class="card" style="margin-bottom: 24px;">
           <div class="card-header"><span class="material-symbols-outlined">add_task</span><h2 style="font-size: 1rem;">Novo Pedido de Exame</h2></div>
-          <form id="form-rececao">
+         <form id="form-rececao">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
               <div class="form-group"><label>Paciente</label><input type="text" id="f-nome" required></div>
               <div class="form-group"><label>Contacto (Tlm)</label><input type="text" id="f-contacto" required></div>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
               <div class="form-group"><label>Nascimento</label><input type="date" id="f-nascimento" required></div>
-              <div class="form-group"><label>Data Prevista Exame</label><input type="date" id="f-data-exame" required></div>
+              <div class="form-group"><label>Sexo</label>
+                <select id="f-sexo" required>
+                  <option value="" disabled selected>Selecione...</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Feminino">Feminino</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Data Prevista</label><input type="date" id="f-data-exame" required></div>
             </div>
             <div class="form-group"><label>Exame Requerido</label><input type="text" id="f-exame" required></div>
+            <div class="form-group"><label>Hipótese Diagnóstica (ICD 10)</label><input type="text" id="f-hipotese" required></div>
             <div class="form-group"><label>Médico Prescritor</label><input type="text" id="f-medico" required></div>
-            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Enviar Pedido</button>
+            
+            <div class="form-group" style="background: rgba(0, 171, 178, 0.05); padding: 16px; border-radius: 8px; border: 1px dashed var(--primary);">
+              <label style="color: var(--primary); display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem;">
+                <span class="material-symbols-outlined">attach_file</span> 
+                <strong>Anexar Prescrição ou Relatório (Opcional)</strong>
+              </label>
+              <input type="file" id="f-anexo" accept="image/*,.pdf" style="margin-top: 8px; border: none; background: transparent; padding: 0;">
+              <small style="color: var(--text-sec); margin-top: 4px;">Guarda no Drive durante 7 dias.</small>
+            </div>
+
+            <button type="submit" class="btn-primary" id="btn-submit-rececao" style="width: 100%; justify-content: center; margin-top: 8px;">Enviar Pedido</button>
           </form>
-        </div>
 
         <div class="card">
           <div class="card-header"><span class="material-symbols-outlined">list_alt</span><h2 style="font-size: 1rem;">Estado dos Pedidos</h2></div>
@@ -194,31 +211,44 @@
       </div>
     </div>
 
-    <div class="pdoc" id="pdf-template-cligest" style="display: none;">
-      <div class="hdr">
-        <h2 style="color: #2980b9; margin-bottom: 4px;">CLIGEST</h2>
-        <div style="font-size: 8pt; color: #444;">Clínica Geral e Especialidades, Lda.</div>
+   <div class="pdoc" id="pdf-template-cligest" style="display: none;">
+      <h1 style="font-size: 13pt; font-weight: 700; text-align: center; margin-bottom: 6px;">Pedido de Tomografia Computorizada (TC)</h1>
+      <div style="font-size: 10pt; text-align: center; color: #444; margin-bottom: 15px;">Unidade Executora: CLIGEST – Clínica Vida &nbsp;|&nbsp; Departamento de Imagiologia</div>
+
+      <div class="fld"><span class="fld-lbl">Entidade Solicitante:</span><span class="fld-val">Aliva Saúde</span></div>
+      <div class="fld"><span class="fld-lbl">Morada:</span><span class="fld-val">Rua Amilcar Cabral Nº3, Luanda</span></div>
+      <div style="display: flex; gap: 20px;">
+        <div class="fld" style="flex: 1;"><span class="fld-lbl">Telefone:</span><span class="fld-val">938 351 173</span></div>
+        <div class="fld" style="flex: 1;"><span class="fld-lbl">E-mail:</span><span class="fld-val">imagiologia@alivasaude.com</span></div>
       </div>
-      <h1>Termo de Responsabilidade - Cligest</h1>
-      <div class="fld"><span class="fld-lbl">Nome do Paciente:</span><span class="fld-val" id="c-nome"></span></div>
-      <div class="fld"><span class="fld-lbl">Data de Nascimento:</span><span class="fld-val" id="c-nascimento"></span></div>
-      <div class="fld"><span class="fld-lbl">Contacto Telefónico:</span><span class="fld-val" id="c-contacto"></span></div>
-      <div class="fld"><span class="fld-lbl">Médico Prescritor:</span><span class="fld-val" id="c-medico"></span></div>
-      <div class="fld"><span class="fld-lbl">Exame Solicitado:</span><span class="fld-val" id="c-exame"></span></div>
-      <div class="fld"><span class="fld-lbl">Data Prevista:</span><span class="fld-val" id="c-dataReal"></span></div>
-      
-      <div style="margin-top: 20px; font-size: 9pt; line-height: 1.5; text-align: justify;">
-        <p>A Aliva Saúde autoriza a realização do exame acima descrito na Cligest e responsabiliza-se pelos respetivos encargos associados ao ato clínico, conforme acordo estabelecido.</p>
+      <div class="fld" style="margin-bottom: 10px;"><span class="fld-lbl">Médico Solicitante:</span><span class="fld-val" id="c-medico"></span></div>
+
+      <div style="font-size: 11pt; font-weight: 700; margin-bottom: 5px; margin-top: 15px;">Identificação do Paciente</div>
+      <div class="fld"><span class="fld-lbl">Nome:</span><span class="fld-val" id="c-nome"></span></div>
+      <div style="display: flex; gap: 20px; margin-bottom: 10px;">
+        <div class="fld" style="flex: 1;"><span class="fld-lbl">Data de Nascimento:</span><span class="fld-val" id="c-nascimento"></span></div>
+        <div class="fld" style="flex: 1;"><span class="fld-lbl">Sexo:</span><span class="fld-val" id="c-sexo"></span></div>
       </div>
 
-      <div style="margin-top: 30px; border: 1px solid #ccc; padding: 15px;">
-        <div style="font-size: 8pt; font-weight: 600; margin-bottom: 10px;">Assinatura e Carimbo - Direção Clínica Aliva Saúde</div>
-        <div class="sig-area"><img id="pdf-assinatura-cligest" src="" alt="Assinatura"></div>
+      <div style="font-size: 11pt; font-weight: 700; margin-bottom: 5px; margin-top: 15px;">Exame de Tomografia Computorizada</div>
+      <div style="border: 1px solid #ccc; padding: 10px; min-height: 40px; margin-bottom: 5px;" id="c-exame"></div>
+      <div class="fld" style="margin-bottom: 10px;"><span class="fld-lbl">Hipótese Diagnóstica (ICD 10):</span><span class="fld-val" id="c-hipotese"></span></div>
+
+      <div style="font-size: 11pt; font-weight: 700; margin-bottom: 5px; margin-top: 15px;">Declaração de Responsabilidade Clínica</div>
+      <div style="font-size: 9pt; line-height: 1.5; text-align: justify; margin-bottom: 15px;">
+        A entidade solicitante declara que o exame acima indicado foi prescrito por médico devidamente habilitado, após avaliação clínica do paciente. A indicação clínica, a escolha do exame e a pertinência da sua realização são da inteira responsabilidade da unidade solicitante e do médico prescritor. A Clínica Vida atuará exclusivamente como unidade executora do exame de imagiologia, não sendo responsável pela decisão clínica que motivou o pedido do exame.
       </div>
+
+      <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+        <div class="fld" style="flex: 1;"><span class="fld-lbl">Local:</span><span class="fld-val">Luanda</span></div>
+        <div class="fld" style="flex: 1;"><span class="fld-lbl">Data:</span><span class="fld-val" id="c-dataReal"></span></div>
+      </div>
+
+      <div style="font-size: 10pt; font-weight: 700; margin-bottom: 5px;">Assinatura e Carimbo do Médico:</div>
+      <div class="sig-area" style="border: none; padding: 0; min-height: auto; justify-content: flex-start;"><img id="pdf-assinatura-cligest" src="" alt="Assinatura" style="max-height: 80px;"></div>
     </div>
-  </div>
 
-  <script type="module">
+<script type="module">
     import { auth, db } from './firebase.js';
     import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
     import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
@@ -247,10 +277,220 @@
         await signInWithEmailAndPassword(auth, document.getElementById('l-email').value, document.getElementById('l-password').value);
       } catch (err) {
         btn.disabled = false; btn.textContent = "Entrar no Sistema";
-        alert("Acesso negado. Verifique o e-mail e a palavra-passe.");
+        alert("Acesso negado. Verifique as credenciais.");
       }
     };
 
+    document.getElementById('btn-logout').onclick = () => signOut(auth);
+
+    const tabRec = document.getElementById('tab-btn-rececao');
+    const tabAdm = document.getElementById('tab-btn-admin');
+    const vRec = document.getElementById('view-rececao');
+    const vAdm = document.getElementById('view-admin');
+
+    tabRec.onclick = () => { tabRec.classList.add('active'); tabAdm.classList.remove('active'); vRec.classList.remove('hidden'); vAdm.classList.add('hidden'); };
+    tabAdm.onclick = () => { tabAdm.classList.add('active'); tabRec.classList.remove('active'); vAdm.classList.remove('hidden'); vRec.classList.add('hidden'); };
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userEmail = user.email;
+        document.getElementById('login-view').classList.add('hidden');
+        document.getElementById('app-view').classList.remove('hidden');
+        document.getElementById('btn-logout').classList.remove('hidden');
+        document.getElementById('user-badge').classList.remove('hidden');
+        document.getElementById('user-badge').textContent = user.email;
+        if (EMAILS_ADMIN.includes(userEmail)) tabAdm.classList.remove('hidden');
+        carregarPedidos();
+      } else {
+        document.getElementById('login-view').classList.remove('hidden');
+        document.getElementById('app-view').classList.add('hidden');
+        document.getElementById('btn-logout').classList.add('hidden');
+        document.getElementById('user-badge').classList.add('hidden');
+      }
+    });
+
+    document.getElementById('form-rececao').onsubmit = async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit-rececao');
+      btn.disabled = true;
+      btn.textContent = "A processar...";
+
+      try {
+        let anexoUrl = "";
+        const fileInput = document.getElementById('f-anexo');
+        const file = fileInput.files[0];
+
+        // Lógica de envio para o Google Drive
+        if (file) {
+          showToast("A fazer upload do anexo para o Drive...");
+          const base64Data = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = error => reject(error);
+            reader.readAsDataURL(file);
+          });
+
+          // Envia para o seu Google Apps Script
+          const response = await fetch("https://script.google.com/macros/s/AKfycbw15VjPIeLAt15c8GO6hT6tKUwVjc_M1lk6RL3t0tbNd5oqadYIpPOfWHpyevnlb76DOA/exec", {
+            method: "POST",
+            body: JSON.stringify({
+              fileName: file.name,
+              mimeType: file.type,
+              base64: base64Data
+            })
+          });
+
+          const result = await response.json();
+          if (result.success) {
+            anexoUrl = result.url;
+          } else {
+            console.error(result.error);
+            alert("Aviso: Falha ao guardar anexo no Drive. O pedido será registado na mesma.");
+          }
+        }
+
+        // Grava no Firebase
+        await addDoc(collection(db, "pedidos"), {
+          nome: document.getElementById('f-nome').value,
+          contacto: document.getElementById('f-contacto').value,
+          nascimento: document.getElementById('f-nascimento').value,
+          sexo: document.getElementById('f-sexo').value,
+          dataExame: document.getElementById('f-data-exame').value,
+          exame: document.getElementById('f-exame').value,
+          hipotese: document.getElementById('f-hipotese').value,
+          medico: document.getElementById('f-medico').value,
+          anexoUrl: anexoUrl,
+          status: "pendente", 
+          instituicao: "", 
+          criadoPor: userEmail, 
+          timestamp: serverTimestamp()
+        });
+        
+        showToast("Pedido submetido com sucesso!");
+        e.target.reset();
+      } catch (err) { 
+        console.error(err);
+        alert("Erro ao enviar pedido."); 
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Enviar Pedido";
+      }
+    };
+
+    function carregarPedidos() {
+      const q = query(collection(db, "pedidos"), orderBy("timestamp", "desc"));
+      onSnapshot(q, (snapshot) => {
+        const tbodyRec = document.getElementById('pedidos-rececao-tabela');
+        const tbodyAdm = document.getElementById('pedidos-admin-tabela');
+        tbodyRec.innerHTML = ""; tbodyAdm.innerHTML = "";
+
+        snapshot.forEach((docSnap) => {
+          const p = docSnap.data();
+          const id = docSnap.id;
+
+          const aprovador = p.aprovadoPor ? `<span style="font-size: 0.8rem; color: var(--text-sec);">${p.aprovadoPor}</span>` : '<span style="color: var(--border);">-</span>';
+          
+          // Ícone e link de anexo se existir
+          const linkAnexo = p.anexoUrl ? `<br><a href="${p.anexoUrl}" target="_blank" style="color:var(--primary); font-size:0.8rem; text-decoration:none; display:inline-flex; align-items:center; gap:2px;"><span class="material-symbols-outlined" style="font-size:14px;">attach_file</span> Ver Anexo</a>` : '';
+
+          tbodyRec.innerHTML += `
+            <tr>
+              <td><strong>${p.nome}</strong></td>
+              <td>${p.exame}${linkAnexo}${p.status === 'aprovado' ? `<br><small>Clínica: ${p.instituicao}</small>` : ''}</td>
+              <td><span class="status-chip status-${p.status}">${p.status}</span></td>
+              <td>${aprovador}</td>
+              <td><button style="border:1px solid var(--primary); background:none; color:var(--primary); padding:4px 10px; border-radius:4px; cursor:pointer;" ${p.status !== 'aprovado' ? 'disabled' : ''} onclick="window.gerarGuia('${id}', '${p.instituicao}')">PDF</button></td>
+            </tr>`;
+
+          if (p.status === "pendente") {
+            tbodyAdm.innerHTML += `
+              <tr>
+                <td><strong>${p.nome}</strong></td>
+                <td>${p.exame}${linkAnexo}</td>
+                <td><select id="sel-${id}"><option value="Vítrea">Vítrea</option><option value="Cligest">Cligest</option></select></td>
+                <td><button style="background:var(--success); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;" onclick="window.aprovarPedido('${id}')">Aprovar</button></td>
+              </tr>`;
+          }
+        });
+      });
+    }
+
+    window.aprovarPedido = async (id) => {
+      const inst = document.getElementById(`sel-${id}`).value;
+      await updateDoc(doc(db, "pedidos", id), { 
+        status: "aprovado", 
+        instituicao: inst,
+        aprovadoPor: userEmail
+      });
+      showToast("Aprovado com sucesso!");
+    };
+
+    window.gerarGuia = async (id, instituicao) => {
+      try {
+        showToast(`A gerar guia para a ${instituicao}...`);
+        
+        const pSnap = await getDoc(doc(db, "pedidos", id));
+        const sSnap = await getDoc(doc(db, "configuracoes", "direcao"));
+        if (!pSnap.exists()) return;
+        
+        const p = pSnap.data();
+        const assinaturaB64 = sSnap.exists() ? sSnap.data().assinatura_base64 : "";
+        
+        let templateId = "";
+        let filename = "";
+
+        if (instituicao === "Vítrea") {
+          document.getElementById('pdf-template-vitrea').style.display = 'block';
+          document.getElementById('pdf-template-cligest').style.display = 'none';
+          
+          document.getElementById('p-nome').textContent = p.nome;
+          document.getElementById('p-contacto').textContent = p.contacto;
+          document.getElementById('p-dataReal').textContent = p.dataExame;
+          document.getElementById('p-exame').textContent = p.exame;
+          document.getElementById('pdf-assinatura').src = assinaturaB64;
+          
+          templateId = 'pdf-template-vitrea';
+          filename = `Guia_Vitrea_${p.nome.replace(/\s+/g, '_')}.pdf`;
+          
+        } else if (instituicao === "Cligest") {
+          document.getElementById('pdf-template-vitrea').style.display = 'none';
+          document.getElementById('pdf-template-cligest').style.display = 'block';
+          
+          document.getElementById('c-nome').textContent = p.nome;
+          // Inverte as datas de YYYY-MM-DD para DD.MM.YYYY como na Cligest
+          document.getElementById('c-nascimento').textContent = p.nascimento ? p.nascimento.split('-').reverse().join('.') : '';
+          document.getElementById('c-sexo').textContent = p.sexo || '';
+          document.getElementById('c-medico').textContent = p.medico;
+          document.getElementById('c-exame').textContent = p.exame;
+          document.getElementById('c-hipotese').textContent = p.hipotese || '';
+          
+          // Data de emissão (hoje)
+          const dataHoje = new Date();
+          const hojeStr = String(dataHoje.getDate()).padStart(2, '0') + '.' + String(dataHoje.getMonth() + 1).padStart(2, '0') + '.' + dataHoje.getFullYear();
+          document.getElementById('c-dataReal').textContent = hojeStr;
+
+          document.getElementById('pdf-assinatura-cligest').src = assinaturaB64;
+          
+          templateId = 'pdf-template-cligest';
+          filename = `Guia_Cligest_${p.nome.replace(/\s+/g, '_')}.pdf`;
+        }
+
+        const opt = { 
+          margin: 0, 
+          filename: filename, 
+          html2canvas: { scale: 2, useCORS: true }, 
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
+        };
+        await html2pdf().set(opt).from(document.getElementById(templateId)).save();
+        showToast("PDF descarregado com sucesso!");
+        
+      } catch (e) { 
+        console.error(e); 
+        alert("Erro ao gerar PDF.");
+      }
+    };
+  </script>
+    
     document.getElementById('btn-logout').onclick = () => signOut(auth);
 
     const tabRec = document.getElementById('tab-btn-rececao');
