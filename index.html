@@ -312,14 +312,45 @@ onAuthStateChanged(auth, (user) => {
           document.getElementById('tab-btn-admin').classList.add('hidden');
         }
         
-        carregarPedidos();
-      } else {
-        document.getElementById('login-view').classList.remove('hidden');
-        document.getElementById('app-view').classList.add('hidden');
-        document.getElementById('btn-logout').classList.add('hidden');
-        document.getElementById('user-badge').classList.add('hidden');
-      }
-    });
+      function carregarPedidos() {
+      const q = query(collection(db, "pedidos"), orderBy("timestamp", "desc"));
+      onSnapshot(q, (snapshot) => {
+        const tbodyRec = document.getElementById('pedidos-rececao-tabela');
+        const tbodyAdm = document.getElementById('pedidos-admin-tabela');
+        tbodyRec.innerHTML = ""; tbodyAdm.innerHTML = "";
+
+        snapshot.forEach((docSnap) => {
+          const p = docSnap.data();
+          const id = docSnap.id;
+
+          // A MAGIA: Pega no estado, remove espaços e força a minúsculas
+          const statusLimpo = p.status ? String(p.status).trim().toLowerCase() : "";
+
+          const aprovador = p.aprovadoPor ? `<span style="font-size: 0.8rem; color: var(--text-sec);">${p.aprovadoPor}</span>` : '<span style="color: var(--border);">-</span>';
+          const linkAnexo = p.anexoUrl ? `<br><a href="${p.anexoUrl}" target="_blank" style="color:var(--primary); font-size:0.8rem; text-decoration:none; display:inline-flex; align-items:center; gap:2px;"><span class="material-symbols-outlined" style="font-size:14px;">attach_file</span> Ver Anexo</a>` : '';
+
+          tbodyRec.innerHTML += `
+            <tr>
+              <td><strong>${p.nome}</strong></td>
+              <td>${p.exame}${linkAnexo}${statusLimpo === 'aprovado' ? `<br><small>Clínica: ${p.instituicao}</small>` : ''}</td>
+              <td><span class="status-chip status-${statusLimpo}">${p.status}</span></td>
+              <td>${aprovador}</td>
+              <td><button style="border:1px solid var(--primary); background:none; color:var(--primary); padding:4px 10px; border-radius:4px; cursor:pointer;" ${statusLimpo !== 'aprovado' ? 'disabled' : ''} onclick="window.gerarGuia('${id}', '${p.instituicao}')">PDF</button></td>
+            </tr>`;
+
+          // Agora a tabela Admin preenche sempre, independentemente de espaços ou maiúsculas!
+          if (statusLimpo === "pendente") {
+            tbodyAdm.innerHTML += `
+              <tr>
+                <td><strong>${p.nome}</strong></td>
+                <td>${p.exame}${linkAnexo}</td>
+                <td><select id="sel-${id}"><option value="Vítrea">Vítrea</option><option value="Cligest">Cligest</option></select></td>
+                <td><button style="background:var(--success); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;" onclick="window.aprovarPedido('${id}')">Aprovar</button></td>
+              </tr>`;
+          }
+        });
+      });
+    }
 
     document.getElementById('form-rececao').onsubmit = async (e) => {
       e.preventDefault();
