@@ -13,7 +13,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
-    /* Variáveis de Cores Aliva Saúde */
     :root {
       --primary: #00abb2; 
       --primary-hover: #26748a;
@@ -42,7 +41,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Roboto', sans-serif; background-color: var(--bg-color); color: var(--text-main); transition: all 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
 
-    /* Barra Superior */
     .top-app-bar { background-color: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
     .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.1rem; }
     .brand img { height: 35px; object-fit: contain; }
@@ -55,14 +53,12 @@
     .btn-primary:hover { background-color: var(--primary-hover); }
     .btn-primary:disabled { background-color: var(--text-sec); cursor: not-allowed; }
     
-    /* Separadores (Tabs) */
     .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
     .tab-btn { background: none; border: none; padding: 12px 24px; font-size: 1rem; font-weight: 500; color: var(--text-sec); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
     .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 
     main { flex: 1; width: 100%; max-width: 950px; margin: 0 auto; padding: 32px 20px; display: flex; flex-direction: column; gap: 24px; }
 
-    /* Cartões e Formulários */
     .card { background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
     .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
     
@@ -71,7 +67,6 @@
     input, select, textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-color); color: var(--text-main); outline: none; font-family: inherit; }
     input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0, 171, 178, 0.1); }
 
-    /* Tabelas */
     table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
     th { text-align: left; padding: 12px; color: var(--text-sec); border-bottom: 2px solid var(--border); }
     td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
@@ -86,7 +81,6 @@
 
     .login-logo { height: 90px; margin-bottom: 10px; object-fit: contain; }
 
-    /* ======== ESTILOS DO PDF (Ocultos na Interface) ======== */
     #pdf-wrapper { position: absolute; left: -9999px; top: 0; width: 210mm; background: white; z-index: -1; }
     .pdoc { width: 210mm; padding: 14mm 16mm; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10pt; color: #000; box-sizing: border-box; }
     .pdoc .hdr { margin-bottom: 14px; }
@@ -199,9 +193,8 @@
         <div class="sig-area"><img id="pdf-assinatura" src="" alt="Assinatura"></div>
       </div>
     </div>
-  </div>
 
-  <div class="pdoc" id="pdf-template-cligest" style="display: none;">
+    <div class="pdoc" id="pdf-template-cligest" style="display: none;">
       <div class="hdr">
         <h2 style="color: #2980b9; margin-bottom: 4px;">CLIGEST</h2>
         <div style="font-size: 8pt; color: #444;">Clínica Geral e Especialidades, Lda.</div>
@@ -223,16 +216,16 @@
         <div class="sig-area"><img id="pdf-assinatura-cligest" src="" alt="Assinatura"></div>
       </div>
     </div>
+  </div>
+
   <script type="module">
     import { auth, db } from './firebase.js';
     import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
     import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-    // Email com permissões de Administrador
     const EMAILS_ADMIN = ["carlos.martins@alivasaude.com"];
     let userEmail = "";
 
-    // Gestão de Tema
     document.getElementById('btn-theme').onclick = () => {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
@@ -246,7 +239,6 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-    // Lógica de Login
     document.getElementById('form-login').onsubmit = async (e) => {
       e.preventDefault();
       const btn = document.getElementById('btn-entrar');
@@ -261,7 +253,6 @@
 
     document.getElementById('btn-logout').onclick = () => signOut(auth);
 
-    // Navegação por Separadores
     const tabRec = document.getElementById('tab-btn-rececao');
     const tabAdm = document.getElementById('tab-btn-admin');
     const vRec = document.getElementById('view-rececao');
@@ -270,7 +261,6 @@
     tabRec.onclick = () => { tabRec.classList.add('active'); tabAdm.classList.remove('active'); vRec.classList.remove('hidden'); vAdm.classList.add('hidden'); };
     tabAdm.onclick = () => { tabAdm.classList.add('active'); tabRec.classList.remove('active'); vAdm.classList.remove('hidden'); vRec.classList.add('hidden'); };
 
-    // Monitorização da Sessão
     onAuthStateChanged(auth, (user) => {
       if (user) {
         userEmail = user.email;
@@ -289,7 +279,6 @@
       }
     });
 
-    // Envio de Novo Pedido (Receção)
     document.getElementById('form-rececao').onsubmit = async (e) => {
       e.preventDefault();
       try {
@@ -307,7 +296,6 @@
       } catch (err) { console.error(err); }
     };
 
-    // Carregamento de Dados em Tempo Real
     function carregarPedidos() {
       const q = query(collection(db, "pedidos"), orderBy("timestamp", "desc"));
       onSnapshot(q, (snapshot) => {
@@ -321,7 +309,6 @@
 
           const aprovador = p.aprovadoPor ? `<span style="font-size: 0.8rem; color: var(--text-sec);">${p.aprovadoPor}</span>` : '<span style="color: var(--border);">-</span>';
 
-          // Tabela Receção
           tbodyRec.innerHTML += `
             <tr>
               <td><strong>${p.nome}</strong></td>
@@ -331,7 +318,6 @@
               <td><button style="border:1px solid var(--primary); background:none; color:var(--primary); padding:4px 10px; border-radius:4px; cursor:pointer;" ${p.status !== 'aprovado' ? 'disabled' : ''} onclick="window.gerarGuia('${id}', '${p.instituicao}')">PDF</button></td>
             </tr>`;
 
-          // Tabela Admin (Apenas pendentes)
           if (p.status === "pendente") {
             tbodyAdm.innerHTML += `
               <tr>
@@ -345,7 +331,6 @@
       });
     }
 
-    // Aprovação do Pedido (Admin)
     window.aprovarPedido = async (id) => {
       const inst = document.getElementById(`sel-${id}`).value;
       await updateDoc(doc(db, "pedidos", id), { 
@@ -356,12 +341,10 @@
       showToast("Aprovado com sucesso!");
     };
 
-    // Geração do PDF
     window.gerarGuia = async (id, instituicao) => {
       try {
         showToast(`A gerar guia para a ${instituicao}...`);
         
-        // 1. Ir buscar os dados do paciente e a assinatura ao Firebase
         const pSnap = await getDoc(doc(db, "pedidos", id));
         const sSnap = await getDoc(doc(db, "configuracoes", "direcao"));
         if (!pSnap.exists()) return;
@@ -372,7 +355,6 @@
         let templateId = "";
         let filename = "";
 
-        // 2. Preencher o molde correto consoante a instituição
         if (instituicao === "Vítrea") {
           document.getElementById('pdf-template-vitrea').style.display = 'block';
           document.getElementById('pdf-template-cligest').style.display = 'none';
@@ -406,7 +388,6 @@
           return;
         }
 
-        // 3. Gerar o PDF e forçar o download
         const opt = { 
           margin: 0, 
           filename: filename, 
@@ -421,3 +402,6 @@
         alert("Erro ao gerar PDF.");
       }
     };
+  </script>
+</body>
+</html>
