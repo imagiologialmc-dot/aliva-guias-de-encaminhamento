@@ -269,15 +269,24 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-    document.getElementById('form-login').onsubmit = async (e) => {
+  document.getElementById('form-login').onsubmit = async (e) => {
       e.preventDefault();
       const btn = document.getElementById('btn-entrar');
       try {
-        btn.disabled = true; btn.textContent = "A autenticar...";
-        await signInWithEmailAndPassword(auth, document.getElementById('l-email').value, document.getElementById('l-password').value);
+        btn.disabled = true; 
+        btn.textContent = "A autenticar...";
+        
+        // A MAGIA: Remove automaticamente os espaços invisíveis antes e depois do e-mail
+        const emailLimpo = document.getElementById('l-email').value.trim();
+        const pass = document.getElementById('l-password').value;
+        
+        await signInWithEmailAndPassword(auth, emailLimpo, pass);
       } catch (err) {
-        btn.disabled = false; btn.textContent = "Entrar no Sistema";
-        alert("Acesso negado. Verifique as credenciais.");
+        btn.disabled = false; 
+        btn.textContent = "Entrar no Sistema";
+        
+        // Agora, em vez de uma mensagem genérica, vai mostrar-lhe a mensagem exata do sistema!
+        alert("Erro ao entrar: " + err.message);
       }
     };
 
