@@ -586,21 +586,26 @@
           filename = `Guia_Cligest_${(p.nome || 'Paciente').replace(/\s+/g, '_')}.pdf`;
         }
 
-        await waitForPaint();
+        window.scrollTo(0, 0);
+        
+await waitForPaint();
 
-        const opt = {
-          margin: 0,
-          filename,
-          image: { type: 'jpeg', quality: 1 },
-          html2canvas: { scale: 1.6, useCORS: true, backgroundColor: '#ffffff' },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
+const opt = {
+  margin: 0,
+  filename,
+  image: { type: 'jpeg', quality: 1 },
+  html2canvas: {
+    scale: 1.6,
+    useCORS: true,
+    backgroundColor: '#ffffff',
+    scrollX: 0,
+    scrollY: 0
+  },
+  jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+};
 
-        await html2pdf().set(opt).from(document.getElementById(templateId)).save();
-        showToast('PDF descarregado com sucesso!');
-      } catch (e) {
-        console.error(e);
-        alert('Erro ao gerar PDF.');
+await html2pdf().set(opt).from(document.getElementById(templateId)).save();
+showToast('PDF descarregado com sucesso!');
       }
     };
   </script>
