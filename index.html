@@ -547,7 +547,7 @@
               alert('Aviso: Falha ao guardar anexo no Drive. O pedido será registado na mesma.');
             }
           } catch (uploadError) {
-            console.error('Erro de comunicação:', uploadError);
+            console.error('Erro de comunicação do Drive:', uploadError);
             alert('Aviso: Falha ao ligar ao Google Drive. O pedido será gravado sem anexo.');
           }
         }
@@ -569,75 +569,40 @@
           timestamp: serverTimestamp()
         });
 
-        // 3. Enviar cópia para o Google Sheets (em background)
-        try {
-          const urlGoogleSheets = 'https://script.google.com/macros/s/AKfycbxiMzyu4x7PKX15KCTGUpYZEFa47vJkJw-UJvDiA1TyZN1JH8Ct0qZ40nyx8nDfDwFG/exec';
-          
-          fetch(urlGoogleSheets, {
-            method: 'POST',
-            body: JSON.stringify({
-              nome: document.getElementById('f-nome').value,
-              contacto: document.getElementById('f-contacto').value,
-              nascimento: document.getElementById('f-nascimento').value,
-              sexo: document.getElementById('f-sexo').value,
-              dataExame: document.getElementById('f-data-exame').value,
-              exame: document.getElementById('f-exame').value,
-              hipotese: document.getElementById('f-hipotese').value,
-              medico: document.getElementById('f-medico').value,
-              criadoPor: userEmail
-            })
-          });
-        } catch (sheetErr) {
-          console.error('Erro ao enviar para o Sheets:', sheetErr);
-        }
+        // 3. Enviar cópia para o Google Sheets (100% isolado para não bloquear a UI)
+        const urlGoogleSheets = 'https://script.google.com/macros/s/AKfycbxiMzyu4x7PKX15KCTGUpYZEFa47vJkJw-UJvDiA1TyZN1JH8Ct0qZ40nyx8nDfDwFG/exec';
+        
+        fetch(urlGoogleSheets, {
+          method: 'POST',
+          mode: 'no-cors', // <-- ISTO IMPEDE QUE O BROWSER BLOQUEIE A APLICAÇÃO
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8',
+          },
+          body: JSON.stringify({
+            nome: document.getElementById('f-nome').value,
+            contacto: document.getElementById('f-contacto').value,
+            nascimento: document.getElementById('f-nascimento').value,
+            sexo: document.getElementById('f-sexo').value,
+            dataExame: document.getElementById('f-data-exame').value,
+            exame: document.getElementById('f-exame').value,
+            hipotese: document.getElementById('f-hipotese').value,
+            medico: document.getElementById('f-medico').value,
+            criadoPor: userEmail
+          })
+        }).catch(err => console.error('Erro silencioso ao enviar para o Sheets:', err));
 
+        // Sucesso e limpeza
         showToast('Pedido submetido com sucesso!');
         e.target.reset();
+
       } catch (err) {
-        console.error(err);
-        alert('Erro ao enviar pedido: ' + err.message);
+        console.error("Erro fatal no formulário:", err);
+        alert('Erro ao enviar pedido: ' + err.message + '\nVerifique as regras do Firebase.');
       } finally {
         btn.disabled = false;
         btn.textContent = 'Enviar Pedido';
       }
     };
-
-    function carregarPedidos() {
-      const q = query(collection(db, 'pedidos'), orderBy('timestamp', 'desc'));
-      onSnapshot(q, (snapshot) => {
-        const tbodyRec = document.getElementById('pedidos-rececao-tabela');
-        const tbodyAdm = document.getElementById('pedidos-admin-tabela');
-        tbodyRec.innerHTML = '';
-        tbodyAdm.innerHTML = '';
-
-        snapshot.forEach((docSnap) => {
-          const p = docSnap.data();
-          const id = docSnap.id;
-          const statusLimpo = p.status ? String(p.status).trim().toLowerCase() : '';
-          const aprovador = p.aprovadoPor ? `<span style="font-size: 0.8rem; color: var(--text-sec);">${p.aprovadoPor}</span>` : '<span style="color: var(--border);">-</span>';
-          const linkAnexo = p.anexoUrl ? `<br><a href="${p.anexoUrl}" target="_blank" rel="noopener noreferrer" style="color:var(--primary); font-size:0.8rem; text-decoration:none; display:inline-flex; align-items:center; gap:2px;"><span class="material-symbols-outlined" style="font-size:14px;">attach_file</span> Ver Anexo</a>` : '';
-
-          tbodyRec.innerHTML += `
-            <tr>
-              <td><strong>${p.nome}</strong></td>
-              <td>${p.exame}${linkAnexo}${statusLimpo === 'aprovado' ? `<br><small>Clínica: ${p.instituicao}</small>` : ''}</td>
-              <td><span class="status-chip status-${statusLimpo}">${p.status}</span></td>
-              <td>${aprovador}</td>
-              <td><button style="border:1px solid var(--primary); background:none; color:var(--primary); padding:4px 10px; border-radius:4px; cursor:pointer;" ${statusLimpo !== 'aprovado' ? 'disabled' : ''} onclick="window.gerarGuia('${id}', '${p.instituicao}')">PDF</button></td>
-            </tr>`;
-
-          if (statusLimpo === 'pendente') {
-            tbodyAdm.innerHTML += `
-              <tr>
-                <td><strong>${p.nome}</strong></td>
-                <td>${p.exame}${linkAnexo}</td>
-                <td><select id="sel-${id}"><option value="Vítrea">Vítrea</option><option value="Cligest">Cligest</option></select></td>
-                <td><button style="background:var(--success); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;" onclick="window.aprovarPedido('${id}')">Aprovar</button></td>
-              </tr>`;
-          }
-        });
-      });
-    }
 
     window.aprovarPedido = async (id) => {
       const inst = document.getElementById(`sel-${id}`).value;
