@@ -6,9 +6,7 @@
   <title>Encaminhamento de Actos Médicos/Exames</title>
 
   <link rel="manifest" href="manifest.json">
-  
   <meta name="theme-color" content="#00abb2">
-  
   <link rel="apple-touch-icon" href="icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -57,10 +55,8 @@
     .btn-primary:hover { background-color: var(--primary-hover); }
     .btn-primary:disabled { background-color: var(--text-sec); cursor: not-allowed; }
     
-    /* Ocultamos os antigos tabs fixos */
     .tabs { display: none !important; }
     
-    /* Espaço de margem inferior ajustado para a barra inferior estilo Meu Turno */
     main { flex: 1; width: 100%; max-width: 950px; margin: 0 auto; padding: 32px 20px 95px 20px; display: flex; flex-direction: column; gap: 24px; }
     
     .card { background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
@@ -81,7 +77,6 @@
     #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .login-logo { height: 90px; margin-bottom: 10px; object-fit: contain; }
 
-    /* --- BARRA DE NAVEGAÇÃO INFERIOR DINÂMICA (ESTILO MEU TURNO) --- */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -95,9 +90,7 @@
       box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
       z-index: 1000;
     }
-    [data-theme="dark"] .bottom-nav {
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.4);
-    }
+    [data-theme="dark"] .bottom-nav { box-shadow: 0 -4px 12px rgba(0,0,0,0.4); }
     .nav-item {
       display: flex;
       flex-direction: column;
@@ -111,19 +104,10 @@
       font-weight: 500;
       transition: color 0.2s;
     }
-    .nav-item.active {
-      color: var(--primary);
-    }
-    .nav-item .material-symbols-outlined {
-      font-size: 26px;
-      font-variation-settings: 'FILL' 0;
-      transition: all 0.2s;
-    }
-    .nav-item.active .material-symbols-outlined {
-      font-variation-settings: 'FILL' 1;
-    }
+    .nav-item.active { color: var(--primary); }
+    .nav-item .material-symbols-outlined { font-size: 26px; font-variation-settings: 'FILL' 0; transition: all 0.2s; }
+    .nav-item.active .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
 
-    /* --- ÁREA OCULTA PARA PREPARAÇÃO E RENDERIZAÇÃO DE PDF --- */
     #pdf-wrapper {
       position: absolute;
       left: -99999px;
@@ -453,21 +437,14 @@
 
     document.getElementById('btn-logout').onclick = () => signOut(auth);
 
-    // --- ENGENHARIA DE NAVEGAÇÃO DINÂMICA (NÃO MEXER EM CASO DE ADIÇÃO DE ABAS) ---
     const navButtons = document.querySelectorAll('.nav-item');
     navButtons.forEach(btn => {
       btn.onclick = () => {
-        // Remover estado ativo de todos os botões da Bottom Nav
         navButtons.forEach(b => b.classList.remove('active'));
-        // Ativar apenas o botão clicado
         btn.classList.add('active');
-
-        // Ocultar todas as visões cujo id comece por "view-"
         document.querySelectorAll('div[id^="view-"]').forEach(view => {
           view.classList.add('hidden');
         });
-
-        // Deduzir o ID correspondente da view e apresentá-lo
         const targetViewId = btn.id.replace('nav-btn-', 'view-');
         const targetView = document.getElementById(targetViewId);
         if (targetView) {
@@ -485,10 +462,8 @@
         document.getElementById('user-badge').classList.remove('hidden');
         document.getElementById('user-badge').textContent = userEmail;
         
-        // Mostrar barra inferior estilo Meu Turno
         document.getElementById('app-bottom-nav').classList.remove('hidden');
 
-        // Permissão condicional para aba administrativa
         const eAdmin = userEmail.includes('carlos.martins') || userEmail.includes('admin');
         if (eAdmin) document.getElementById('nav-btn-admin').classList.remove('hidden');
         else document.getElementById('nav-btn-admin').classList.add('hidden');
@@ -514,7 +489,6 @@
         const fileInput = document.getElementById('f-anexo');
         const file = fileInput.files[0];
 
-        // 1. Lógica de Anexo (Google Drive)
         if (file) {
           if (file.size > 5 * 1024 * 1024) {
             alert('Atenção: O anexo é muito grande (máx 5MB). Por favor, escolha um ficheiro menor.');
@@ -552,7 +526,6 @@
           }
         }
 
-        // 2. Gravar no Firebase
         await addDoc(collection(db, 'pedidos'), {
           nome: document.getElementById('f-nome').value,
           contacto: document.getElementById('f-contacto').value,
@@ -569,12 +542,11 @@
           timestamp: serverTimestamp()
         });
 
-        // 3. Enviar cópia para o Google Sheets (100% isolado para não bloquear a UI)
         const urlGoogleSheets = 'https://script.google.com/macros/s/AKfycbxiMzyu4x7PKX15KCTGUpYZEFa47vJkJw-UJvDiA1TyZN1JH8Ct0qZ40nyx8nDfDwFG/exec';
         
         fetch(urlGoogleSheets, {
           method: 'POST',
-          mode: 'no-cors', // <-- ISTO IMPEDE QUE O BROWSER BLOQUEIE A APLICAÇÃO
+          mode: 'no-cors',
           headers: {
             'Content-Type': 'text/plain;charset=utf-8',
           },
@@ -591,7 +563,6 @@
           })
         }).catch(err => console.error('Erro silencioso ao enviar para o Sheets:', err));
 
-        // Sucesso e limpeza
         showToast('Pedido submetido com sucesso!');
         e.target.reset();
 
@@ -613,6 +584,68 @@
       });
       showToast('Aprovado com sucesso!');
     };
+
+    // --- FUNÇÃO CARREGAR PEDIDOS RESTAURADA E REFORÇADA COM ALERTAS DE ERRO ---
+    function carregarPedidos() {
+      try {
+        const q = query(collection(db, 'pedidos'), orderBy('timestamp', 'desc'));
+        
+        onSnapshot(q, (snapshot) => {
+          const tbodyRec = document.getElementById('pedidos-rececao-tabela');
+          const tbodyAdm = document.getElementById('pedidos-admin-tabela');
+          
+          if (!tbodyRec || !tbodyAdm) {
+            console.error("Erro: Tabelas não encontradas no DOM.");
+            return;
+          }
+          
+          tbodyRec.innerHTML = '';
+          tbodyAdm.innerHTML = '';
+
+          if (snapshot.empty) {
+            console.log("Nenhum pedido encontrado na base de dados.");
+          }
+
+          snapshot.forEach((docSnap) => {
+            try {
+              const p = docSnap.data();
+              const id = docSnap.id;
+              const statusLimpo = p.status ? String(p.status).trim().toLowerCase() : '';
+              const aprovador = p.aprovadoPor ? `<span style="font-size: 0.8rem; color: var(--text-sec);">${p.aprovadoPor}</span>` : '<span style="color: var(--border);">-</span>';
+              const linkAnexo = p.anexoUrl ? `<br><a href="${p.anexoUrl}" target="_blank" rel="noopener noreferrer" style="color:var(--primary); font-size:0.8rem; text-decoration:none; display:inline-flex; align-items:center; gap:2px;"><span class="material-symbols-outlined" style="font-size:14px;">attach_file</span> Ver Anexo</a>` : '';
+
+              tbodyRec.innerHTML += `
+                <tr>
+                  <td><strong>${p.nome || 'Sem Nome'}</strong></td>
+                  <td>${p.exame || 'Sem Exame'}${linkAnexo}${statusLimpo === 'aprovado' ? `<br><small>Clínica: ${p.instituicao || ''}</small>` : ''}</td>
+                  <td><span class="status-chip status-${statusLimpo}">${p.status || 'Pendente'}</span></td>
+                  <td>${aprovador}</td>
+                  <td><button style="border:1px solid var(--primary); background:none; color:var(--primary); padding:4px 10px; border-radius:4px; cursor:pointer;" ${statusLimpo !== 'aprovado' ? 'disabled' : ''} onclick="window.gerarGuia('${id}', '${p.instituicao || ''}')">PDF</button></td>
+                </tr>`;
+
+              if (statusLimpo === 'pendente') {
+                tbodyAdm.innerHTML += `
+                  <tr>
+                    <td><strong>${p.nome || 'Sem Nome'}</strong></td>
+                    <td>${p.exame || 'Sem Exame'}${linkAnexo}</td>
+                    <td><select id="sel-${id}"><option value="Vítrea">Vítrea</option><option value="Cligest">Cligest</option></select></td>
+                    <td><button style="background:var(--success); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;" onclick="window.aprovarPedido('${id}')">Aprovar</button></td>
+                  </tr>`;
+              }
+            } catch (innerError) {
+              console.error("Erro ao renderizar linha:", innerError);
+            }
+          });
+        }, (error) => {
+          console.error("Erro de escuta do Firestore:", error);
+          alert("Erro do Firebase na leitura: " + error.message);
+        });
+
+      } catch (err) {
+        console.error("Erro ao iniciar a query:", err);
+        alert("Erro ao iniciar carregamento: " + err.message);
+      }
+    }
 
     function formatDatePt(dateStr, sep='.') {
       if (!dateStr) return '';
