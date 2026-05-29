@@ -44,7 +44,7 @@
 
     /* LOGIN */
     #login-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; background: linear-gradient(135deg, var(--login-grad-1) 0%, var(--login-grad-2) 100%); transition: background 0.3s; }
-    #login-logo-img { width: 90px; height: 90px; border-radius: 22px; object-fit: cover; box-shadow: 0 12px 30px rgba(0,0,0,0.25); margin-bottom: 18px; }
+    #login-logo-img { width: 240px; height: auto; border-radius: 0; object-fit: contain; filter: drop-shadow(0 4px 20px rgba(0,0,0,0.25)); margin-bottom: 14px; background: transparent; padding: 0; }
     #login-logo-fallback { display: none; font-size: 72px; color: #fff; margin-bottom: 18px; }
     .login-app-name { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 20px; color: #fff; margin-bottom: 4px; }
     .login-subtitle { font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 28px; text-align: center; max-width: 300px; }
@@ -157,7 +157,7 @@
 
 <!-- LOGIN -->
 <div id="login-screen">
-  <img id="login-logo-img" src="Hlogo.png" alt="Aliva Saude"
+  <img id="login-logo-img" src="Hlogo.jpg" alt="Aliva Saude"
        onerror="this.style.display='none'; document.getElementById('login-logo-fallback').style.display='block';">
   <span id="login-logo-fallback" class="material-symbols-rounded" style="font-size:72px; color:#fff; margin-bottom:18px;">local_hospital</span>
   <div class="login-app-name brand-text">Aliva Saude</div>
@@ -178,7 +178,7 @@
 <div id="app-screen" class="hidden">
   <header class="app-header">
     <div class="header-left">
-      <img class="header-logo" src="Hlogo.png" alt="Aliva" onerror="this.style.display='none'">
+      <img class="header-logo" src="Hlogo.jpg" alt="Aliva" onerror="this.style.display='none'">
       <span class="header-title brand-text">Encaminhamentos</span>
     </div>
     <div class="header-right">
