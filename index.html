@@ -155,7 +155,6 @@
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login-screen">
   <img id="login-logo-img" src="Hlogo.jpg" alt="Aliva Saude"
        onerror="this.style.display='none'; document.getElementById('login-logo-fallback').style.display='block';">
@@ -174,7 +173,6 @@
   <button id="btn-forgot">Esqueci-me da palavra-passe</button>
 </div>
 
-<!-- APP -->
 <div id="app-screen" class="hidden">
   <header class="app-header">
     <div class="header-left">
@@ -190,7 +188,6 @@
     </div>
   </header>
 
-  <!-- TAB: RECECAO -->
   <div id="tab-rececao" class="tab-content active">
     <div class="section-title"><span class="material-symbols-rounded">add_task</span> Novo Pedido de Exame</div>
     <form id="form-rececao" class="form-card">
@@ -252,7 +249,6 @@
     </div>
   </div>
 
-  <!-- TAB: ADMIN -->
   <div id="tab-admin" class="tab-content">
     <div class="section-title"><span class="material-symbols-rounded">verified_user</span> Pedidos Pendentes de Aprovacao</div>
     <div id="lista-admin">
@@ -260,7 +256,6 @@
     </div>
   </div>
 
-  <!-- TAB: HISTORICO -->
   <div id="tab-historico" class="tab-content">
     <div class="section-title"><span class="material-symbols-rounded">history</span> Historico de Guias</div>
     <div class="form-card" style="border-left-color: var(--border);">
@@ -274,13 +269,11 @@
     </div>
   </div>
 
-  <!-- TAB: DOCUMENTOS -->
   <div id="tab-documentos" class="tab-content">
     <div class="section-title"><span class="material-symbols-rounded">description</span> Documentos Importantes</div>
     <div id="lista-documentos"><div class="empty-state"><span class="material-symbols-rounded">folder_open</span>A carregar documentos...</div></div>
   </div>
 
-  <!-- TAB: CONFIG -->
   <div id="tab-config" class="tab-content">
     <div class="section-title"><span class="material-symbols-rounded">settings</span> Configuracoes do Sistema</div>
     <div class="form-card" style="border-left-color: var(--border);">
@@ -288,7 +281,6 @@
     </div>
   </div>
 
-  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
     <button class="nav-btn active" id="nav-rececao" onclick="mostrarTab('rececao', this)">
       <span class="material-symbols-rounded icon">add_circle</span>Rececao
@@ -308,16 +300,13 @@
   </nav>
 </div>
 
-<!-- SNACKBAR -->
 <div id="snackbar">
   <span class="material-symbols-rounded" id="snack-icon" style="font-size:16px;">info</span>
   <span id="snack-msg"></span>
 </div>
 
-<!-- PDF TEMPLATES (off-screen) -->
 <div id="pdf-wrapper" aria-hidden="true">
 
-  <!-- Vitrea -->
   <div class="pdoc" id="pdf-template-vitrea" style="display:none; padding:20mm; font-family:Arial,Helvetica,sans-serif; font-size:10pt; line-height:1.5; color:#000; background:#fff;">
     <div style="margin-bottom:20px;">
       <img src="vitrea-logo.jpg" alt="Vitrea" style="height:50px; margin-bottom:5px;" onerror="this.style.display='none'">
@@ -354,7 +343,6 @@
     <div style="font-size:8.5pt; text-align:justify; line-height:1.4;"><strong>Nota:</strong> Este termo de responsabilidade nao dispensa a entrega da requisicao medica por parte do paciente no momento da realizacao do exame.</div>
   </div>
 
-  <!-- Cligest -->
   <div class="pdoc" id="pdf-template-cligest" style="display:none; padding:15mm 14mm 8mm; font-family:Arial,Helvetica,sans-serif; font-size:9.2pt; line-height:1.22; color:#111; background:#fff; overflow:hidden; page-break-inside:avoid; box-sizing:border-box;">
     <div style="width:100%; margin:0 auto;">
       <h1 style="font-size:12pt; font-weight:700; text-align:center; margin:0 0 3px; line-height:1.1;">Pedido de Tomografia Computorizada (TC)</h1>
@@ -379,10 +367,7 @@
     </div>
   </div>
 
-</div><!-- #pdf-wrapper -->
-
-
-<script type="module">
+</div><script type="module">
   import { auth, db } from './firebase.js';
   import { signInWithEmailAndPassword, signOut, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
   import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
@@ -390,10 +375,10 @@
   let userEmail = "";
   let eAdmin = false;
   let histFiltro = 'todos';
-  let docsData = [];
   let filtroAtual = 'todos';
   let todosPedidos = [];
   let unsubPedidos = null;
+  let unsubDocs = null;
 
   // THEME
   const html = document.documentElement;
@@ -429,10 +414,10 @@
     btn.classList.add('active');
   };
 
-  // FILTRO
+  // FILTRO RECECAO
   window.filtrarRec = (estado, btn) => {
     filtroAtual = estado;
-    document.querySelectorAll('.btn-filter').forEach(b => b.className = 'btn-filter');
+    document.querySelectorAll('#tab-rececao .btn-filter').forEach(b => b.className = 'btn-filter');
     if (estado === 'todos') btn.classList.add('active-all');
     else if (estado === 'pendente') btn.classList.add('active-pend');
     else btn.classList.add('active-aprov');
@@ -475,11 +460,15 @@
       document.getElementById('app-screen').classList.remove('hidden');
       document.getElementById('user-badge').textContent = userEmail;
       if (eAdmin) document.getElementById('nav-admin').classList.remove('hidden');
+      
       iniciarPedidos();
+      carregarDocumentos();
     } else {
       document.getElementById('login-screen').classList.remove('hidden');
       document.getElementById('app-screen').classList.add('hidden');
+      document.getElementById('nav-admin').classList.add('hidden');
       if (unsubPedidos) { unsubPedidos(); unsubPedidos = null; }
+      if (unsubDocs) { unsubDocs(); unsubDocs = null; }
     }
   });
 
@@ -532,7 +521,7 @@
         criadoPor: userEmail, timestamp: serverTimestamp()
       });
 
-      fetch('https://script.google.com/macros/s/AKfycbxiMzyu4x7PKX15KCTGUpYZEFa47vJkJw-UJvDiA1TyZN1JH8Ct0qZ40nyx8nDfDwFG/exec', {
+      fetch('https://script.google.com/macros/s/AKfycbsubstituam_pelo_vosso_endpoint/exec', {
         method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
@@ -559,14 +548,15 @@
     }
   };
 
-  // CARREGAR PEDIDOS
+  // CARREGAR PEDIDOS DO FIRESTORE
   function iniciarPedidos() {
     const q = query(collection(db, 'pedidos'), orderBy('timestamp', 'desc'));
     unsubPedidos = onSnapshot(q, (snap) => {
       todosPedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderRececao(todosPedidos);
+      renderHistorico(todosPedidos);
       if (eAdmin) renderAdmin(todosPedidos);
-    }, (err) => showSnack('Erro: ' + err.message, 'error'));
+    }, (err) => showSnack('Erro ao sincronizar dados: ' + err.message, 'error'));
   }
 
   function esc(str) {
@@ -686,60 +676,105 @@
     }
   };
 
+  // MÓDULO HISTÓRICO
+  function fmtDate(v){ 
+    if(!v) return ''; 
+    const d = v.seconds ? new Date(v.seconds*1000) : new Date(v); 
+    return d.toLocaleDateString('pt-PT'); 
+  }
 
-  function fmtDate(v){ if(!v) return ''; const d = v.seconds ? new Date(v.seconds*1000) : new Date(v); return d.toLocaleDateString('pt-PT'); }
-  function within2Months(v){ if(!v) return false; const d = v.seconds ? new Date(v.seconds*1000) : new Date(v); const lim = new Date(); lim.setMonth(lim.getMonth()-2); return d >= lim; }
+  function within2Months(v){ 
+    if(!v) return false; 
+    const d = v.seconds ? new Date(v.seconds*1000) : new Date(v); 
+    const lim = new Date(); 
+    lim.setMonth(lim.getMonth()-2); 
+    return d >= lim; 
+  }
+
   function renderHistorico(items){
     const wrap = document.getElementById('lista-historico');
     if (!wrap) return;
     const q = (document.getElementById('hist-search')?.value || '').toLowerCase().trim();
-    const data = items.filter(p => within2Months(p.timestamp) && (histFiltro === 'todos' || String(p.status || '').toLowerCase() === histFiltro) && (!q || String(p.nome || '').toLowerCase().includes(q)));
-    if(!data.length){ wrap.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">history</span>Nenhum historico encontrado.</div>'; return; }
+    
+    // Filtro de visibilidade por utilizador (Operadores apenas vêm os seus pedidos no histórico)
+    let filtradosGerais = items;
+    if (!eAdmin) {
+      filtradosGerais = filtradosGerais.filter(p => p.criadoPor === userEmail);
+    }
+
+    const data = filtradosGerais.filter(p => 
+      within2Months(p.timestamp) && 
+      (histFiltro === 'todos' || String(p.status || '').toLowerCase() === histFiltro) && 
+      (!q || String(p.nome || '').toLowerCase().includes(q))
+    );
+
+    if(!data.length){ 
+      wrap.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">history</span>Nenhum historico encontrado.</div>'; 
+      return; 
+    }
+
     wrap.innerHTML = data.map(p => `
       <div class="card card-${String(p.status || '').toLowerCase()}">
         <div class="pedido-header"><span class="material-symbols-rounded">person</span>${esc(p.nome || 'Sem nome')}</div>
         <div class="pedido-corpo"><span class="material-symbols-rounded">medical_services</span>${esc(p.exame || 'Sem exame')}</div>
-        <div class="pedido-corpo"><span class="material-symbols-rounded">event</span>${fmtDate(p.timestamp)}</div>
-        <div class="pedido-footer"><span class="status-badge status-${String(p.status || '').toLowerCase()}">${esc(p.status || '')}</span><span>${esc(p.instituicao || '')}</span><span>${esc(p.aprovadoPor || '')}</span></div>
-        ${String(p.status || '').toLowerCase() === 'aprovado' ? `<div class="pedido-actions"><button class="btn-outline" onclick="window.gerarGuia('${p.id}', '${p.instituicao || ''}')"><span class="material-symbols-rounded" style="font-size:16px;">picture_as_pdf</span>PDF</button></div>` : ''}
+        <div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">event</span>Criado em: ${fmtDate(p.timestamp)}</div>
+        <div class="pedido-footer">
+          <span class="status-badge status-${String(p.status || '').toLowerCase()}">${esc(p.status || '')}</span>
+          <span>${esc(p.instituicao || '')}</span>
+        </div>
+        ${String(p.status || '').toLowerCase() === 'aprovado' ? `
+        <div class="pedido-actions">
+          <button class="btn-outline" onclick="window.gerarGuia('${p.id}', '${p.instituicao || ''}')">
+            <span class="material-symbols-rounded" style="font-size:16px;">picture_as_pdf</span>Gerar PDF
+          </button>
+        </div>` : ''}
       </div>`).join('');
   }
+
   window.filtrarHistorico = (estado, btn) => {
     histFiltro = estado;
     document.querySelectorAll('#tab-historico .btn-filter').forEach(b => b.className = 'btn-filter');
     btn.classList.add(estado === 'todos' ? 'active-all' : estado === 'pendente' ? 'active-pend' : 'active-aprov');
     renderHistorico(todosPedidos);
   };
-  document.addEventListener('input', (e) => {
-    if (e.target && e.target.id === 'hist-search') renderHistorico(todosPedidos);
+
+  document.getElementById('hist-search').addEventListener('input', () => {
+    renderHistorico(todosPedidos);
   });
 
+  // MÓDULO DOCUMENTOS (REAL-TIME SNAPSHOT)
   function carregarDocumentos(){
     const q = query(collection(db, 'documentos'), orderBy('ordem', 'asc'));
-    onSnapshot(q, (snap) => {
+    unsubDocs = onSnapshot(q, (snap) => {
       const wrap = document.getElementById('lista-documentos');
       if(!wrap) return;
-      if(snap.empty){ wrap.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">folder_open</span>Sem documentos.</div>'; return; }
+      if(snap.empty){ wrap.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">folder_open</span>Sem documentos carregados.</div>'; return; }
+      
       const docs = [];
       snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
+      
       const cats = {
         preparacao: { titulo: 'Preparações de Exames', icone: 'radiology' },
-        protocolo: { titulo: 'Protocolos', icone: 'assignment' },
+        protocolo: { titulo: 'Protocolos de Atendimento', icone: 'assignment' },
         contactos: { titulo: 'Contactos Importantes', icone: 'contact_phone' }
       };
+      
       let out = '';
       Object.entries(cats).forEach(([cat, meta]) => {
         const list = docs.filter(x => String(x.categoria || '') === cat && x.ativo !== false);
         if(!list.length) return;
-        out += `<div class="form-card" style="border-left-color: var(--border); margin-bottom: 12px;">
-          <div class="section-title" style="margin-top:0;"><span class="material-symbols-rounded">${meta.icone}</span> ${meta.titulo}</div>
-          ${list.map(x => `<a class="anexo-link" href="${esc(x.url || '')}" target="_blank" rel="noopener noreferrer" style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); text-decoration:none; color:var(--text-main);">
-            <span style="display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded" style="font-size:16px;">${esc(x.icone || 'description')}</span>${esc(x.titulo || 'Sem título')}</span>
+        out += `<div class="form-card" style="border-left-color: var(--secondary); margin-bottom: 12px; padding: 14px 18px;">
+          <div class="section-title" style="margin-top:0; font-size:14px; border-bottom:1px solid var(--border); padding-bottom:6px;"><span class="material-symbols-rounded">${meta.icone}</span> ${meta.titulo}</div>
+          ${list.map(x => `<a class="anexo-link" href="${esc(x.url || '')}" target="_blank" rel="noopener noreferrer" style="display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid var(--bg); text-decoration:none; color:var(--text-main); font-weight:normal;">
+            <span style="display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded" style="font-size:18px; color:var(--text-muted);">${esc(x.icone || 'description')}</span>${esc(x.titulo || 'Sem título')}</span>
             <span class="material-symbols-rounded" style="font-size:16px; color:var(--primary);">open_in_new</span>
           </a>`).join('')}
         </div>`;
       });
-      wrap.innerHTML = out || '<div class="empty-state"><span class="material-symbols-rounded">folder_open</span>Sem documentos.</div>';
+      wrap.innerHTML = out || '<div class="empty-state"><span class="material-symbols-rounded">folder_open</span>Sem documentos ativos de momento.</div>';
+    }, (err) => {
+      console.error(err);
+      document.getElementById('lista-documentos').innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">error</span>Erro ao carregar documentos.</div>';
     });
   }
 </script>
