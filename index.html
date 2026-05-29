@@ -687,7 +687,6 @@
   };
 
 
-  function esc(s){ return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
   function fmtDate(v){ if(!v) return ''; const d = v.seconds ? new Date(v.seconds*1000) : new Date(v); return d.toLocaleDateString('pt-PT'); }
   function within2Months(v){ if(!v) return false; const d = v.seconds ? new Date(v.seconds*1000) : new Date(v); const lim = new Date(); lim.setMonth(lim.getMonth()-2); return d >= lim; }
   function renderHistorico(items){
