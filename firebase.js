@@ -3,7 +3,7 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-aut
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDfqzj2K3GsulAL1X17RGzs6DcHkMyBUMA",
+  apiKey: AIzaSyDFqzj2K3GsulAL1X17RGzs6DcHKmyBUMA
   authDomain: "aliva-guias-de-encaminhamento.firebaseapp.com",
   projectId: "aliva-guias-de-encaminhamento",
   storageBucket: "aliva-guias-de-encaminhamento.firebasestorage.app",
