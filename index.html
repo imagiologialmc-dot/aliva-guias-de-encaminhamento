@@ -225,7 +225,7 @@
       <div class="form-label"><span class="material-symbols-rounded">stethoscope</span> Medico Prescritor</div>
       <input type="text" id="f-medico" required placeholder="Dr(a). Nome">
       <div class="form-label"><span class="material-symbols-rounded">attach_file</span> Anexar Prescricao / Relatorio</div>
-      <input type="file" id="f-anexo" accept="image/*,.pdf" style="margin-bottom:12px;">
+      <input type="file" id="f-anexo" accept="image/*,.pdf" multiple style="margin-bottom:12px;">
       <button type="submit" class="btn-main" id="btn-submit-rececao" style="margin-top:4px;">
         <span class="material-symbols-rounded" style="font-size:18px;">send</span> Enviar Pedido
       </button>
@@ -495,33 +495,41 @@
     btn.disabled = true;
     btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">hourglass_top</span> A processar...';
     try {
-      let anexoUrl = '';
-      const file = document.getElementById('f-anexo').files[0];
-      if (file) {
-        if (file.size > 5 * 1024 * 1024) {
-          showSnack('Ficheiro muito grande. Max. 5MB.', 'error');
-          btn.disabled = false;
-          btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">send</span> Enviar Pedido';
-          return;
+      let anexosUrls = [];
+      const files = document.getElementById('f-anexo').files;
+      
+      if (files.length > 0) {
+        showSnack(`A fazer upload de ${files.length} anexo(s)...`);
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (file.size > 5 * 1024 * 1024) {
+            showSnack(`O ficheiro ${file.name} é muito grande. Max. 5MB.`, 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">send</span> Enviar Pedido';
+            return;
+          }
+          try {
+            const base64 = await new Promise((res, rej) => {
+              const r = new FileReader();
+              r.onload = () => res(r.result.split(',')[1]);
+              r.onerror = rej;
+              r.readAsDataURL(file);
+            });
+            const resp = await fetch('https://script.google.com/macros/s/AKfycbw15VjPIeLAt15c8GO6hT6tKUwVjc_M1lk6RL3t0tbNd5oqadYIpPOfWHpyevnlb76DOA/exec', {
+              method: 'POST', body: JSON.stringify({ fileName: file.name, mimeType: file.type, base64 })
+            });
+            const result = await resp.json();
+            if (result.success) { 
+              anexosUrls.push(result.url); 
+            } else {
+              showSnack(`Aviso: falha no upload de ${file.name}.`, 'error');
+            }
+          } catch (upErr) {
+            console.error(upErr);
+            showSnack(`Aviso: falha ao ligar ao Drive para ${file.name}.`, 'error');
+          }
         }
-        showSnack('A fazer upload do anexo...');
-        try {
-          const base64 = await new Promise((res, rej) => {
-            const r = new FileReader();
-            r.onload = () => res(r.result.split(',')[1]);
-            r.onerror = rej;
-            r.readAsDataURL(file);
-          });
-          const resp = await fetch('https://script.google.com/macros/s/AKfycbw15VjPIeLAt15c8GO6hT6tKUwVjc_M1lk6RL3t0tbNd5oqadYIpPOfWHpyevnlb76DOA/exec', {
-            method: 'POST', body: JSON.stringify({ fileName: file.name, mimeType: file.type, base64 })
-          });
-          const result = await resp.json();
-          if (result.success) { anexoUrl = result.url; showSnack('Anexo guardado!', 'success'); }
-          else showSnack('Aviso: falha no upload do anexo.', 'error');
-        } catch (upErr) {
-          console.error(upErr);
-          showSnack('Aviso: falha ao ligar ao Drive.', 'error');
-        }
+        if (anexosUrls.length > 0) showSnack('Anexos guardados!', 'success');
       }
 
       await addDoc(collection(db, 'pedidos'), {
@@ -533,7 +541,9 @@
         exame: document.getElementById('f-exame').value.trim(),
         hipotese: document.getElementById('f-hipotese').value.trim(),
         medico: document.getElementById('f-medico').value.trim(),
-        anexoUrl, status: 'pendente', instituicao: '',
+        anexosUrls: anexosUrls, // Nova lista que suporta vários ficheiros
+        anexoUrl: anexosUrls.length > 0 ? anexosUrls[0] : '', // Mantém um ficheiro aqui para compatibilidade com código antigo
+        status: 'pendente', instituicao: '',
         criadoPor: userEmail, timestamp: serverTimestamp()
       });
 
@@ -578,11 +588,19 @@
     container.innerHTML = filtrada.map(p => {
       const isPend = p.status === 'pendente';
       const clinica = p.instituicao ? ' <span style="color:var(--text-muted); font-size:11px; font-weight:400;">· ' + esc(p.instituicao) + '</span>' : '';
-      const anexo = p.anexoUrl ? '<a href="' + esc(p.anexoUrl) + '" target="_blank" rel="noopener" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Ver Anexo</a>' : '';
+      
+      // Nova lógica para múltiplos anexos
+      let anexo = '';
+      if (p.anexosUrls && p.anexosUrls.length > 0) {
+        anexo = p.anexosUrls.map((url, i) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="anexo-link" style="margin-right:6px;"><span class="material-symbols-rounded">attach_file</span>Anexo ${i+1}</a>`).join('');
+      } else if (p.anexoUrl) {
+        anexo = `<a href="${esc(p.anexoUrl)}" target="_blank" rel="noopener noreferrer" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Ver Anexo</a>`;
+      }
+
       const pdfBtn = !isPend ? '<button class="btn-outline" onclick="gerarGuia(\'' + p.id + '\',\'' + esc(p.instituicao) + '\')"><span class="material-symbols-rounded" style="font-size:15px;">picture_as_pdf</span>Gerar PDF</button>' : '';
       return '<div class="card card-' + esc(p.status) + '">' +
         '<div class="pedido-header"><span class="material-symbols-rounded">person</span>' + esc(p.nome) + clinica + '</div>' +
-        '<div class="pedido-corpo"><span class="material-symbols-rounded">biotech</span>' + esc(p.exame) + '</div>' +
+        '<div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>' + esc(p.exame) + '</div>' +
         (p.hipotese ? '<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>' + esc(p.hipotese) + '</div>' : '') +
         '<div class="pedido-footer"><span class="status-badge status-' + esc(p.status) + '">' + esc(p.status) + '</span>' +
         (p.aprovadoPor ? '<span style="font-size:11px; color:var(--text-muted);">✓ ' + esc(p.aprovadoPor) + '</span>' : '') + '</div>' +
@@ -598,6 +616,27 @@
       container.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">check_circle</span>Sem pedidos pendentes.</div>';
       return;
     }
+    container.innerHTML = pendentes.map(p => {
+      
+      // Nova lógica para múltiplos anexos
+      let anexo = '';
+      if (p.anexosUrls && p.anexosUrls.length > 0) {
+        anexo = p.anexosUrls.map((url, i) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="anexo-link" style="margin-right:6px;"><span class="material-symbols-rounded">attach_file</span>Anexo ${i+1}</a>`).join('');
+      } else if (p.anexoUrl) {
+        anexo = `<a href="${esc(p.anexoUrl)}" target="_blank" rel="noopener noreferrer" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Anexo</a>`;
+      }
+
+      return '<div class="card card-pendente">' +
+        '<div class="pedido-header"><span class="material-symbols-rounded">person</span>' + esc(p.nome) +
+        ' <span style="font-size:11px; color:var(--text-muted); font-weight:400;">· ' + esc(p.medico) + '</span></div>' +
+        '<div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>' + esc(p.exame) + '</div>' +
+        (p.hipotese ? '<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>' + esc(p.hipotese) + '</div>' : '') +
+        '<div class="approve-row">' +
+        '<select id="sel-' + p.id + '"><option value="Vitrea">Vitrea</option><option value="Cligest">Cligest</option></select>' +
+        '<button class="btn-main" style="width:auto; margin:0; padding:10px 18px; font-size:13px;" onclick="aprovarPedido(\'' + p.id + '\')"><span class="material-symbols-rounded" style="font-size:16px;">task_alt</span>Aprovar</button>' +
+        anexo + '</div></div>';
+    }).join('');
+  }
     container.innerHTML = pendentes.map(p => {
       const anexo = p.anexoUrl ? '<a href="' + esc(p.anexoUrl) + '" target="_blank" rel="noopener" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Anexo</a>' : '';
       return '<div class="card card-pendente">' +
