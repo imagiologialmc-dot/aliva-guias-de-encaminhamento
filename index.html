@@ -626,13 +626,37 @@
   }
 
   function renderAdmin(lista) {
-    const container = document.getElementById('lista-admin');
-    const pendentes = lista.filter(p => p.status === 'pendente');
-    if (!pendentes.length) {
-      container.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">check_circle</span>Sem pedidos pendentes.</div>';
-      return;
+  const container = document.getElementById('lista-admin');
+  if (!container) return;
+
+  const pendentes = lista.filter(p => p.status === 'pendente');
+
+  if (!pendentes.length) {
+    container.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">check_circle</span>Sem pedidos pendentes.</div>';
+    return;
+  }
+
+  container.innerHTML = pendentes.map(p => {
+    let anexo = '';
+    if (p.anexosUrls && p.anexosUrls.length > 0) {
+      anexo = p.anexosUrls.map((url, i) =>
+        `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="anexo-link" style="margin-right:6px;"><span class="material-symbols-rounded">attach_file</span>Anexo ${i + 1}</a>`
+      ).join('');
+    } else if (p.anexoUrl) {
+      anexo = `<a href="${esc(p.anexoUrl)}" target="_blank" rel="noopener noreferrer" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Anexo</a>`;
     }
-    container.innerHTML = pendentes.map(p => {
+
+    return '<div class="card card-pendente">' +
+      '<div class="pedido-header"><span class="material-symbols-rounded">person</span>' + esc(p.nome || '') +
+      ' <span style="font-size:11px; color:var(--text-muted); font-weight:400;">· ' + esc(p.medico || '') + '</span></div>' +
+      '<div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>' + esc(p.exame || '') + '</div>' +
+      (p.hipotese ? '<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>' + esc(p.hipotese) + '</div>' : '') +
+      '<div class="approve-row">' +
+      '<select id="sel-' + p.id + '"><option value="Vitrea">Vitrea</option><option value="Cligest">Cligest</option></select>' +
+      '<button class="btn-main" style="width:auto; margin:0; padding:10px 18px; font-size:13px;" onclick="window.aprovarPedido(\'' + p.id + '\')"><span class="material-symbols-rounded" style="font-size:16px;">task_alt</span>Aprovar</button>' +
+      anexo + '</div></div>';
+  }).join('');
+}
       
       // Nova lógica para múltiplos anexos
       let anexo = '';
