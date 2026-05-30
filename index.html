@@ -794,24 +794,6 @@
     });
   }
       
-      let out = '';
-      Object.entries(cats).forEach(([cat, meta]) => {
-        const list = docs.filter(x => String(x.categoria || '') === cat && x.ativo !== false);
-        if(!list.length) return;
-        out += `<div class="form-card" style="border-left-color: var(--secondary); margin-bottom: 12px; padding: 14px 18px;">
-          <div class="section-title" style="margin-top:0; font-size:14px; border-bottom:1px solid var(--border); padding-bottom:6px;"><span class="material-symbols-rounded">${meta.icone}</span> ${meta.titulo}</div>
-          ${list.map(x => `<a class="anexo-link" href="${esc(x.url || '')}" target="_blank" rel="noopener noreferrer" style="display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid var(--bg); text-decoration:none; color:var(--text-main); font-weight:normal;">
-            <span style="display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded" style="font-size:18px; color:var(--text-muted);">${esc(x.icone || 'description')}</span>${esc(x.titulo || 'Sem título')}</span>
-            <span class="material-symbols-rounded" style="font-size:16px; color:var(--primary);">open_in_new</span>
-          </a>`).join('')}
-        </div>`;
-      });
-      wrap.innerHTML = out || '<div class="empty-state"><span class="material-symbols-rounded">folder_open</span>Sem documentos ativos de momento.</div>';
-    }, (err) => {
-      console.error(err);
-      document.getElementById('lista-documentos').innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">error</span>Erro ao carregar documentos.</div>';
-    });
-  }
 </script>
 </body>
 </html>
