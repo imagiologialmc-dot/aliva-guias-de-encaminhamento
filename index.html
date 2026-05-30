@@ -751,7 +751,7 @@
     wrap.innerHTML = data.map(p => `
       <div class="card card-${String(p.status || '').toLowerCase()}">
         <div class="pedido-header"><span class="material-symbols-rounded">person</span>${esc(p.nome || 'Sem nome')}</div>
-        <div class="pedido-corpo"><span class="material-symbols-rounded">medical_services</span>${esc(p.exame || 'Sem exame')}</div>
+        <div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>${esc(p.exame || 'Sem exame')}</div>
         <div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">event</span>Criado em: ${fmtDate(p.timestamp)}</div>
         <div class="pedido-footer">
           <span class="status-badge status-${String(p.status || '').toLowerCase()}">${esc(p.status || '')}</span>
