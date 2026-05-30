@@ -3,16 +3,13 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-aut
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDFqzj2K3GsulAL1X17RGzs6DcHKmyBUMA",
+  apiKey: "AIzaSyAMl1EqilYm-tnC1xMF3WDqZC4gFAVXLEY",
   authDomain: "aliva-guias-de-encaminhamento.firebaseapp.com",
   projectId: "aliva-guias-de-encaminhamento",
   storageBucket: "aliva-guias-de-encaminhamento.firebasestorage.app",
   messagingSenderId: "325204238014",
   appId: "1:325204238014:web:b0bebdad162c059e2ac8ef"
 };
-
-// VAMOS IMPRIMIR A CHAVE NA CONSOLA PARA TER A CERTEZA
-console.log("Ficheiro carregado. Chave em uso:", firebaseConfig.apiKey);
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
