@@ -5,7 +5,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.11.1/firebas
 
 // Configuração do seu projeto Firebase (mantenha os seus dados atuais)
 const firebaseConfig = {
-  apiKey: "AIzaSy...", // Insira aqui a sua apiKey completa
+  apiKey: "AIzaSy...", //AIzaSyDFqzj2K3GsulAL1X17RGzs6DcHKmyBUMA
   authDomain: "meu-turno-f4893.firebaseapp.com",
   projectId: "meu-turno-f4893",
   storageBucket: "meu-turno-f4893.appspot.com",
