@@ -742,11 +742,57 @@
       const docs = [];
       snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
       
-      const cats = {
-        preparacao: { titulo: 'Preparações de Exames', icone: 'radiology' },
-        protocolo: { titulo: 'Protocolos de Atendimento', icone: 'assignment' },
-        contactos: { titulo: 'Contactos Importantes', icone: 'contact_phone' }
-      };
+      // 1. Agrupar os documentos dinamicamente pelo nome que estiver no Firebase
+      const agrupados = {};
+      docs.forEach(x => {
+        if (x.ativo === false) return; // Ignorar se estiver inativo
+        
+        const catNome = x.categoria || 'Outros';
+        if (!agrupados[catNome]) {
+          // Atribui um ícone por defeito dependendo do nome da categoria
+          let catIcone = 'folder';
+          const catLower = catNome.toLowerCase();
+          if (catLower.includes('prepara')) catIcone = 'radiology';
+          else if (catLower.includes('protocol')) catIcone = 'assignment';
+          else if (catLower.includes('contact')) catIcone = 'contact_phone';
+          
+          agrupados[catNome] = { titulo: catNome, icone: catIcone, items: [] };
+        }
+        agrupados[catNome].items.push(x);
+      });
+      
+      // 2. Gerar o HTML
+      let out = '';
+      Object.values(agrupados).forEach(grupo => {
+        out += `<div class="form-card" style="border-left-color: var(--secondary); margin-bottom: 12px; padding: 14px 18px;">
+          <div class="section-title" style="margin-top:0; font-size:14px; border-bottom:1px solid var(--border); padding-bottom:6px;">
+            <span class="material-symbols-rounded">${grupo.icone}</span> ${esc(grupo.titulo)}
+          </div>
+          ${grupo.items.map(x => `
+            <a class="anexo-link" href="${esc(x.url || '')}" target="_blank" rel="noopener noreferrer" style="display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid var(--bg); text-decoration:none; color:var(--text-main); font-weight:normal;">
+              <span style="display:flex; align-items:center; gap:8px;">
+                <span class="material-symbols-rounded" style="font-size:18px; color:var(--text-muted);">${esc(x.icone || 'description')}</span>
+                ${esc(x.titulo || 'Sem título')}
+              </span>
+              <span class="material-symbols-rounded" style="font-size:16px; color:var(--primary);">open_in_new</span>
+            </a>
+          `).join('')}
+        </div>`;
+      });
+      
+      wrap.innerHTML = out || '<div class="empty-state"><span class="material-symbols-rounded">folder_open</span>Sem documentos ativos de momento.</div>';
+    }, (err) => {
+      console.error("Erro a carregar documentos do Firebase:", err);
+      const wrap = document.getElementById('lista-documentos');
+      if(wrap) {
+        wrap.innerHTML = `<div class="empty-state">
+          <span class="material-symbols-rounded" style="color: #d93025;">error</span>
+          Erro ao carregar documentos.<br>
+          <small style="font-size:11px; margin-top:8px; display:block;">(Verifique as Regras de Segurança no Firebase)</small>
+        </div>`;
+      }
+    });
+  }
       
       let out = '';
       Object.entries(cats).forEach(([cat, meta]) => {
