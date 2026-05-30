@@ -156,8 +156,7 @@
 <body>
 
 <div id="login-screen">
-  <img id="login-logo-img" src="Hlogo.png" alt="Aliva Saude"
-       onerror="this.style.display='none'; document.getElementById('login-logo-fallback').style.display='block';">
+  <img id="login-logo-img" src="Hlogo.png" alt="Aliva Saude" onerror="this.style.display='none'; document.getElementById('login-logo-fallback').style.display='block';">
   <span id="login-logo-fallback" class="material-symbols-rounded" style="font-size:72px; color:#fff; margin-bottom:18px;">local_hospital</span>
   <div class="login-app-name brand-text">Aliva Saude</div>
   <div class="login-subtitle">Encaminhamento de Actos Medicos / Exames</div>
@@ -306,7 +305,6 @@
 </div>
 
 <div id="pdf-wrapper" aria-hidden="true">
-
   <div class="pdoc" id="pdf-template-vitrea" style="display:none; padding:20mm; font-family:Arial,Helvetica,sans-serif; font-size:10pt; line-height:1.5; color:#000; background:#fff;">
     <div style="margin-bottom:20px;">
       <img src="vitrea-logo.jpg" alt="Vitrea" style="height:50px; margin-bottom:5px;" onerror="this.style.display='none'">
@@ -366,8 +364,9 @@
       </div>
     </div>
   </div>
+</div>
 
-</div><script type="module">
+<script type="module">
   import { auth, db } from './firebase.js';
   import { signInWithEmailAndPassword, signOut, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
   import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
@@ -424,7 +423,7 @@
     renderRececao(todosPedidos);
   };
 
-  // LOGIN
+  // LOGIN (COM LOGS EXPLICITOS DE INTERCEPCAO DE PERMISSOES)
   document.getElementById('form-login').onsubmit = async (e) => {
     e.preventDefault();
     const btn = document.getElementById('btn-entrar');
@@ -434,8 +433,9 @@
       await signInWithEmailAndPassword(auth,
         document.getElementById('l-email').value.trim(),
         document.getElementById('l-password').value);
-    } catch {
-      showSnack('Credenciais invalidas. Tente novamente.', 'error');
+    } catch (authError) {
+      console.error("Erro critico capturado no Firebase Auth:", authError.code, authError.message);
+      showSnack('Erro de Autenticacao: ' + authError.code, 'error');
       btn.disabled = false;
       btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">login</span> ENTRAR';
     }
@@ -521,22 +521,6 @@
         criadoPor: userEmail, timestamp: serverTimestamp()
       });
 
-      fetch('https://script.google.com/macros/s/AKfycbsubstituam_pelo_vosso_endpoint/exec', {
-        method: 'POST', mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          nome: document.getElementById('f-nome').value.trim(),
-          contacto: document.getElementById('f-contacto').value.trim(),
-          nascimento: document.getElementById('f-nascimento').value,
-          sexo: document.getElementById('f-sexo').value,
-          dataExame: document.getElementById('f-data-exame').value,
-          exame: document.getElementById('f-exame').value.trim(),
-          hipotese: document.getElementById('f-hipotese').value.trim(),
-          medico: document.getElementById('f-medico').value.trim(),
-          criadoPor: userEmail
-        })
-      }).catch(err => console.error('Sheets silencioso:', err));
-
       showSnack('Pedido enviado com sucesso!', 'success');
       e.target.reset();
     } catch (err) {
@@ -556,7 +540,10 @@
       renderRececao(todosPedidos);
       renderHistorico(todosPedidos);
       if (eAdmin) renderAdmin(todosPedidos);
-    }, (err) => showSnack('Erro ao sincronizar dados: ' + err.message, 'error'));
+    }, (err) => {
+      console.error("Erro nas permissões/regras ao ler pedidos:", err.code, err.message);
+      showSnack('Erro de base de dados: ' + err.message, 'error');
+    });
   }
 
   function esc(str) {
@@ -696,7 +683,6 @@
     if (!wrap) return;
     const q = (document.getElementById('hist-search')?.value || '').toLowerCase().trim();
     
-    // Filtro de visibilidade por utilizador (Operadores apenas vêm os seus pedidos no histórico)
     let filtradosGerais = items;
     if (!eAdmin) {
       filtradosGerais = filtradosGerais.filter(p => p.criadoPor === userEmail);
@@ -738,8 +724,11 @@
     renderHistorico(todosPedidos);
   };
 
-  document.getElementById('hist-search').addEventListener('input', () => {
-    renderHistorico(todosPedidos);
+  // MAPEAMENTO DINÂMICO SEGURO DO INPUT DE PESQUISA
+  document.addEventListener('input', (e) => {
+    if (e.target && e.target.id === 'hist-search') {
+      renderHistorico(todosPedidos);
+    }
   });
 
   // MÓDULO DOCUMENTOS (REAL-TIME SNAPSHOT)
