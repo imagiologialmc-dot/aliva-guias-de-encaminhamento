@@ -3,14 +3,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/fireba
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-// Configuração do seu projeto Firebase (mantenha os seus dados atuais)
+// Configuração do seu projeto Firebase (Aliva Guias de Encaminhamento)
 const firebaseConfig = {
-  apiKey: "AIzaSy...", //AIzaSyDFqzj2K3GsulAL1X17RGzs6DcHKmyBUMA
-  authDomain: "meu-turno-f4893.firebaseapp.com",
-  projectId: "meu-turno-f4893",
-  storageBucket: "meu-turno-f4893.appspot.com",
-  messagingSenderId: "1053703358055",
-  appId: "1:1053703358055:web:80c850220bc04ff8f39fc7"
+  apiKey: "AIzaSyDfqzj2K3GsulAL1X17RGzs6DcHkMyBUMA",
+  authDomain: "aliva-guias-de-encaminhamento.firebaseapp.com",
+  projectId: "aliva-guias-de-encaminhamento",
+  storageBucket: "aliva-guias-de-encaminhamento.firebasestorage.app",
+  messagingSenderId: "325204238014",
+  appId: "1:325204238014:web:b0bebdad162c059e2ac8ef"
 };
 
 // Inicializa o Firebase
