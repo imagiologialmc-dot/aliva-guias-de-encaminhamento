@@ -466,7 +466,15 @@
   onAuthStateChanged(auth, (user) => {
     if (user) {
       userEmail = user.email.toLowerCase();
-      eAdmin = userEmail.includes('carlos.martins') || userEmail.includes('admin');
+      // Lista de e-mails que têm permissão de Administrador
+      const listaAdmins = [
+        'carlos.martins@alivasaude.com',
+        'vera.fontes@alivasaude.com',
+        'ana.baiao@alivasaude.com',
+      ];
+      
+      // Verifica se o e-mail de quem fez login está na lista acima
+      eAdmin = listaAdmins.includes(userEmail);
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('app-screen').classList.remove('hidden');
       document.getElementById('user-badge').textContent = userEmail;
