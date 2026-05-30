@@ -367,7 +367,7 @@
 </div>
 
 <script type="module">
-  import { auth, db } from './firebase.js';
+  import { auth, db } from './firebase.js?v=2';
   import { signInWithEmailAndPassword, signOut, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
   import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
