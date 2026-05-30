@@ -1,9 +1,7 @@
-// Importações oficiais do Firebase (Versão 10.11.1)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-// Configuração do seu projeto Firebase (Aliva Guias de Encaminhamento)
 const firebaseConfig = {
   apiKey: "AIzaSyDfqzj2K3GsulAL1X17RGzs6DcHkMyBUMA",
   authDomain: "aliva-guias-de-encaminhamento.firebaseapp.com",
@@ -13,9 +11,9 @@ const firebaseConfig = {
   appId: "1:325204238014:web:b0bebdad162c059e2ac8ef"
 };
 
-// Inicializa o Firebase
-const app = initializeApp(firebaseConfig);
+// VAMOS IMPRIMIR A CHAVE NA CONSOLA PARA VER O QUE O BROWSER ESTÁ A LER
+console.log("Ficheiro firebase.js carregado! A chave lida é:", firebaseConfig.apiKey);
 
-// Inicializa os serviços de Autenticação e Firestore
+const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
