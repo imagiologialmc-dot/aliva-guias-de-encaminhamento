@@ -611,6 +611,21 @@
     await new Promise(r => setTimeout(r, 120));
   }
 
+  window.reverterPedido = async (id) => {
+    if (!confirm("Deseja reverter este pedido para 'Pendente'? Ele voltará para o separador de Aprovação.")) return;
+    try {
+      // Volta a colocar o status como pendente e limpa a instituição e o aprovador
+      await updateDoc(doc(db, 'pedidos', id), { 
+        status: 'pendente', 
+        instituicao: '', 
+        aprovadoPor: '' 
+      });
+      showSnack('Pedido revertido com sucesso!', 'success');
+    } catch (err) { 
+      showSnack('Erro: ' + err.message, 'error'); 
+    }
+  };
+  
   window.gerarGuia = async (id, inst) => {
     try {
       showSnack('A gerar guia para ' + inst + '...');
@@ -713,6 +728,10 @@
           <button class="btn-outline" onclick="window.gerarGuia('${p.id}', '${p.instituicao || ''}')">
             <span class="material-symbols-rounded" style="font-size:16px;">picture_as_pdf</span>Gerar PDF
           </button>
+          ${eAdmin ? `
+          <button class="btn-outline" style="color: #d93025; border-color: #d93025;" onclick="window.reverterPedido('${p.id}')">
+            <span class="material-symbols-rounded" style="font-size:16px;">undo</span>Reverter
+          </button>` : ''}
         </div>` : ''}
       </div>`).join('');
   }
@@ -723,13 +742,6 @@
     btn.classList.add(estado === 'todos' ? 'active-all' : estado === 'pendente' ? 'active-pend' : 'active-aprov');
     renderHistorico(todosPedidos);
   };
-
-  // MAPEAMENTO DINÂMICO SEGURO DO INPUT DE PESQUISA
-  document.addEventListener('input', (e) => {
-    if (e.target && e.target.id === 'hist-search') {
-      renderHistorico(todosPedidos);
-    }
-  });
 
   // MÓDULO DOCUMENTOS (REAL-TIME SNAPSHOT)
   function carregarDocumentos(){
