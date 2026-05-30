@@ -5,7 +5,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.11.1/firebas
 
 // Configuração do seu projeto Firebase (Aliva Guias de Encaminhamento)
 const firebaseConfig = {
-  apiKey: "AIzaSyDFqzj2K3GsulAL1X17RGzs6DcHKmyBUMA",
+  apiKey: "AIzaSyDfqzj2K3GsulAL1X17RGzs6DcHkMyBUMA",
   authDomain: "aliva-guias-de-encaminhamento.firebaseapp.com",
   projectId: "aliva-guias-de-encaminhamento",
   storageBucket: "aliva-guias-de-encaminhamento.firebasestorage.app",
