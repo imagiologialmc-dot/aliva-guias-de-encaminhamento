@@ -274,9 +274,20 @@
   </div>
 
   <div id="tab-config" class="tab-content">
-    <div class="section-title"><span class="material-symbols-rounded">settings</span> Configuracoes do Sistema</div>
+    <div class="section-title"><span class="material-symbols-rounded">manage_accounts</span> Definições da Conta</div>
+    <div class="form-card" style="border-left-color: var(--primary);">
+      <div class="form-label"><span class="material-symbols-rounded">account_circle</span> O Meu Perfil</div>
+      <p style="font-size:14px; color:var(--text-main); margin-bottom: 12px;">Sessão iniciada como: <strong id="config-user-email"></strong></p>
+      
+      <button class="btn-outline" onclick="window.alterarPassword()">
+        <span class="material-symbols-rounded" style="font-size:18px;">lock_reset</span> Redefinir Palavra-passe
+      </button>
+      <p style="font-size:11px; color:var(--text-muted); margin-top:8px;">* Será enviado um link seguro para o seu e-mail para escolher uma nova palavra-passe.</p>
+    </div>
+
+    <div class="section-title" style="margin-top: 16px;"><span class="material-symbols-rounded">admin_panel_settings</span> Administração</div>
     <div class="form-card" style="border-left-color: var(--border);">
-      <p style="font-size:14px; color:var(--text-muted); line-height:1.6;">Gestao de assinaturas, listagem de medicos parceiros e parametrizacoes tecnicas. Em desenvolvimento.</p>
+      <p style="font-size:14px; color:var(--text-muted); line-height:1.6;">Gestão de assinaturas, listagem de médicos parceiros e parametrizações técnicas. Em desenvolvimento.</p>
     </div>
   </div>
 
@@ -459,6 +470,11 @@
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('app-screen').classList.remove('hidden');
       document.getElementById('user-badge').textContent = userEmail;
+      
+      // NOVA LINHA: Preenche o e-mail na aba de configurações
+      const configEmailEl = document.getElementById('config-user-email');
+      if (configEmailEl) configEmailEl.textContent = userEmail;
+
       if (eAdmin) document.getElementById('nav-admin').classList.remove('hidden');
       
       iniciarPedidos();
@@ -624,6 +640,24 @@
     } catch (err) { 
       showSnack('Erro: ' + err.message, 'error'); 
     }
+  };
+
+  window.alterarPassword = () => {
+    if (!userEmail) {
+      showSnack('Erro: Utilizador não identificado.', 'error');
+      return;
+    }
+    
+    if (!confirm(`Deseja receber um link de recuperação no e-mail ${userEmail}?`)) return;
+    
+    sendPasswordResetEmail(auth, userEmail)
+      .then(() => {
+        showSnack('Link enviado! Verifique a sua caixa de entrada.', 'success');
+      })
+      .catch((error) => {
+        console.error(error);
+        showSnack('Erro ao enviar link.', 'error');
+      });
   };
   
   window.gerarGuia = async (id, inst) => {
