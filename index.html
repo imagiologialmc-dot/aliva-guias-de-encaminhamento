@@ -179,13 +179,15 @@
       <span class="header-title brand-text">Elo Aliva Saúde</span>
     </div>
     <div class="header-right">
-      <span id="user-badge"></span>
+      <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.1; margin-right: 4px;">
+        <span id="user-badge" style="font-size: 11.5px; color: #fff; font-weight: 600; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
+        <span id="user-role" style="font-size: 9px; font-weight: 800; color: #FFD700; display: none;">COORDENAÇÃO</span>
+      </div>
       <span id="theme-toggle" class="material-symbols-rounded" style="cursor:pointer; font-size:22px; transition: transform 0.3s;" title="Mudar Tema">dark_mode</span>
       <button id="btn-logout" class="btn-icon-round">
         <span class="material-symbols-rounded" style="font-size:14px;">logout</span> Sair
       </button>
     </div>
-  </header>
 
   <div id="tab-rececao" class="tab-content active">
     <div class="section-title"><span class="material-symbols-rounded">add_task</span> Novo Pedido de Exame</div>
@@ -477,7 +479,12 @@
       eAdmin = listaAdmins.includes(userEmail);
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('app-screen').classList.remove('hidden');
-      document.getElementById('user-badge').textContent = userEmail;
+      // Formata o e-mail para mostrar apenas o nome (ex: carlos.martins)
+      const nomeCurto = userEmail.split('@')[0];
+      document.getElementById('user-badge').textContent = nomeCurto;
+      
+      // Mostra a tag amarela se a conta for de administrador
+      document.getElementById('user-role').style.display = eAdmin ? 'block' : 'none';
       
       // NOVA LINHA: Preenche o e-mail na aba de configurações
       const configEmailEl = document.getElementById('config-user-email');
