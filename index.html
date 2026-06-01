@@ -150,7 +150,7 @@
 
     /* PDF WRAPPER */
     #pdf-wrapper { position: absolute; left: 0; top: 0; width: 210mm; pointer-events: none; opacity: 0.01; z-index: -9999; background: white; }
-    .pdoc { width: 210mm; min-height: 297mm; background: white; color: #000; box-sizing: border-box; }
+    .pdoc { width: 210mm; height: 296mm; background: white; color: #000; box-sizing: border-box; overflow: hidden; }
   </style>
 </head>
 <body>
@@ -757,7 +757,24 @@
     let element;
     let filename = `Guia_${pedido.nome.replace(/\s+/g, '_')}_${instituicao}.pdf`;
 
-    // 2. Selecionar o template e preencher os dados dependendo da Instituição
+    // NOVO: 2. Buscar assinatura em Base64 ao Firestore
+    try {
+      const configRef = doc(db, 'configuracoes', 'direcao');
+      const configSnap = await getDoc(configRef);
+      
+      if (configSnap.exists() && configSnap.data().assinatura_base64) {
+        const assinaturaB64 = configSnap.data().assinatura_base64;
+        // Injeta a string base64 diretamente nas tags img
+        document.getElementById('pdf-assinatura-vitrea').src = assinaturaB64;
+        document.getElementById('pdf-assinatura-cligest').src = assinaturaB64;
+      } else {
+        console.warn("Documento de configuração não encontrado ou sem assinatura.");
+      }
+    } catch (err) {
+      console.error("Aviso: Não foi possível carregar a assinatura do Firestore", err);
+    }
+
+    // 3. Selecionar o template e preencher os dados dependendo da Instituição
     if (instituicao.toLowerCase() === 'vitrea') {
       element = document.getElementById('pdf-template-vitrea');
       document.getElementById('v-nome').textContent = pedido.nome || '';
@@ -781,10 +798,10 @@
       return;
     }
 
-    // 3. Tornar o template visível temporariamente para o html2pdf o conseguir ler
+    // 4. Tornar o template visível temporariamente para o html2pdf o conseguir ler
     element.style.display = 'block';
 
-    // 4. Configurações do html2pdf (Ajustadas para fixar o layout e não cortar)
+    // 5. Configurações do html2pdf (Ajustadas para corrigir o corte)
     const opt = {
       margin:       0,
       filename:     filename,
@@ -792,15 +809,15 @@
       html2canvas:  { 
         scale: 2, 
         useCORS: true,
-        scrollY: 0, // <-- ISTO É CRUCIAL: Impede que o PDF seja gerado "encolhido"
+        scrollY: 0, 
         scrollX: 0
       },
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    // 5. Gerar o PDF, descarregar e voltar a esconder o template
+    // 6. Gerar o PDF, descarregar e voltar a esconder o template
     try {
-      window.scrollTo(0, 0); // <-- ISTO É CRUCIAL: Garante que o ecrã está no topo antes de "fotografar"
+      window.scrollTo(0, 0); // Força o ecrã para o topo para evitar que o PDF saia em branco/cortado
       
       await html2pdf().set(opt).from(element).save();
       element.style.display = 'none';
