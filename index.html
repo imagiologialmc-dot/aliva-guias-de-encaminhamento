@@ -149,7 +149,7 @@
     .hidden { display: none !important; }
 
     /* PDF WRAPPER */
-    #pdf-wrapper { position: absolute; left: -99999px; top: 0; width: 210mm; pointer-events: none; opacity: 0; z-index: -1; background: white; overflow: hidden; }
+    #pdf-wrapper { position: absolute; left: 0; top: 0; width: 210mm; pointer-events: none; opacity: 0.01; z-index: -9999; background: white; }
     .pdoc { width: 210mm; min-height: 297mm; background: white; color: #000; box-sizing: border-box; }
   </style>
 </head>
@@ -785,17 +785,24 @@
     // 3. Tornar o template visível temporariamente para o html2pdf o conseguir ler
     element.style.display = 'block';
 
-    // 4. Configurações do html2pdf
+    // 4. Configurações do html2pdf (Ajustadas para fixar o layout e não cortar)
     const opt = {
       margin:       0,
       filename:     filename,
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true },
+      image:        { type: 'jpeg', quality: 1 },
+      html2canvas:  { 
+        scale: 2, 
+        useCORS: true,
+        scrollY: 0, // <-- ISTO É CRUCIAL: Impede que o PDF seja gerado "encolhido"
+        scrollX: 0
+      },
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     // 5. Gerar o PDF, descarregar e voltar a esconder o template
     try {
+      window.scrollTo(0, 0); // <-- ISTO É CRUCIAL: Garante que o ecrã está no topo antes de "fotografar"
+      
       await html2pdf().set(opt).from(element).save();
       element.style.display = 'none';
       showSnack('PDF gerado com sucesso!', 'success');
@@ -805,7 +812,6 @@
       showSnack('Erro interno ao gerar PDF.', 'error');
     }
   }
-
   // --- FUNÇÕES DE APOIO ---
   function within2Months(timestamp) {
     if (!timestamp || typeof timestamp.toDate !== 'function') return false;
