@@ -732,10 +732,78 @@
     }
   }
 
-  function gerarGuia(id, instituicao) {
+  async function gerarGuia(id, instituicao) {
     console.log("A preparar PDF para o pedido:", id, "na instituição:", instituicao);
     showSnack('A preparar o documento PDF...', 'info');
-    // Cole aqui o seu código do html2pdf.js caso já o tenha escrito!
+    
+    // 1. Procurar os dados do pedido na variável global todosPedidos
+    const pedido = todosPedidos.find(p => p.id === id);
+    if (!pedido) {
+      showSnack('Erro: Pedido não encontrado na base de dados.', 'error');
+      return;
+    }
+
+    // Função auxiliar para converter datas de YYYY-MM-DD para DD/MM/YYYY
+    const formatarData = (dataStr) => {
+      if (!dataStr) return '';
+      const partes = dataStr.split('-');
+      if (partes.length === 3) return `${partes[2]}/${partes[1]}/${partes[0]}`;
+      return dataStr;
+    };
+
+    const dataAtual = new Date().toLocaleDateString('pt-PT');
+    const dataExameFmt = formatarData(pedido.dataExame);
+    const dataNascFmt = formatarData(pedido.nascimento);
+
+    let element;
+    let filename = `Guia_${pedido.nome.replace(/\s+/g, '_')}_${instituicao}.pdf`;
+
+    // 2. Selecionar o template e preencher os dados dependendo da Instituição
+    if (instituicao.toLowerCase() === 'vitrea') {
+      element = document.getElementById('pdf-template-vitrea');
+      document.getElementById('v-nome').textContent = pedido.nome || '';
+      document.getElementById('v-contacto').textContent = pedido.contacto || '';
+      document.getElementById('v-dataAut').textContent = dataAtual;
+      document.getElementById('v-dataReal').textContent = dataExameFmt;
+      document.getElementById('v-exame').textContent = pedido.exame || '';
+    } 
+    else if (instituicao.toLowerCase() === 'cligest') {
+      element = document.getElementById('pdf-template-cligest');
+      document.getElementById('c-medico').textContent = pedido.medico || '';
+      document.getElementById('c-nome').textContent = pedido.nome || '';
+      document.getElementById('c-nascimento').textContent = dataNascFmt;
+      document.getElementById('c-sexo').textContent = pedido.sexo || '';
+      document.getElementById('c-exame').textContent = pedido.exame || '';
+      document.getElementById('c-hipotese').textContent = pedido.hipotese || '';
+      document.getElementById('c-dataReal').textContent = dataAtual;
+    } 
+    else {
+      showSnack('Erro: Instituição inválida ou não selecionada.', 'error');
+      return;
+    }
+
+    // 3. Tornar o template visível temporariamente para o html2pdf o conseguir ler
+    element.style.display = 'block';
+
+    // 4. Configurações do html2pdf
+    const opt = {
+      margin:       0,
+      filename:     filename,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // 5. Gerar o PDF, descarregar e voltar a esconder o template
+    try {
+      await html2pdf().set(opt).from(element).save();
+      element.style.display = 'none';
+      showSnack('PDF gerado com sucesso!', 'success');
+    } catch (err) {
+      console.error("Erro na geração do PDF:", err);
+      element.style.display = 'none';
+      showSnack('Erro interno ao gerar PDF.', 'error');
+    }
   }
 
   // --- FUNÇÕES DE APOIO ---
