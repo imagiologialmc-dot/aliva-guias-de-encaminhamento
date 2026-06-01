@@ -696,8 +696,24 @@ function renderHistorico(items){
     document.querySelectorAll('#tab-historico .btn-filter').forEach(b => b.className = 'btn-filter');
     btn.classList.add(estado === 'todos' ? 'active-all' : estado === 'pendente' ? 'active-pend' : 'active-aprov');
     renderHistorico(todosPedidos);
-  };
+  }
+    // --- FUNÇÕES DE APOIO PARA O HISTÓRICO ---
 
+function within2Months(timestamp) {
+    if (!timestamp || typeof timestamp.toDate !== 'function') return false;
+    const date = timestamp.toDate();
+    const now = new Date();
+    const twoMonthsAgo = new Date();
+    twoMonthsAgo.setMonth(now.getMonth() - 2);
+    return date >= twoMonthsAgo;
+}
+
+function fmtDate(timestamp) {
+    if (!timestamp || typeof timestamp.toDate !== 'function') return 'Data inválida';
+    const date = timestamp.toDate();
+    return date.toLocaleDateString('pt-PT');
+}
+  
   // MÓDULO DOCUMENTOS (REAL-TIME SNAPSHOT)
   function carregarDocumentos(){
     const q = query(collection(db, 'documentos'), orderBy('ordem', 'asc'));
