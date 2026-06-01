@@ -502,6 +502,12 @@
       if (unsubPedidos) { unsubPedidos(); unsubPedidos = null; }
       if (unsubDocs) { unsubDocs(); unsubDocs = null; }
     }
+    // Certifique-se de que esta função está aqui, fora de outras funções
+async function aprovarPedido(id) {
+    const instituicao = document.getElementById('sel-' + id).value;
+    // ... restante da sua lógica de aprovação (Firebase update, etc)
+    console.log("Aprovar pedido", id, "para", instituicao);
+}
   });
 
   // FORM ENVIO
@@ -637,15 +643,20 @@
 
   container.innerHTML = pendentes.map(p => {
     const anexo = p.anexoUrl ? '<a href="' + esc(p.anexoUrl) + '" target="_blank" rel="noopener" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Anexo</a>' : '';
-    return '<div class="card card-pendente">' +
-      '<div class="pedido-header"><span class="material-symbols-rounded">person</span>' + esc(p.nome || '') +
-      ' <span style="font-size:11px; color:var(--text-muted); font-weight:400;">· ' + esc(p.medico || '') + '</span></div>' +
-      '<div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>' + esc(p.exame || '') + '</div>' +
-      (p.hipotese ? '<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>' + esc(p.hipotese) + '</div>' : '') +
-      '<div class="approve-row">' +
-      '<select id="sel-' + p.id + '"><option value="Vitrea">Vitrea</option><option value="Cligest">Cligest</option></select>' +
-      '<button class="btn-main" style="width:auto; margin:0; padding:10px 18px; font-size:13px;" onclick="window.aprovarPedido(\'' + p.id + '\')"><span class="material-symbols-rounded" style="font-size:16px;">task_alt</span>Aprovar</button>' +
-      anexo + '</div></div>';
+    
+    return `<div class="card card-pendente">
+      <div class="pedido-header"><span class="material-symbols-rounded">person</span>${esc(p.nome || '')}
+      <span style="font-size:11px; color:var(--text-muted); font-weight:400;">· ${esc(p.medico || '')}</span></div>
+      <div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>${esc(p.exame || '')}</div>
+      ${p.hipotese ? `<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>${esc(p.hipotese)}</div>` : ''}
+      <div class="approve-row">
+        <select id="sel-${p.id}"><option value="Vitrea">Vitrea</option><option value="Cligest">Cligest</option></select>
+        <button class="btn-main btn-aprovar" data-id="${p.id}" style="width:auto; margin:0; padding:10px 18px; font-size:13px;">
+          <span class="material-symbols-rounded" style="font-size:16px;">task_alt</span>Aprovar
+        </button>
+        ${anexo}
+      </div>
+    </div>`;
   }).join('');
 }
 function renderHistorico(items){
