@@ -644,7 +644,7 @@
       (p.hipotese ? '<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>' + esc(p.hipotese) + '</div>' : '') +
       '<div class="approve-row">' +
       '<select id="sel-' + p.id + '"><option value="Vitrea">Vitrea</option><option value="Cligest">Cligest</option></select>' +
-      '<button class="btn-main" style="width:auto; margin:0; padding:10px 18px; font-size:13px;" onclick="window.aprovarPedido('' + p.id + '')"><span class="material-symbols-rounded" style="font-size:16px;">task_alt</span>Aprovar</button>' +
+      '<button class="btn-main" style="width:auto; margin:0; padding:10px 18px; font-size:13px;" onclick="window.aprovarPedido(\'' + p.id + '\')"><span class="material-symbols-rounded" style="font-size:16px;">task_alt</span>Aprovar</button>' +
       anexo + '</div></div>';
   }).join('');
 }
