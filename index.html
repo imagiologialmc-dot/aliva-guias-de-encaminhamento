@@ -8,8 +8,7 @@
   <meta name="theme-color" content="#2AA8A8">
   <link rel="apple-touch-icon" href="icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="mobile-web-app-capable" content="yes"> <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
@@ -438,7 +437,7 @@
     renderRececao(todosPedidos);
   };
 
-  // LOGIN (COM LOGS EXPLICITOS DE INTERCEPCAO DE PERMISSOES)
+  // LOGIN
   document.getElementById('form-login').onsubmit = async (e) => {
     e.preventDefault();
     const btn = document.getElementById('btn-entrar');
@@ -470,25 +469,20 @@
   onAuthStateChanged(auth, (user) => {
     if (user) {
       userEmail = user.email.toLowerCase();
-      // Lista de e-mails que têm permissão de Administrador
       const listaAdmins = [
         'carlos.martins@alivasaude.com',
         'vera.fontes@alivasaude.com',
         'ana.baiao@alivasaude.com',
       ];
       
-      // Verifica se o e-mail de quem fez login está na lista acima
       eAdmin = listaAdmins.includes(userEmail);
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('app-screen').classList.remove('hidden');
-      // Formata o e-mail para mostrar apenas o nome (ex: carlos.martins)
+      
       const nomeCurto = userEmail.split('@')[0];
       document.getElementById('user-badge').textContent = nomeCurto;
-      
-      // Mostra a tag amarela se a conta for de administrador
       document.getElementById('user-role').style.display = eAdmin ? 'block' : 'none';
       
-      // NOVA LINHA: Preenche o e-mail na aba de configurações
       const configEmailEl = document.getElementById('config-user-email');
       if (configEmailEl) configEmailEl.textContent = userEmail;
 
@@ -504,23 +498,6 @@
       if (unsubDocs) { unsubDocs(); unsubDocs = null; }
     }
   });
-
-  // --- FUNÇÃO DE APROVAÇÃO (MOVIDA PARA FORA DO AUTH STATE E GLOBAL) ---
-  window.aprovarPedido = async (id) => {
-    const instituicao = document.getElementById('sel-' + id).value;
-    console.log("Aprovar pedido", id, "para", instituicao);
-    try {
-        const pedidoRef = doc(db, 'pedidos', id);
-        await updateDoc(pedidoRef, {
-            status: 'aprovado',
-            instituicao: instituicao,
-            aprovadoPor: userEmail
-        });
-        showSnack('Pedido aprovado com sucesso!', 'success');
-    } catch (err) {
-        showSnack('Erro ao aprovar: ' + err.message, 'error');
-    }
-  };
 
   // FORM ENVIO
   document.getElementById('form-rececao').onsubmit = async (e) => {
@@ -575,8 +552,8 @@
         exame: document.getElementById('f-exame').value.trim(),
         hipotese: document.getElementById('f-hipotese').value.trim(),
         medico: document.getElementById('f-medico').value.trim(),
-        anexosUrls: anexosUrls, // Nova lista que suporta vários ficheiros
-        anexoUrl: anexosUrls.length > 0 ? anexosUrls[0] : '', // Mantém um ficheiro aqui para compatibilidade com código antigo
+        anexosUrls: anexosUrls, 
+        anexoUrl: anexosUrls.length > 0 ? anexosUrls[0] : '',
         status: 'pendente', instituicao: '',
         criadoPor: userEmail, timestamp: serverTimestamp()
       });
@@ -623,7 +600,6 @@
       const isPend = p.status === 'pendente';
       const clinica = p.instituicao ? ' <span style="color:var(--text-muted); font-size:11px; font-weight:400;">· ' + esc(p.instituicao) + '</span>' : '';
       
-      // Nova lógica para múltiplos anexos
       let anexo = '';
       if (p.anexosUrls && p.anexosUrls.length > 0) {
         anexo = p.anexosUrls.map((url, i) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="anexo-link" style="margin-right:6px;"><span class="material-symbols-rounded">attach_file</span>Anexo ${i+1}</a>`).join('');
@@ -631,8 +607,8 @@
         anexo = `<a href="${esc(p.anexoUrl)}" target="_blank" rel="noopener noreferrer" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Ver Anexo</a>`;
       }
 
-      // CORREÇÃO APLICADA AQUI: usar window.gerarGuia para evitar ReferenceError
-      const pdfBtn = !isPend ? '<button class="btn-outline" onclick="window.gerarGuia(\'' + p.id + '\',\'' + esc(p.instituicao) + '\')"><span class="material-symbols-rounded" style="font-size:15px;">picture_as_pdf</span>Gerar PDF</button>' : '';
+      // CORREÇÃO: Removido onclick e adicionadas classes btn-gerar-guia
+      const pdfBtn = !isPend ? `<button class="btn-outline btn-gerar-guia" data-id="${p.id}" data-inst="${esc(p.instituicao)}"><span class="material-symbols-rounded" style="font-size:15px;">picture_as_pdf</span>Gerar PDF</button>` : '';
       return '<div class="card card-' + esc(p.status) + '">' +
         '<div class="pedido-header"><span class="material-symbols-rounded">person</span>' + esc(p.nome) + clinica + '</div>' +
         '<div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>' + esc(p.exame) + '</div>' +
@@ -645,34 +621,34 @@
   }
 
   function renderAdmin(lista) {
-  const container = document.getElementById('lista-admin');
-  if (!container) return;
-  const pendentes = lista.filter(p => p.status === 'pendente');
+    const container = document.getElementById('lista-admin');
+    if (!container) return;
+    const pendentes = lista.filter(p => p.status === 'pendente');
 
-  if (!pendentes.length) {
-    container.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">check_circle</span>Sem pedidos pendentes.</div>';
-    return;
+    if (!pendentes.length) {
+      container.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">check_circle</span>Sem pedidos pendentes.</div>';
+      return;
+    }
+
+    container.innerHTML = pendentes.map(p => {
+      const anexo = p.anexoUrl ? '<a href="' + esc(p.anexoUrl) + '" target="_blank" rel="noopener" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Anexo</a>' : '';
+      
+      // CORREÇÃO: Removido onclick e adicionada classe btn-aprovar
+      return `<div class="card card-pendente">
+        <div class="pedido-header"><span class="material-symbols-rounded">person</span>${esc(p.nome || '')}
+        <span style="font-size:11px; color:var(--text-muted); font-weight:400;">· ${esc(p.medico || '')}</span></div>
+        <div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>${esc(p.exame || '')}</div>
+        ${p.hipotese ? `<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>${esc(p.hipotese)}</div>` : ''}
+        <div class="approve-row">
+          <select id="sel-${p.id}"><option value="Vitrea">Vitrea</option><option value="Cligest">Cligest</option></select>
+          <button class="btn-main btn-aprovar" data-id="${p.id}" style="width:auto; margin:0; padding:10px 18px; font-size:13px;">
+            <span class="material-symbols-rounded" style="font-size:16px;">task_alt</span>Aprovar
+          </button>
+          ${anexo}
+        </div>
+      </div>`;
+    }).join('');
   }
-
-  container.innerHTML = pendentes.map(p => {
-    const anexo = p.anexoUrl ? '<a href="' + esc(p.anexoUrl) + '" target="_blank" rel="noopener" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Anexo</a>' : '';
-    
-    // CORREÇÃO APLICADA AQUI: Remoção do onclick sujo e adição do botão com data-id
-    return `<div class="card card-pendente">
-      <div class="pedido-header"><span class="material-symbols-rounded">person</span>${esc(p.nome || '')}
-      <span style="font-size:11px; color:var(--text-muted); font-weight:400;">· ${esc(p.medico || '')}</span></div>
-      <div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>${esc(p.exame || '')}</div>
-      ${p.hipotese ? `<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>${esc(p.hipotese)}</div>` : ''}
-      <div class="approve-row">
-        <select id="sel-${p.id}"><option value="Vitrea">Vitrea</option><option value="Cligest">Cligest</option></select>
-        <button class="btn-main btn-aprovar" data-id="${p.id}" style="width:auto; margin:0; padding:10px 18px; font-size:13px;">
-          <span class="material-symbols-rounded" style="font-size:16px;">task_alt</span>Aprovar
-        </button>
-        ${anexo}
-      </div>
-    </div>`;
-  }).join('');
-}
 
   function renderHistorico(items){
     const wrap = document.getElementById('lista-historico');
@@ -695,6 +671,7 @@
       return; 
     }
 
+    // CORREÇÃO: Removidos os onclicks, adicionadas as classes btn-gerar-guia e btn-reverter
     wrap.innerHTML = data.map(p => `
       <div class="card card-${String(p.status || '').toLowerCase()}">
         <div class="pedido-header"><span class="material-symbols-rounded">person</span>${esc(p.nome || 'Sem nome')}</div>
@@ -706,11 +683,11 @@
         </div>
         ${String(p.status || '').toLowerCase() === 'aprovado' ? `
         <div class="pedido-actions">
-          <button class="btn-outline" onclick="window.gerarGuia('${p.id}', '${p.instituicao || ''}')">
+          <button class="btn-outline btn-gerar-guia" data-id="${p.id}" data-inst="${esc(p.instituicao || '')}">
             <span class="material-symbols-rounded" style="font-size:16px;">picture_as_pdf</span>Gerar PDF
           </button>
           ${eAdmin ? `
-          <button class="btn-outline" style="color: #d93025; border-color: #d93025;" onclick="window.reverterPedido('${p.id}')">
+          <button class="btn-outline btn-reverter" style="color: #d93025; border-color: #d93025;" data-id="${p.id}">
             <span class="material-symbols-rounded" style="font-size:16px;">undo</span>Reverter
           </button>` : ''}
         </div>` : ''}
@@ -724,7 +701,44 @@
     renderHistorico(todosPedidos);
   }
 
-  // --- FUNÇÕES DE APOIO PARA O HISTÓRICO ---
+  // --- FUNÇÕES DE LÓGICA (APROVAR, REVERTER, PDF) ---
+  
+  async function aprovarPedido(id) {
+    const instituicao = document.getElementById('sel-' + id).value;
+    try {
+        const pedidoRef = doc(db, 'pedidos', id);
+        await updateDoc(pedidoRef, {
+            status: 'aprovado',
+            instituicao: instituicao,
+            aprovadoPor: userEmail
+        });
+        showSnack('Pedido aprovado com sucesso!', 'success');
+    } catch (err) {
+        showSnack('Erro ao aprovar: ' + err.message, 'error');
+    }
+  }
+
+  async function reverterPedido(id) {
+    try {
+        const pedidoRef = doc(db, 'pedidos', id);
+        await updateDoc(pedidoRef, {
+            status: 'pendente',
+            instituicao: '',
+            aprovadoPor: ''
+        });
+        showSnack('Pedido revertido para pendente!', 'success');
+    } catch (err) {
+        showSnack('Erro ao reverter: ' + err.message, 'error');
+    }
+  }
+
+  function gerarGuia(id, instituicao) {
+    console.log("A preparar PDF para o pedido:", id, "na instituição:", instituicao);
+    showSnack('A preparar o documento PDF...', 'info');
+    // Cole aqui o seu código do html2pdf.js caso já o tenha escrito!
+  }
+
+  // --- FUNÇÕES DE APOIO ---
   function within2Months(timestamp) {
     if (!timestamp || typeof timestamp.toDate !== 'function') return false;
     const date = timestamp.toDate();
@@ -751,26 +765,21 @@
       const docs = [];
       snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
       
-      // 1. Agrupar os documentos dinamicamente pelo nome que estiver no Firebase
       const agrupados = {};
       docs.forEach(x => {
-        if (x.ativo === false) return; // Ignorar se estiver inativo
-        
+        if (x.ativo === false) return;
         const catNome = x.categoria || 'Outros';
         if (!agrupados[catNome]) {
-          // Atribui um ícone por defeito dependendo do nome da categoria
           let catIcone = 'folder';
           const catLower = catNome.toLowerCase();
           if (catLower.includes('prepara')) catIcone = 'radiology';
           else if (catLower.includes('protocol')) catIcone = 'assignment';
           else if (catLower.includes('contact')) catIcone = 'contact_phone';
-          
           agrupados[catNome] = { titulo: catNome, icone: catIcone, items: [] };
         }
         agrupados[catNome].items.push(x);
       });
       
-      // 2. Gerar o HTML
       let out = '';
       Object.values(agrupados).forEach(grupo => {
         out += `<div class="form-card" style="border-left-color: var(--secondary); margin-bottom: 12px; padding: 14px 18px;">
@@ -788,28 +797,33 @@
           `).join('')}
         </div>`;
       });
-      
       wrap.innerHTML = out || '<div class="empty-state"><span class="material-symbols-rounded">folder_open</span>Sem documentos ativos de momento.</div>';
     }, (err) => {
-      console.error("Erro a carregar documentos do Firebase:", err);
+      console.error("Erro a carregar documentos:", err);
       const wrap = document.getElementById('lista-documentos');
-      if(wrap) {
-        wrap.innerHTML = `<div class="empty-state">
-          <span class="material-symbols-rounded" style="color: #d93025;">error</span>
-          Erro ao carregar documentos.<br>
-          <small style="font-size:11px; margin-top:8px; display:block;">(Verifique as Regras de Segurança no Firebase)</small>
-        </div>`;
-      }
+      if(wrap) wrap.innerHTML = `<div class="empty-state"><span class="material-symbols-rounded" style="color: #d93025;">error</span>Erro ao carregar documentos.</div>`;
     });
   }
 
-  // --- ADIÇÃO DA DELEGAÇÃO DE EVENTOS PARA OS BOTÕES (NO FIM DO FICHEIRO) ---
+  // --- DELEGAÇÃO DE EVENTOS PARA OS BOTÕES (A MÁGICA ACONTECE AQUI) ---
   document.addEventListener('click', (e) => {
-    // Verifica se o clique foi no botão de aprovação
+    
     const btnAprov = e.target.closest('.btn-aprovar');
     if (btnAprov) {
-        const id = btnAprov.dataset.id;
-        window.aprovarPedido(id);
+        aprovarPedido(btnAprov.dataset.id);
+        return;
+    }
+
+    const btnGerar = e.target.closest('.btn-gerar-guia');
+    if (btnGerar) {
+        gerarGuia(btnGerar.dataset.id, btnGerar.dataset.inst);
+        return;
+    }
+
+    const btnReverter = e.target.closest('.btn-reverter');
+    if (btnReverter) {
+        reverterPedido(btnReverter.dataset.id);
+        return;
     }
   });
 
