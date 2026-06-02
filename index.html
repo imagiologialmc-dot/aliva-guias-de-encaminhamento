@@ -1076,13 +1076,6 @@
     }
   });
 
-const btnReverter = e.target.closest('.btn-reverter');
-    if (btnReverter) {
-        window.reverterPedido(btnReverter.dataset.id);
-        return;
-    }
-  });
-
   // --- PASSO 4: Código que preenche a lista (Tem de ficar antes de fechar o script!) ---
   document.addEventListener('DOMContentLoaded', () => {
     const datalistCID = document.getElementById('lista-cid');
