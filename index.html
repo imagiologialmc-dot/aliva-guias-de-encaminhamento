@@ -222,13 +222,150 @@
         </div>
       </div>
       <div class="form-label"><span class="material-symbols-rounded">radiology</span> Exame Requerido</div>
-      <input type="text" id="f-exame" required placeholder="Ex: TAC Torax com contraste">
+      <input type="text" id="f-exame" required placeholder="Pesquise por código interno ou nome..." list="lista-exames" autocomplete="off">
+      <div style="font-size:11px; color:var(--text-muted); margin-top:-6px; margin-bottom:12px; line-height:1.4;">
+        * Nota: Pode pesquisar pelo nome ou pelo código interno da Aliva. Estes códigos são exclusivos para facilitar a pesquisa (diferentes dos códigos das clínicas parceiras).
+      </div>
+      
+      <datalist id="lista-exames">
+        <option value="64000001 - TC do Crânio">
+        <option value="64000002 - TC do Tórax">
+        <option value="64000004 - TC dos Membros Inferiores">
+        <option value="64000008 - TC da Coluna Lombo-Sagrada">
+        <option value="64000009 - TC Mandíbula">
+        <option value="64000010 - TC dos Seios Perinasais">
+        <option value="64000011 - Uro TC">
+        <option value="64000012 - TC da Coluna Cervical">
+        <option value="64000015 - TC das Órbitas">
+        <option value="64000016 - TC da Sela Turca ou Hipófise">
+        <option value="64000017 - TC do Pescoço">
+        <option value="64000019 - TC da Articulação Tibio-Társica">
+        <option value="64000020 - TC da Mão">
+        <option value="64000021 - Angio TC de Crânio">
+        <option value="64000022 - Angio TC das Coronárias">
+        <option value="64000027 - TC Abdominal">
+        <option value="64000028 - TC Pélvico">
+        <option value="64000029 - TC da Coluna Dorsal">
+        <option value="64000031 - TC do Maxilar">
+        <option value="64000032 - TC do Cavum">
+        <option value="64000033 - TC do Joelho">
+        <option value="64000034 - TC dos Joelhos com Medição TAGT">
+        <option value="64000035 - TC dos Colos Femurais + Joelhos + Tibio-Társicas (Medição)">
+        <option value="64000036 - TC do Pé">
+        <option value="64000037 - TC do Punho">
+        <option value="64000038 - TC das Articulações Sacro-Ilíacas">
+        <option value="64000039 - TC da Articulação Coxo-Femural">
+        <option value="64000040 - TC da Bacia">
+        <option value="64000041 - TC da Anca">
+        <option value="64000042 - TC do Cotovelo">
+        <option value="64000043 - TC do Ombro">
+        <option value="64000044 - TC dos Ouvidos e/ou CAIs ou Âng. Pontocerebelosos">
+        <option value="64000045 - TC da Coluna Sacro-Coccígea">
+        <option value="64000046 - TC da Charneira Cranio-Vertebral">
+        <option value="64000047 - Angio TC Pélvico">
+        <option value="64000048 - Angio TC Abdómen">
+        <option value="64000049 - Angio TC Tórax">
+        <option value="64000050 - Angio TC Troncos Supra-Aórticos">
+        <option value="64000051 - Angio TC Membros Inferiores">
+        <option value="64000052 - Angio TC Membro Superior">
+        <option value="64000053 - Angio TC Aorta Torácica">
+        <option value="64000054 - Angio TC Aorta Abdominal">
+        <option value="64000055 - Score de Cálcio">
+        <option value="64000056 - TC da Grelha Costal">
+        <option value="64000058 - TC Abdómen + TC Pélvico">
+        <option value="64000059 - TC da Perna">
+        <option value="64000060 - TC Face">
+        <option value="64000061 - TC Articulações Têmporo-Mandibulares">
+        <option value="64000062 - Dentalscan">
+        <option value="64000063 - TC do Joelho com Medição TAGT">
+        <option value="64000064 - TC do Braço">
+        <option value="64000065 - Sedação em TC">
+        <option value="64000066 - TC Esterno">
+      </datalist>
+
       <div class="form-label"><span class="material-symbols-rounded">diagnosis</span> Hipotese Diagnostica (ICD 10)</div>
       <input type="text" id="f-hipotese" required placeholder="Ex: J18.9 - Pneumonia nao especificada">
+      
       <div class="form-label"><span class="material-symbols-rounded">stethoscope</span> Medico Prescritor</div>
-      <input type="text" id="f-medico" required placeholder="Dr(a). Nome">
+      <input type="text" id="f-medico" required placeholder="Pesquise o nome do médico..." list="lista-medicos" autocomplete="off">
+      
+      <datalist id="lista-medicos">
+        <option value="Abel Reina Rodriguez">
+        <option value="Abilene Vaz Sacramento">
+        <option value="Agostinho Napato">
+        <option value="Alberto Escalona Arzuaga">
+        <option value="Alemayehu Tegegne Tefera">
+        <option value="Alvaro Marcelino Cuenha">
+        <option value="Ana Maria Dias">
+        <option value="Bruna Daniela">
+        <option value="Bruna Komba">
+        <option value="Carlos Alberto Perez Alvarez">
+        <option value="Claudia Di Bella">
+        <option value="Claudia Ignoto">
+        <option value="Constantina Stela António">
+        <option value="Damaso Silvério">
+        <option value="Edgar Artahona Sosa">
+        <option value="Elizabeth Fernandez">
+        <option value="Ernesto Ulica">
+        <option value="Ester Catarina Freitas">
+        <option value="Estevão Claudio Rangel">
+        <option value="Estevão Muhongo">
+        <option value="Eyner Gonzalez">
+        <option value="Fernando Echevarria">
+        <option value="Fernando Flora">
+        <option value="Fernando Silva Coelho">
+        <option value="Filomena Coelho">
+        <option value="Gladys Garrido">
+        <option value="Gladys Lukeni Araujo">
+        <option value="Jandir Patrocínio">
+        <option value="Janete Cerqueira">
+        <option value="Jemima Patrocinio">
+        <option value="João Bilardo">
+        <option value="João Caiano">
+        <option value="Joice Dala">
+        <option value="Jose Luis Rodriguez">
+        <option value="José Hernandez">
+        <option value="Josemar Lima">
+        <option value="Juan Carlos Suarez">
+        <option value="Juliana Vanda de Macedo">
+        <option value="Lorette Cardona">
+        <option value="Maite Riveron Sainz">
+        <option value="Manuel Dolongo">
+        <option value="Marco António Tur">
+        <option value="Maria Elena Lopez de Isea">
+        <option value="Maria Esther Raola Sánchez">
+        <option value="Maria Sanchez">
+        <option value="Mauer Alexandre da Assunção">
+        <option value="Mauer Gonçalves">
+        <option value="Mircea Jawara de Rosa">
+        <option value="Mircea Jawara Neto">
+        <option value="Norvelis Duverger">
+        <option value="Olaida Montero">
+        <option value="Orestes Estevez">
+        <option value="Óscar Marquez">
+        <option value="Pedro Silva">
+        <option value="Roberto Ortiz">
+        <option value="Rodolfo Perez Gonzalez">
+        <option value="Rui Amilton Puna">
+        <option value="Sandra Martins">
+        <option value="Teresa Domingos">
+        <option value="Vagace Atilus">
+        <option value="Vanda Carapichoso">
+        <option value="Vera Fontes">
+        <option value="Virginia Santos">
+        <option value="Wilson José">
+        <option value="Wilson Laffita Labanino">
+        <option value="Wilson Rodrigo Jaime">
+        <option value="Wilson Teixeira">
+        <option value="Yadira Diaz">
+        <option value="Yaharina Labanino">
+        <option value="Yohanis Haile">
+        <option value="Yudelsy Quiala">
+      </datalist>
+      
       <div class="form-label"><span class="material-symbols-rounded">attach_file</span> Anexar Prescricao / Relatorio</div>
       <input type="file" id="f-anexo" accept="image/*,.pdf" multiple style="margin-bottom:12px;">
+      
       <button type="submit" class="btn-main" id="btn-submit-rececao" style="margin-top:4px;">
         <span class="material-symbols-rounded" style="font-size:18px;">send</span> Enviar Pedido
       </button>
