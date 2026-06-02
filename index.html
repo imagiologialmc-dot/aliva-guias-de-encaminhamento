@@ -828,6 +828,26 @@
       showSnack('Erro interno ao gerar PDF.', 'error');
     }
   }
+
+  // --- FUNÇÃO PARA REDEFINIR PALAVRA-PASSE NAS DEFINIÇÕES ---
+  window.alterarPassword = () => {
+    // Verifica se o e-mail do utilizador está carregado
+    if (!userEmail) {
+      showSnack('Erro: Não foi possível identificar o seu e-mail.', 'error');
+      return;
+    }
+    
+    // Usa a mesma função do Firebase que o ecrã de login usa
+    sendPasswordResetEmail(auth, userEmail)
+      .then(() => {
+        showSnack('Link enviado! Verifique a sua caixa de entrada.', 'success');
+      })
+      .catch((error) => {
+        console.error(error);
+        showSnack('Erro ao enviar link de recuperação.', 'error');
+      });
+  };
+  
   // --- FUNÇÕES DE APOIO ---
   function within2Months(timestamp) {
     if (!timestamp || typeof timestamp.toDate !== 'function') return false;
