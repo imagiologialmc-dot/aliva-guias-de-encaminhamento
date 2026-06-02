@@ -729,11 +729,13 @@
   function renderRececao(lista) {
     const container = document.getElementById('lista-rececao');
     let filtrada = filtroAtual === 'todos' ? lista : lista.filter(p => p.status === filtroAtual);
-    if (!eAdmin) filtrada = filtrada.filter(p => p.criadoPor === userEmail);
+    
+    // Agora o bloco tem a mensagem para o utilizador
     if (!filtrada.length) {
       container.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">inbox</span>Nenhum pedido encontrado.</div>';
-      return;
-    }
+      return; // Importante para parar a execução aqui
+    } // A chaveta fecha AQUI, antes de começar o .map()
+    
     container.innerHTML = filtrada.map(p => {
       const isPend = p.status === 'pendente';
       const clinica = p.instituicao ? ' <span style="color:var(--text-muted); font-size:11px; font-weight:400;">· ' + esc(p.instituicao) + '</span>' : '';
@@ -794,11 +796,8 @@
     const q = (document.getElementById('hist-search')?.value || '').toLowerCase().trim();
     
     let filtradosGerais = items;
-    if (!eAdmin) {
-      filtradosGerais = filtradosGerais.filter(p => p.criadoPor === userEmail);
-    }
 
-    const data = filtradosGerais.filter(p => 
+    const data = filtradosGerais.filter(p =>
       within2Months(p.timestamp) && 
       (histFiltro === 'todos' || String(p.status || '').toLowerCase() === histFiltro) && 
       (!q || String(p.nome || '').toLowerCase().includes(q))
