@@ -141,4 +141,9 @@ const listaCompletaCID = [
   "Z12.3 - Exame de rastreio especial para neoplasia da mama",
   "Z12.5 - Exame de rastreio especial para neoplasia da próstata",
   "Z36.9 - Rastreio pré-natal, não especificado (Ecografia obstétrica)"
+
+  // Adicione estas linhas na lista existente:
+  "E78.0 - Hipercolesterolemia pura",
+  "E79.0 - Hiperuricemia sem sinais de artrite inflamatória ou doença tofácea",
+  "J84.9 - Doença pulmonar intersticial, não especificada",
 ];
