@@ -284,7 +284,9 @@
       </datalist>
 
       <div class="form-label"><span class="material-symbols-rounded">diagnosis</span> Hipotese Diagnostica (ICD 10)</div>
-      <input type="text" id="f-hipotese" required placeholder="Ex: J18.9 - Pneumonia nao especificada">
+      <input type="text" id="f-hipotese" required placeholder="Pesquise o código ou diagnóstico..." list="lista-cid" autocomplete="off">
+      
+      <datalist id="lista-cid"></datalist>
       
       <div class="form-label"><span class="material-symbols-rounded">stethoscope</span> Medico Prescritor</div>
       <input type="text" id="f-medico" required placeholder="Pesquise o nome do médico..." list="lista-medicos" autocomplete="off">
@@ -1074,6 +1076,32 @@
     }
   });
 
+const btnReverter = e.target.closest('.btn-reverter');
+    if (btnReverter) {
+        window.reverterPedido(btnReverter.dataset.id);
+        return;
+    }
+  });
+
+  // --- PASSO 4: Código que preenche a lista (Tem de ficar antes de fechar o script!) ---
+  document.addEventListener('DOMContentLoaded', () => {
+    const datalistCID = document.getElementById('lista-cid');
+    
+    if (typeof listaCompletaCID !== 'undefined') {
+      listaCompletaCID.forEach(diagnostico => {
+        const option = document.createElement('option');
+        option.value = diagnostico;
+        datalistCID.appendChild(option);
+      });
+      console.log(`Lista CID-10 carregada com sucesso: ${listaCompletaCID.length} códigos.`);
+    } else {
+      console.warn("Ficheiro cid10.js não encontrado ou lista vazia.");
+    }
+  });
+
 </script>
+
+<script src="cid10.js"></script>
+
 </body>
 </html>
