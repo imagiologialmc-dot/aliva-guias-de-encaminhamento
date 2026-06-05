@@ -773,7 +773,7 @@
     container.innerHTML = pendentes.map(p => {
       const anexo = p.anexoUrl ? '<a href="' + esc(p.anexoUrl) + '" target="_blank" rel="noopener" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Anexo</a>' : '';
       
-      // CORREÇÃO: Removido onclick e adicionada classe btn-aprovar
+      // CORREÇÃO: Botão de edição adicionado
       return `<div class="card card-pendente">
         <div class="pedido-header"><span class="material-symbols-rounded">person</span>${esc(p.nome || '')}
         <span style="font-size:11px; color:var(--text-muted); font-weight:400;">· ${esc(p.medico || '')}</span></div>
@@ -784,6 +784,11 @@
           <button class="btn-main btn-aprovar" data-id="${p.id}" style="width:auto; margin:0; padding:10px 18px; font-size:13px;">
             <span class="material-symbols-rounded" style="font-size:16px;">task_alt</span>Aprovar
           </button>
+          
+          <button class="btn-outline btn-editar" data-id="${p.id}" style="padding:10px 14px; margin:0; color:var(--text-muted); border-color:var(--border);">
+            <span class="material-symbols-rounded" style="font-size:16px;">edit</span>Editar
+          </button>
+          
           ${anexo}
         </div>
       </div>`;
@@ -838,7 +843,7 @@
     renderHistorico(todosPedidos);
   }
 
-  // --- FUNÇÕES DE LÓGICA (APROVAR, REVERTER, PDF) ---
+  // --- FUNÇÕES DE LÓGICA (APROVAR, REVERTER, PDF, EDITAR) ---
   
   async function aprovarPedido(id) {
     const instituicao = document.getElementById('sel-' + id).value;
@@ -866,6 +871,28 @@
         showSnack('Pedido revertido para pendente!', 'success');
     } catch (err) {
         showSnack('Erro ao reverter: ' + err.message, 'error');
+    }
+  }
+
+  async function editarPedido(id) {
+    const pedido = todosPedidos.find(p => p.id === id);
+    if (!pedido) {
+      showSnack('Erro: Pedido não encontrado.', 'error');
+      return;
+    }
+
+    const novoExame = prompt("Editar Exame Requerido:", pedido.exame);
+
+    if (novoExame !== null && novoExame.trim() !== "" && novoExame !== pedido.exame) {
+      try {
+          const pedidoRef = doc(db, 'pedidos', id);
+          await updateDoc(pedidoRef, {
+              exame: novoExame.trim()
+          });
+          showSnack('Pedido atualizado com sucesso!', 'success');
+      } catch (err) {
+          showSnack('Erro ao editar: ' + err.message, 'error');
+      }
     }
   }
 
@@ -1059,6 +1086,12 @@
     const btnAprov = e.target.closest('.btn-aprovar');
     if (btnAprov) {
         aprovarPedido(btnAprov.dataset.id);
+        return;
+    }
+
+    const btnEditar = e.target.closest('.btn-editar');
+    if (btnEditar) {
+        editarPedido(btnEditar.dataset.id);
         return;
     }
 
