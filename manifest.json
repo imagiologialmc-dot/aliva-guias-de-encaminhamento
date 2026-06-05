@@ -1,6 +1,6 @@
 {
-  "name": "Actos Médicos - Aliva Saúde",
-  "short_name": "Exames",
+  "name": "Elo - Aliva Saúde",
+  "short_name": "Elo Aliva Saúde",
   "description": "Plataforma de encaminhamento de actos médicos e exames",
   "start_url": "./index.html",
   "display": "standalone",
