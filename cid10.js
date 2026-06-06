@@ -1,16 +1,20 @@
 const listaCompletaCID = [
-  // --- SINTOMAS GERAIS E INESPECÍFICOS ---
+  // === SINTOMAS GERAIS E INESPECÍFICOS ===
   "R53.81 - Mal-estar geral",
   "R53.83 - Fadiga",
   "R05 - Tosse",
   "R06.0 - Dispneia",
   "R06.02 - Falta de ar",
   "R07.9 - Dor no peito, não especificada",
+  "R10.0 - Abdómen agudo",
+  "R10.1 - Dor no abdómen superior",
+  "R10.2 - Dor pélvica e perineal",
+  "R10.3 - Dor no abdómen inferior",
   "R10.9 - Dor abdominal, não especificada",
   "R11.2 - Náuseas e vómitos, não especificados",
   "R13.10 - Disfagia, não especificada",
-  "R19.7 - Diarreia, não especificada",
   "R19.4 - Alteração do hábito intestinal",
+  "R19.7 - Diarreia, não especificada",
   "R31.9 - Hematúria não especificada",
   "R32 - Incontinência urinária não especificada",
   "R33.9 - Retenção urinária",
@@ -21,52 +25,68 @@ const listaCompletaCID = [
   "R59.1 - Adenomegalia generalizada",
   "R63.4 - Perda de peso anormal",
 
-  // --- ACHADOS ANORMAIS EM IMAGEM ---
+  // === ACHADOS ANORMAIS EM IMAGEM / FUNÇÃO ===
+  "R90.0 - Lesão expansiva intracraniana",
+  "R90.8 - Outros achados anormais do SNC em imagem",
   "R91.1 - Nódulo pulmonar solitário",
   "R91.8 - Outro achado pulmonar inespecífico",
+  "R92.0 - Microcalcificações mamárias",
   "R92.2 - Mamografia inconclusiva",
   "R93.0 - Achados anormais do crânio e cabeça",
-  "R93.1 - Achados anormais do coração e circulação",
+  "R93.1 - Achados anormais do coração e circulação coronária",
   "R93.2 - Achados anormais do fígado e vias biliares",
-  "R93.3 - Achados anormais do trato gastrointestinal",
-  "R93.4 - Achados anormais do trato geniturinário",
+  "R93.3 - Achados anormais do trato digestivo",
+  "R93.4 - Achados anormais do trato urinário",
   "R93.5 - Achados anormais do abdómen/retroperitoneu",
   "R93.6 - Achados anormais dos membros",
   "R93.7 - Achados anormais do sistema músculo-esquelético",
   "R93.8 - Outros achados anormais em imagem",
-  "R93.89 - Achados anormais em outros locais especificados",
+  "R93.81 - Achados anormais do testículo",
+  "R93.89 - Achados anormais de outras estruturas especificadas",
+  "R94.0 - EEG anormal",
+  "R94.1 - EMG/EOG/ERG anormais",
+  "R94.2 - Função pulmonar anormal",
+  "R94.3 - Função cardiovascular anormal",
+  "R94.4 - Função renal anormal",
+  "R94.5 - Função hepática anormal",
+  "R94.6 - Função tiroideia anormal",
+  "R94.7 - Função endócrina anormal",
+  "R94.8 - Função anormal de outros órgãos e sistemas",
 
-  // --- NEUROLOGIA E CABEÇA/PESCOÇO ---
+  // === NEUROLOGIA / CABEÇA / PESCOÇO ===
   "F03 - Demência não especificada",
   "G30.9 - Doença de Alzheimer, não especificada",
   "G35 - Esclerose múltipla",
   "G40.9 - Epilepsia, não especificada",
   "G43.9 - Enxaqueca, não especificada",
   "G51.0 - Paralisia de Bell",
+  "G93.4 - Encefalopatia, não especificada",
+  "H66.9 - Otite média, não especificada",
+  "H70.9 - Mastoidite, não especificada",
   "I61.9 - Hemorragia intracerebral, não especificada",
   "I63.9 - Enfarte cerebral, não especificado",
   "I64 - AVC, não especificado",
   "J01.9 - Sinusite aguda, não especificada",
   "J32.9 - Sinusite crónica, não especificada",
-  "H66.9 - Otite média, não especificada",
 
-  // --- COLUNA VERTEBRAL ---
+  // === COLUNA VERTEBRAL / ESPINHA ===
   "M41.9 - Escoliose, não especificada",
   "M47.9 - Espondilose, não especificada",
-  "M50.2 - Outro deslocamento de disco cervical",
-  "M51.2 - Outro deslocamento de disco intervertebral",
+  "M48.0 - Estenose espinal",
+  "M50.2 - Deslocamento de disco cervical",
+  "M51.2 - Deslocamento de disco intervertebral",
   "M54.2 - Cervicalgia",
   "M54.3 - Ciática",
   "M54.4 - Lumbago com ciática",
   "M54.5 - Dor lombar baixa",
   "Q76.2 - Espondilolistese congénita",
 
-  // --- OSTEOMUSCULAR E ARTICULAÇÕES ---
+  // === OSTEOMUSCULAR / ARTICULAR ===
   "M06.9 - Artrite reumatoide, não especificada",
   "M16.9 - Coxartrose não especificada",
   "M17.9 - Gonartrose não especificada",
   "M19.9 - Artrose não especificada",
-  "M23.2 - Transtorno do menisco por lesão antiga",
+  "M23.2 - Lesão antiga do menisco",
   "M25.5 - Dor articular",
   "M65.9 - Sinovite e tenossinovite, não especificadas",
   "M75.1 - Síndrome do manguito rotador",
@@ -76,9 +96,9 @@ const listaCompletaCID = [
   "M79.6 - Dor num membro",
   "M81.9 - Osteoporose, não especificada",
 
-  // --- TRAUMA E FRATURAS ---
+  // === TRAUMA / FRATURAS / LESÕES ===
   "S00.9 - Traumatismo superficial da cabeça, não especificado",
-  "S02.9 - Fratura do crânio e dos ossos da face, não especificada",
+  "S02.9 - Fratura do crânio e ossos da face, não especificada",
   "S06.9 - Traumatismo intracraniano, não especificado",
   "S12.9 - Fratura do pescoço, não especificada",
   "S22.0 - Fratura de vértebra torácica",
@@ -90,15 +110,31 @@ const listaCompletaCID = [
   "S32.5 - Fratura do púbis",
   "S32.7 - Fraturas múltiplas da coluna lombar e da pelve",
   "S42.2 - Fratura da extremidade superior do úmero",
+  "S42.9 - Fratura do ombro e do braço, não especificada",
   "S52.5 - Fratura da extremidade inferior do rádio",
+  "S52.9 - Fratura do antebraço, não especificada",
   "S62.8 - Fratura de outros ossos da mão e do punho",
+  "S62.9 - Fratura da mão, não especificada",
   "S72.0 - Fratura do colo do fémur",
   "S72.1 - Fratura pertrocantérica",
+  "S72.9 - Fratura do fémur, não especificada",
   "S82.0 - Fratura da rótula",
   "S82.8 - Fratura de outras partes da perna",
+  "S82.9 - Fratura da perna, não especificada",
+  "S83.5 - Entorse/lesão do joelho",
   "S93.4 - Entorse e distensão do tornozelo",
 
-  // --- TÓRAX E RESPIRATÓRIO ---
+  // === TRAUMA POR REGIÃO (BLOCOS) ===
+  "S20-S29 - Lesões do tórax",
+  "S30-S39 - Lesões do abdómen, lombar, pelve e genitais externos",
+  "S40-S49 - Lesões do ombro e braço",
+  "S50-S59 - Lesões do cotovelo e antebraço",
+  "S60-S69 - Lesões do punho e mão",
+  "S70-S79 - Lesões da anca e coxa",
+  "S80-S89 - Lesões do joelho e perna",
+  "S90-S99 - Lesões do tornozelo e pé",
+
+  // === TÓRAX / RESPIRATÓRIO ===
   "J18.9 - Pneumonia, não especificada",
   "J20.9 - Bronquite aguda, não especificada",
   "J44.9 - DPOC, não especificada",
@@ -107,20 +143,23 @@ const listaCompletaCID = [
   "I26.9 - Embolia pulmonar sem menção de cor pulmonale agudo",
   "J84.9 - Doença pulmonar intersticial, não especificada",
 
-  // --- ABDÓMEN E GASTROINTESTINAL ---
+  // === ABDÓMEN / GASTROINTESTINAL ===
   "K35.8 - Apendicite aguda, outras e não especificadas",
   "K40.9 - Hérnia inguinal unilateral ou não especificada",
   "K42.9 - Hérnia umbilical sem obstrução ou gangrena",
   "K43.9 - Hérnia abdominal, não especificada",
+  "K44.9 - Hérnia diafragmática, não especificada",
   "K56.6 - Obstrução intestinal, não especificada",
   "K57.9 - Doença diverticular do intestino, não especificada",
+  "K58.9 - Síndrome do intestino irritável, sem diarreia",
+  "K59.0 - Obstipação",
   "K74.6 - Cirrose hepática, não especificada",
   "K76.0 - Esteatose hepática",
   "K80.2 - Colelitíase sem colecistite",
   "K81.9 - Colecistite, não especificada",
   "K85.9 - Pancreatite aguda, não especificada",
 
-  // --- PÉLVICA, UROLÓGICA E GINECOLÓGICA ---
+  // === PÉLVICA / UROLÓGICA / GINECOLÓGICA ===
   "N13.3 - Hidronefrose, não especificada",
   "N17.9 - Insuficiência renal aguda, não especificada",
   "N18.9 - Doença renal crónica, não especificada",
@@ -136,7 +175,7 @@ const listaCompletaCID = [
   "Q61.9 - Doença cística do rim, não especificada",
   "N40 - Hiperplasia benigna da próstata",
   "N41.9 - Prostatite, não especificada",
-  "N43.3 - Hidrocele, não especificado",
+  "N43.3 - Hidrocele, não especificada",
   "N44.9 - Torção do testículo e epidídimo",
   "N45.9 - Orquite/epididimite, não especificada",
   "N47 - Prepúcio redundante, fimose e parafimose",
@@ -155,7 +194,7 @@ const listaCompletaCID = [
   "D25.9 - Leiomioma do útero, não especificado",
   "O00.9 - Gravidez ectópica, não especificada",
 
-  // --- VASCULAR E CARDIO ---
+  // === VASCULAR / CARDIO ===
   "I50.9 - Insuficiência cardíaca, não especificada",
   "I70.9 - Aterosclerose, não especificada",
   "I71.9 - Aneurisma da aorta, não especificado",
@@ -163,14 +202,14 @@ const listaCompletaCID = [
   "I80.2 - Trombose venosa profunda dos membros inferiores",
   "I83.9 - Varizes dos membros inferiores, sem úlcera ou inflamação",
 
-  // --- ENDÓCRINO E METABÓLICO ---
+  // === ENDÓCRINO / METABÓLICO ===
   "E04.1 - Nódulo tiroideu simples",
   "E04.9 - Bócio não tóxico, não especificado",
   "E11.9 - Diabetes mellitus tipo 2 sem complicações",
   "E78.0 - Hipercolesterolemia pura",
   "E79.0 - Hiperuricemia",
 
-  // --- ONCOLOGIA ---
+  // === ONCOLOGIA ===
   "C18.9 - Neoplasia maligna do cólon, não especificada",
   "C22.9 - Neoplasia maligna do fígado, não especificada",
   "C25.9 - Neoplasia maligna do pâncreas, não especificada",
@@ -185,7 +224,7 @@ const listaCompletaCID = [
   "C78.7 - Neoplasia maligna secundária do fígado",
   "C79.5 - Neoplasia maligna secundária dos ossos e da medula óssea",
 
-  // --- ROTINA E RASTREIO ---
+  // === ROTINA / RASTREIO / OBSERVAÇÃO ===
   "Z01.6 - Exame radiológico",
   "Z03.9 - Observação por suspeita de doença não especificada",
   "Z12.1 - Rastreio de neoplasia do intestino",
