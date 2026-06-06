@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encaminhamentos – Aliva Saúde</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2AA8A8">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes"> <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    :root {
+      --primary: #2AA8A8;
+      --secondary: #2D6E8E;
+      --bg: #f0f4f7;
+      --surface: #ffffff;
+      --text-main: #333333;
+      --text-muted: #666666;
+      --border: #dddddd;
+      --card-shadow: 0 1px 6px rgba(0,0,0,0.07);
+      --nav-active: #2AA8A8;
+      --login-grad-1: #2AA8A8;
+      --login-grad-2: #2D6E8E;
+    }
+    :root.dark-mode {
+      --bg: #202124;
+      --surface: #292A2D;
+      --text-main: #E8EAED;
+      --text-muted: #9AA0A6;
+      --border: #3C4043;
+      --card-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      --nav-active: #4DD0E1;
+      --login-grad-1: #163838;
+      --login-grad-2: #142833;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+    .brand-text { font-family: 'Montserrat', sans-serif; font-weight: 800; letter-spacing: -0.5px; }
+    img { display: block; max-width: 100%; }
+    button { cursor: pointer; font-family: inherit; }
+
+    /* LOGIN */
+    #login-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; background: linear-gradient(135deg, var(--login-grad-1) 0%, var(--login-grad-2) 100%); transition: background 0.3s; }
+    #login-logo-img { width: 240px; height: auto; border-radius: 0; object-fit: contain; filter: drop-shadow(0 4px 20px rgba(0,0,0,0.25)); margin-bottom: 14px; background: transparent; padding: 0; }
+    #login-logo-fallback { display: none; font-size: 72px; color: #fff; margin-bottom: 18px; }
+    .login-app-name { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 20px; color: #fff; margin-bottom: 4px; }
+    .login-subtitle { font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 28px; text-align: center; max-width: 300px; }
+    .login-box { background: var(--surface); border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 380px; box-shadow: var(--card-shadow); border: 1px solid var(--border); transition: background 0.3s; }
+    .login-box input { width: 100%; padding: 14px; margin: 8px 0; border-radius: 12px; border: 1.5px solid var(--border); outline: none; font-size: 15px; background: var(--bg); color: var(--text-main); transition: 0.3s; font-family: inherit; }
+    .login-box input:focus { border-color: var(--primary); }
+    .login-box input:-webkit-autofill { -webkit-box-shadow: 0 0 0 30px var(--bg) inset !important; -webkit-text-fill-color: var(--text-main) !important; transition: background-color 5000s ease-in-out 0s; }
+    #btn-forgot { margin-top: 14px; font-size: 13px; color: rgba(255,255,255,0.85); text-decoration: underline; cursor: pointer; display: inline-block; background: none; border: none; }
+
+    /* BUTTONS */
+    .btn-main { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 15px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-main:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-main:active { transform: translateY(0); }
+    .btn-main:disabled { background: #888; cursor: not-allowed; opacity: 0.7; transform: none; }
+    .btn-outline { padding: 8px 14px; border-radius: 10px; border: 1.5px solid var(--primary); background: transparent; color: var(--primary); font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s; cursor: pointer; }
+    .btn-outline:hover { background: var(--primary); color: white; }
+    .btn-icon-round { background: rgba(255,255,255,0.18); border: none; color: white; padding: 6px 10px; border-radius: 20px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; cursor: pointer; }
+    .btn-icon-round:hover { background: rgba(255,255,255,0.3); }
+
+    /* HEADER */
+    .app-header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .header-logo { height: 32px; border-radius: 8px; object-fit: cover; }
+    .header-title { font-size: 15px; font-weight: 700; }
+    .header-right { display: flex; align-items: center; gap: 10px; }
+    #user-badge { font-size: 11px; color: rgba(255,255,255,0.8); max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* MAIN */
+    #app-screen { padding-bottom: 80px; }
+    .tab-content { display: none; padding: 16px; }
+    .tab-content.active { display: block; }
+    .section-title { font-size: 16px; font-weight: 700; color: var(--primary); margin: 4px 0 14px; display: flex; align-items: center; gap: 8px; }
+
+    /* FORM CARD */
+    .form-card { background: var(--surface); border-radius: 12px; padding: 18px; box-shadow: var(--card-shadow); margin-bottom: 16px; border-left: 4px solid var(--primary); text-align: left; transition: background 0.3s; }
+    .form-label { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .form-label .material-symbols-rounded { font-size: 18px; }
+    .form-card input, .form-card select, .form-card textarea { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 10px; border: 1px solid var(--border); outline: none; font-size: 14px; background: var(--bg); color: var(--text-main); transition: 0.3s; font-family: inherit; }
+    .form-card input:focus, .form-card select:focus, .form-card textarea:focus { border-color: var(--primary); }
+    .form-card textarea { resize: none; min-height: 72px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .form-row, .form-row-3 { grid-template-columns: 1fr; } }
+    .form-card input[type="file"] { padding: 8px; border: 1px dashed var(--primary); background: transparent; font-size: 13px; color: var(--text-muted); }
+    .form-card input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.5); }
+    :root.dark-mode .form-card input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.7); }
+
+    /* PEDIDO CARD */
+    .card { background: var(--surface); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; box-shadow: var(--card-shadow); border-left: 4px solid var(--border); text-align: left; transition: background 0.3s; }
+    .card-pendente { border-left-color: #FFD700; }
+    .card-aprovado { border-left-color: var(--primary); }
+    .pedido-header { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .pedido-header .material-symbols-rounded { font-size: 16px; }
+    .pedido-corpo { font-size: 14px; margin-bottom: 6px; color: var(--text-main); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .pedido-corpo .material-symbols-rounded { font-size: 16px; color: var(--text-muted); }
+    .pedido-footer { font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 6px; }
+    .pedido-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+
+    /* STATUS BADGES */
+    .status-badge { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; gap: 4px; text-transform: uppercase; }
+    .status-pendente { background: #fff3cd; color: #856404; }
+    .status-aprovado { background: #d1e7dd; color: #0f5132; }
+    :root.dark-mode .status-pendente { background: rgba(255,200,0,0.15); color: #FFD700; }
+    :root.dark-mode .status-aprovado { background: rgba(42,168,168,0.15); color: #4DD0E1; }
+
+    /* FILTER PILLS */
+    .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .btn-filter { padding: 7px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); white-space: nowrap; transition: 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+    .btn-filter .material-symbols-rounded { font-size: 15px; }
+    .btn-filter.active-all { background: var(--primary); color: white; border-color: var(--primary); }
+    .btn-filter.active-pend { background: #fff3cd; color: #856404; border-color: #ffc107; }
+    .btn-filter.active-aprov { background: #d1e7dd; color: #0f5132; border-color: var(--primary); }
+    :root.dark-mode .btn-filter.active-pend { background: rgba(255,200,0,0.15); color: #FFD700; border-color: #FFD700; }
+    :root.dark-mode .btn-filter.active-aprov { background: rgba(42,168,168,0.15); color: #4DD0E1; border-color: #4DD0E1; }
+
+    /* BOTTOM NAV */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); display: flex; border-top: 1px solid var(--border); z-index: 100; padding-bottom: env(safe-area-inset-bottom); transition: background 0.3s; }
+    .nav-btn { flex: 1; min-width: 56px; padding: 10px 2px 8px; border: none; background: none; color: var(--text-muted); font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: color 0.2s; cursor: pointer; }
+    .nav-btn .icon { font-size: 24px; transition: transform 0.2s; font-variation-settings: 'FILL' 0; }
+    .nav-btn.active { color: var(--nav-active); font-weight: 700; }
+    .nav-btn.active .icon { font-variation-settings: 'FILL' 1; transform: scale(1.1); }
+
+    /* EMPTY STATE */
+    .empty-state { padding: 40px 20px; text-align: center; color: var(--text-muted); font-size: 14px; }
+    .empty-state .material-symbols-rounded { font-size: 48px; color: var(--border); margin-bottom: 10px; display: block; }
+
+    /* SNACKBAR */
+    #snackbar { position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%) translateY(10px); background: #323232; color: white; padding: 11px 22px; border-radius: 10px; font-size: 13px; font-weight: 600; opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 500; display: flex; align-items: center; gap: 8px; white-space: nowrap; max-width: 90vw; }
+    #snackbar.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #snackbar.success { background: #0a5c30; }
+    #snackbar.error { background: #842029; }
+
+    /* APPROVE ROW */
+    .approve-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+    .approve-row select { flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text-main); font-size: 13px; outline: none; font-family: inherit; transition: 0.3s; min-width: 120px; }
+    .approve-row select:focus { border-color: var(--primary); }
+
+    /* ANEXO LINK */
+    .anexo-link { display: inline-flex; align-items: center; gap: 4px; color: var(--primary); font-size: 12px; font-weight: 700; text-decoration: none; }
+    .anexo-link .material-symbols-rounded { font-size: 14px; }
+
+    .hidden { display: none !important; }
+
+    /* PDF WRAPPER */
+    #pdf-wrapper { position: absolute; left: 0; top: 0; width: 210mm; pointer-events: none; opacity: 0.01; z-index: -9999; background: white; }
+    .pdoc { width: 210mm; height: 296mm; background: white; color: #000; box-sizing: border-box; overflow: hidden; }
+  </style>
+</head>
+<body>
+
+<div id="login-screen">
+  <img id="login-logo-img" src="icon-512.png" alt="Aliva Saude" onerror="this.style.display='none'; document.getElementById('login-logo-fallback').style.display='block';">
+  <span id="login-logo-fallback" class="material-symbols-rounded" style="font-size:72px; color:#fff; margin-bottom:18px;">local_hospital</span>
+  <div class="login-app-name brand-text">Elo Aliva Saúde</div>
+  <div class="login-subtitle">Encaminhamento de Actos Medicos / Exames</div>
+  <div class="login-box">
+    <form id="form-login">
+      <input type="email" id="l-email" required placeholder="E-mail institucional" autocomplete="email">
+      <input type="password" id="l-password" required placeholder="Palavra-passe" autocomplete="current-password">
+      <button type="submit" class="btn-main" id="btn-entrar">
+        <span class="material-symbols-rounded" style="font-size:18px;">login</span> ENTRAR
+      </button>
+    </form>
+  </div>
+  <button id="btn-forgot">Esqueci-me da palavra-passe</button>
+</div>
+
+<div id="app-screen" class="hidden">
+  <header class="app-header">
+    <div class="header-left">
+      <img class="header-logo" src="icon-512.png" alt="Aliva" onerror="this.style.display='none'">
+      <span class="header-title brand-text">Elo Aliva Saúde</span>
+    </div>
+    <div class="header-right">
+      <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.1; margin-right: 4px;">
+        <span id="user-badge" style="font-size: 11.5px; color: #fff; font-weight: 600; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
+        <span id="user-role" style="font-size: 9px; font-weight: 800; color: #FFD700; display: none;">COORDENAÇÃO</span>
+      </div>
+      <span id="theme-toggle" class="material-symbols-rounded" style="cursor:pointer; font-size:22px; transition: transform 0.3s;" title="Mudar Tema">dark_mode</span>
+      <button id="btn-logout" class="btn-icon-round">
+        <span class="material-symbols-rounded" style="font-size:14px;">logout</span> Sair
+      </button>
+    </div>
+  </header>
+
+  <div id="tab-rececao" class="tab-content active">
+    <div class="section-title"><span class="material-symbols-rounded">add_task</span> Novo Pedido de Exame</div>
+    <form id="form-rececao" class="form-card">
+      <div class="form-row">
+        <div>
+          <div class="form-label"><span class="material-symbols-rounded">person</span> Paciente</div>
+          <input type="text" id="f-nome" required placeholder="Nome completo">
+        </div>
+        <div>
+          <div class="form-label"><span class="material-symbols-rounded">phone</span> Contacto</div>
+          <input type="tel" id="f-contacto" required placeholder="9XX XXX XXX">
+        </div>
+      </div>
+      <div class="form-row-3">
+        <div>
+          <div class="form-label"><span class="material-symbols-rounded">cake</span> Nascimento</div>
+          <input type="date" id="f-nascimento" required>
+        </div>
+        <div>
+          <div class="form-label"><span class="material-symbols-rounded">wc</span> Sexo</div>
+          <select id="f-sexo" required>
+            <option value="" disabled selected>Selecione...</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Feminino">Feminino</option>
+          </select>
+        </div>
+        <div>
+          <div class="form-label"><span class="material-symbols-rounded">event</span> Data Prevista</div>
+          <input type="date" id="f-data-exame" required>
+        </div>
+      </div>
+      <div class="form-label"><span class="material-symbols-rounded">radiology</span> Exame Requerido</div>
+      <input type="text" id="f-exame" required placeholder="Pesquise por código interno ou nome..." list="lista-exames" autocomplete="off">
+      <div style="font-size:11px; color:var(--text-muted); margin-top:-6px; margin-bottom:12px; line-height:1.4;">
+        * Nota: Pode pesquisar pelo nome ou pelo código interno da Aliva. Estes códigos são exclusivos para facilitar a pesquisa (diferentes dos códigos das clínicas parceiras).
+      </div>
+      
+      <datalist id="lista-exames">
+        <option value="64000001 - TC do Crânio">
+        <option value="64000002 - TC do Tórax">
+        <option value="64000004 - TC dos Membros Inferiores">
+        <option value="64000008 - TC da Coluna Lombo-Sagrada">
+        <option value="64000009 - TC Mandíbula">
+        <option value="64000010 - TC dos Seios Perinasais">
+        <option value="64000011 - Uro TC">
+        <option value="64000012 - TC da Coluna Cervical">
+        <option value="64000015 - TC das Órbitas">
+        <option value="64000016 - TC da Sela Turca ou Hipófise">
+        <option value="64000017 - TC do Pescoço">
+        <option value="64000019 - TC da Articulação Tibio-Társica">
+        <option value="64000020 - TC da Mão">
+        <option value="64000021 - Angio TC de Crânio">
+        <option value="64000022 - Angio TC das Coronárias">
+        <option value="64000027 - TC Abdominal">
+        <option value="64000028 - TC Pélvico">
+        <option value="64000029 - TC da Coluna Dorsal">
+        <option value="64000031 - TC do Maxilar">
+        <option value="64000032 - TC do Cavum">
+        <option value="64000033 - TC do Joelho">
+        <option value="64000034 - TC dos Joelhos com Medição TAGT">
+        <option value="64000035 - TC dos Colos Femurais + Joelhos + Tibio-Társicas (Medição)">
+        <option value="64000036 - TC do Pé">
+        <option value="64000037 - TC do Punho">
+        <option value="64000038 - TC das Articulações Sacro-Ilíacas">
+        <option value="64000039 - TC da Articulação Coxo-Femural">
+        <option value="64000040 - TC da Bacia">
+        <option value="64000041 - TC da Anca">
+        <option value="64000042 - TC do Cotovelo">
+        <option value="64000043 - TC do Ombro">
+        <option value="64000044 - TC dos Ouvidos e/ou CAIs ou Âng. Pontocerebelosos">
+        <option value="64000045 - TC da Coluna Sacro-Coccígea">
+        <option value="64000046 - TC da Charneira Cranio-Vertebral">
+        <option value="64000047 - Angio TC Pélvico">
+        <option value="64000048 - Angio TC Abdómen">
+        <option value="64000049 - Angio TC Tórax">
+        <option value="64000050 - Angio TC Troncos Supra-Aórticos">
+        <option value="64000051 - Angio TC Membros Inferiores">
+        <option value="64000052 - Angio TC Membro Superior">
+        <option value="64000053 - Angio TC Aorta Torácica">
+        <option value="64000054 - Angio TC Aorta Abdominal">
+        <option value="64000055 - Score de Cálcio">
+        <option value="64000056 - TC da Grelha Costal">
+        <option value="64000058 - TC Abdómen + TC Pélvico">
+        <option value="64000059 - TC da Perna">
+        <option value="64000060 - TC Face">
+        <option value="64000061 - TC Articulações Têmporo-Mandibulares">
+        <option value="64000062 - Dentalscan">
+        <option value="64000063 - TC do Joelho com Medição TAGT">
+        <option value="64000064 - TC do Braço">
+        <option value="64000065 - Sedação em TC">
+        <option value="64000066 - TC Esterno">
+      </datalist>
+
+      <div class="form-label"><span class="material-symbols-rounded">diagnosis</span> Hipotese Diagnostica (ICD 10)</div>
+      <input type="text" id="f-hipotese" required placeholder="Pesquise o código ou diagnóstico..." list="lista-cid" autocomplete="off">
+      
+      <datalist id="lista-cid"></datalist>
+      
+      <div class="form-label"><span class="material-symbols-rounded">stethoscope</span> Medico Prescritor</div>
+      <input type="text" id="f-medico" required placeholder="Pesquise o nome do médico..." list="lista-medicos" autocomplete="off">
+      
+      <datalist id="lista-medicos">
+        <option value="Abel Reina Rodriguez">
+        <option value="Abilene Vaz Sacramento">
+        <option value="Agostinho Napato">
+        <option value="Alberto Escalona Arzuaga">
+        <option value="Alemayehu Tegegne Tefera">
+        <option value="Alvaro Marcelino Cuenha">
+        <option value="Ana Maria Dias">
+        <option value="Bruna Daniela">
+        <option value="Bruna Komba">
+        <option value="Carlos Alberto Perez Alvarez">
+        <option value="Claudia Di Bella">
+        <option value="Claudia Ignoto">
+        <option value="Constantina Stela António">
+        <option value="Damaso Silvério">
+        <option value="Edgar Artahona Sosa">
+        <option value="Elizabeth Fernandez">
+        <option value="Ernesto Ulica">
+        <option value="Ester Catarina Freitas">
+        <option value="Estevão Claudio Rangel">
+        <option value="Estevão Muhongo">
+        <option value="Eyner Gonzalez">
+        <option value="Fernando Echevarria">
+        <option value="Fernando Flora">
+        <option value="Fernando Silva Coelho">
+        <option value="Filomena Coelho">
+        <option value="Gladys Garrido">
+        <option value="Gladys Lukeni Araujo">
+        <option value="Jandir Patrocínio">
+        <option value="Janete Cerqueira">
+        <option value="Jemima Patrocinio">
+        <option value="João Bilardo">
+        <option value="João Caiano">
+        <option value="Joice Dala">
+        <option value="Jose Luis Rodriguez">
+        <option value="José Hernandez">
+        <option value="Josemar Lima">
+        <option value="Juan Carlos Suarez">
+        <option value="Juliana Vanda de Macedo">
+        <option value="Lorette Cardona">
+        <option value="Maite Riveron Sainz">
+        <option value="Manuel Dolongo">
+        <option value="Marco António Tur">
+        <option value="Maria Elena Lopez de Isea">
+        <option value="Maria Esther Raola Sánchez">
+        <option value="Maria Sanchez">
+        <option value="Mauer Alexandre da Assunção">
+        <option value="Mauer Gonçalves">
+        <option value="Mircea Jawara de Rosa">
+        <option value="Mircea Jawara Neto">
+        <option value="Norvelis Duverger">
+        <option value="Olaida Montero">
+        <option value="Orestes Estevez">
+        <option value="Óscar Marquez">
+        <option value="Pedro Silva">
+        <option value="Roberto Ortiz">
+        <option value="Rodolfo Perez Gonzalez">
+        <option value="Rui Amilton Puna">
+        <option value="Sandra Martins">
+        <option value="Teresa Domingos">
+        <option value="Vagace Atilus">
+        <option value="Vanda Carapichoso">
+        <option value="Vera Fontes">
+        <option value="Virginia Santos">
+        <option value="Wilson José">
+        <option value="Wilson Laffita Labanino">
+        <option value="Wilson Rodrigo Jaime">
+        <option value="Wilson Teixeira">
+        <option value="Yadira Diaz">
+        <option value="Yaharina Labanino">
+        <option value="Yohanis Haile">
+        <option value="Yudelsy Quiala">
+      </datalist>
+      
+      <div class="form-label"><span class="material-symbols-rounded">attach_file</span> Anexar Prescricao / Relatorio</div>
+      <input type="file" id="f-anexo" accept="image/*,.pdf" multiple style="margin-bottom:12px;">
+      
+      <button type="submit" class="btn-main" id="btn-submit-rececao" style="margin-top:4px;">
+        <span class="material-symbols-rounded" style="font-size:18px;">send</span> Enviar Pedido
+      </button>
+    </form>
+
+    <div class="section-title" style="margin-top:8px;"><span class="material-symbols-rounded">list_alt</span> Os Meus Pedidos</div>
+    <div class="filter-row">
+      <button class="btn-filter active-all" id="f-todos" onclick="filtrarRec('todos', this)">
+        <span class="material-symbols-rounded">filter_list</span> Todos
+      </button>
+      <button class="btn-filter" id="f-pend" onclick="filtrarRec('pendente', this)">
+        <span class="material-symbols-rounded">pending_actions</span> Pendentes
+      </button>
+      <button class="btn-filter" id="f-aprov" onclick="filtrarRec('aprovado', this)">
+        <span class="material-symbols-rounded">task_alt</span> Aprovados
+      </button>
+    </div>
+    <div id="lista-rececao">
+      <div class="empty-state"><span class="material-symbols-rounded">inbox</span>Nenhum pedido encontrado.</div>
+    </div>
+  </div>
+
+  <div id="tab-admin" class="tab-content">
+    <div class="section-title"><span class="material-symbols-rounded">verified_user</span> Pedidos Pendentes de Aprovacao</div>
+    <div id="lista-admin">
+      <div class="empty-state"><span class="material-symbols-rounded">check_circle</span>Sem pedidos pendentes.</div>
+    </div>
+  </div>
+
+  <div id="tab-historico" class="tab-content">
+    <div class="section-title"><span class="material-symbols-rounded">history</span> Historico de Guias</div>
+    <div class="form-card" style="border-left-color: var(--border);">
+      <div class="filter-row" style="margin-top:0;">
+        <button class="btn-filter active-all" id="hist-all" onclick="filtrarHistorico('todos', this)"><span class="material-symbols-rounded">filter_list</span> Todos</button>
+        <button class="btn-filter" id="hist-pend" onclick="filtrarHistorico('pendente', this)"><span class="material-symbols-rounded">pending_actions</span> Pendentes</button>
+        <button class="btn-filter" id="hist-aprov" onclick="filtrarHistorico('aprovado', this)"><span class="material-symbols-rounded">task_alt</span> Aprovados</button>
+      </div>
+      <input id="hist-search" type="text" placeholder="Pesquisar por nome do paciente" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:var(--bg); color:var(--text-main); margin-bottom:12px; font-family:inherit; font-size:14px; outline:none;">
+      <div id="lista-historico"><div class="empty-state"><span class="material-symbols-rounded">history</span>Nenhum historico encontrado.</div></div>
+    </div>
+  </div>
+
+  <div id="tab-documentos" class="tab-content">
+    <div class="section-title"><span class="material-symbols-rounded">description</span> Documentos Importantes</div>
+    <div id="lista-documentos"><div class="empty-state"><span class="material-symbols-rounded">folder_open</span>A carregar documentos...</div></div>
+  </div>
+
+  <div id="tab-config" class="tab-content">
+    <div class="section-title"><span class="material-symbols-rounded">manage_accounts</span> Definições da Conta</div>
+    <div class="form-card" style="border-left-color: var(--primary);">
+      <div class="form-label"><span class="material-symbols-rounded">account_circle</span> O Meu Perfil</div>
+      <p style="font-size:14px; color:var(--text-main); margin-bottom: 12px;">Sessão iniciada como: <strong id="config-user-email"></strong></p>
+      
+      <button class="btn-outline" onclick="window.alterarPassword()">
+        <span class="material-symbols-rounded" style="font-size:18px;">lock_reset</span> Redefinir Palavra-passe
+      </button>
+      <p style="font-size:11px; color:var(--text-muted); margin-top:8px;">* Será enviado um link seguro para o seu e-mail para escolher uma nova palavra-passe.</p>
+    </div>
+
+    <div class="section-title" style="margin-top: 16px;"><span class="material-symbols-rounded">admin_panel_settings</span> Administração</div>
+    <div class="form-card" style="border-left-color: var(--border);">
+      <p style="font-size:14px; color:var(--text-muted); line-height:1.6;">Gestão de assinaturas, listagem de médicos parceiros e parametrizações técnicas. Em desenvolvimento.</p>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="nav-rececao" onclick="mostrarTab('rececao', this)">
+      <span class="material-symbols-rounded icon">add_circle</span>Rececao
+    </button>
+    <button class="nav-btn hidden" id="nav-admin" onclick="mostrarTab('admin', this)">
+      <span class="material-symbols-rounded icon">fact_check</span>Aprovacao
+    </button>
+    <button class="nav-btn" id="nav-historico" onclick="mostrarTab('historico', this)">
+      <span class="material-symbols-rounded icon">history</span>Historico
+    </button>
+    <button class="nav-btn" id="nav-docs" onclick="mostrarTab('documentos', this)">
+      <span class="material-symbols-rounded icon">description</span>Documentos
+    </button>
+    <button class="nav-btn" id="nav-config" onclick="mostrarTab('config', this)">
+      <span class="material-symbols-rounded icon">settings</span>Definicoes
+    </button>
+  </nav>
+</div>
+
+<div id="snackbar">
+  <span class="material-symbols-rounded" id="snack-icon" style="font-size:16px;">info</span>
+  <span id="snack-msg"></span>
+</div>
+
+<div id="pdf-wrapper" aria-hidden="true">
+  <div class="pdoc" id="pdf-template-vitrea" style="display:none; padding:20mm; font-family:Arial,Helvetica,sans-serif; font-size:10pt; line-height:1.5; color:#000; background:#fff;">
+    <div style="margin-bottom:20px;">
+      <img src="vitrea-logo.jpg" alt="Vitrea" style="height:50px; margin-bottom:5px;" onerror="this.style.display='none'">
+      <div style="font-size:10pt; color:#333;">Centro de diagnostico por imagem e cirurgia de ambulatorio</div>
+    </div>
+    <h1 style="font-size:11pt; font-weight:bold; margin:0 0 25px; line-height:1.3;">TERMO DE RESPONSABILIDADE E AUTORIZACAO PARA A REALIZACAO DE EXAMES NA VITREA</h1>
+    <div style="margin-bottom:25px; font-size:10pt;">
+      <div style="border-bottom:1px solid #000; padding:6px 0; display:flex;"><strong style="width:290px;">NOME COMPLETO DO PACIENTE:</strong><span id="v-nome"></span></div>
+      <div style="border-bottom:1px solid #000; padding:6px 0; display:flex;"><strong style="width:290px;">CONTACTO TELEFONICO DO PACIENTE:</strong><span id="v-contacto"></span></div>
+      <div style="border-bottom:1px solid #000; padding:6px 0; display:flex;"><strong style="width:290px;">DATA AUTORIZACAO:</strong><span id="v-dataAut"></span></div>
+      <div style="border-bottom:1px solid #000; padding:6px 0; display:flex;"><strong style="width:290px;">DATA DA REALIZACAO DO EXAME:</strong><span id="v-dataReal"></span></div>
+      <div style="border-bottom:1px solid #000; padding:6px 0; display:flex;"><strong style="width:290px;">EXAME REQUERIDO:</strong><span id="v-exame"></span></div>
+      <div style="border-bottom:1px solid #000; padding:6px 0; display:flex; height:29px; align-items:center;"><strong style="width:290px;">CODIGO DO EXAME (VITREA)</strong></div>
+    </div>
+    <div style="text-align:center; margin-bottom:25px;">
+      <div style="font-weight:bold; font-size:11pt; margin-bottom:5px;">PARCEIRO PARA A AREA DE IMAGIOLOGIA</div>
+      <div style="font-size:9.5pt; line-height:1.4;">RADIOLOGIA-RX, RADIOLOGIA DE INTERVENCAO, ECOGRAFIA DOPLLER,<br>ECOCARDIOGRAMA, ELETROCARDIOGRAMA, MAPA, HOLTER, PROVA DE ESFORCO<br>ANGIO TAC CORONARIO, TOMOGRAFIA AXIAL COMPUTORIZADA.</div>
+    </div>
+    <p style="text-align:justify; font-size:10pt; line-height:1.5; margin-bottom:15px;">A Aliva Saude autoriza a realizacao do ato medico acima descrito e responsabiliza-se pelo seu pagamento a Vitrea, nos termos do contrato estabelecido entre as duas instituicoes.</p>
+    <p style="text-align:justify; font-size:10pt; line-height:1.5; margin-bottom:35px;"><strong>Procedimento:</strong> A Aliva Saude, compromete-se a enviar o termo de responsabilidade preenchido em todos os campos, para o endereco de correio eletronico, <a href="mailto:administrativo@vitreasaude.com" style="color:#000; text-decoration:underline;">administrativo@vitreasaude.com</a> em data previa a realizacao do exame.</p>
+    <div style="display:flex; gap:40px; justify-content:space-between; margin-bottom:30px;">
+      <div style="flex:1;">
+        <div style="font-size:9pt; font-weight:bold; text-align:center; margin-bottom:5px; height:28px; display:flex; align-items:flex-end; justify-content:center;"><span>Assinatura e carimbo do<br>responsavel que autoriza o exame</span></div>
+        <div style="height:100px; border:1px solid #000; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+          <img id="pdf-assinatura-vitrea" src="" alt="Assinatura" style="max-height:90px; max-width:95%; object-fit:contain; mix-blend-mode:multiply;">
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:9pt; font-weight:bold; text-align:center; margin-bottom:5px; height:28px; display:flex; align-items:flex-end; justify-content:center;"><span>Assinatura do Paciente<br>Assinar na data da realizacao do exame</span></div>
+        <div style="height:100px; border:1px solid #000; display:flex; align-items:flex-end; padding:10px; box-sizing:border-box;"><div style="font-size:10pt; font-weight:bold;">Data: ____/____/______</div></div>
+      </div>
+    </div>
+    <div style="font-size:8.5pt; text-align:justify; line-height:1.4;"><strong>Nota:</strong> Este termo de responsabilidade nao dispensa a entrega da requisicao medica por parte do paciente no momento da realizacao do exame.</div>
+  </div>
+
+  <div class="pdoc" id="pdf-template-cligest" style="display:none; padding:15mm 14mm 8mm; font-family:Arial,Helvetica,sans-serif; font-size:9.2pt; line-height:1.22; color:#111; background:#fff; overflow:hidden; page-break-inside:avoid; box-sizing:border-box;">
+    <div style="width:100%; margin:0 auto;">
+      <h1 style="font-size:12pt; font-weight:700; text-align:center; margin:0 0 3px; line-height:1.1;">Pedido de Tomografia Computorizada (TC)</h1>
+      <div style="font-size:9.2pt; text-align:center; color:#444; margin:0 0 6px;">Unidade Executora: CLIGEST - Clinica Vida &nbsp;|&nbsp; Departamento de Imagiologia</div>
+      <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:6px; margin-bottom:4px;"><div style="font-weight:700;">Entidade Solicitante:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;">Aliva Saude</div></div>
+      <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:6px; margin-bottom:4px;"><div style="font-weight:700;">Morada:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;">Rua Amilcar Cabral N3, Luanda</div></div>
+      <div style="display:grid; grid-template-columns:auto 1fr auto 1fr; align-items:center; column-gap:6px; margin-bottom:4px;"><div style="font-weight:700;">Telefone:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;">938 351 173</div><div style="font-weight:700; padding-left:6px;">E-mail:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;">imagiologia@alivasaude.com</div></div>
+      <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:6px; margin-bottom:8px;"><div style="font-weight:700;">Medico Solicitante:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-medico"></span></div></div>
+      <div style="font-size:10.5pt; font-weight:700; margin:0 0 6px;">Identificacao do Paciente</div>
+      <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:6px; margin-bottom:4px;"><div style="font-weight:700;">Nome:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-nome"></span></div></div>
+      <div style="display:grid; grid-template-columns:auto 1fr auto 1fr; align-items:center; column-gap:6px; margin-bottom:8px;"><div style="font-weight:700;">Data de Nascimento:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-nascimento"></span></div><div style="font-weight:700; padding-left:6px;">Sexo:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-sexo"></span></div></div>
+      <div style="font-size:10.5pt; font-weight:700; margin:0 0 6px;">Exame de Tomografia Computorizada</div>
+      <div id="c-exame" style="background:#cfe0f5; padding:8px; min-height:38px; margin-bottom:6px; white-space:pre-wrap; display:flex; align-items:center; font-weight:700;"></div>
+      <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:6px; margin-bottom:8px;"><div style="font-weight:700;">Hipotese Diagnostica (ICD 10):</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-hipotese"></span></div></div>
+      <div style="font-size:10.5pt; font-weight:700; margin:0 0 6px;">Declaracao de Responsabilidade Clinica</div>
+      <div style="font-size:8.9pt; line-height:1.38; text-align:justify; margin-bottom:8px;">A entidade solicitante declara que o exame acima indicado foi prescrito por medico devidamente habilitado, apos avaliacao clinica do paciente. A indicacao clinica, a escolha do exame e a pertinencia da sua realizacao sao da inteira responsabilidade da unidade solicitante e do medico prescritor. A Clinica Vida atuara exclusivamente como unidade executora do exame de imagiologia, nao sendo responsavel pela decisao clinica que motivou o pedido do exame.</div>
+      <div style="display:grid; grid-template-columns:auto 1fr auto 1fr; align-items:center; column-gap:6px; margin-bottom:8px;"><div style="font-weight:700;">Local:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;">Luanda</div><div style="font-weight:700; padding-left:6px;">Data:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-dataReal"></span></div></div>
+      <div style="font-size:9.6pt; font-weight:700; margin-bottom:6px;">Assinatura e Carimbo do Medico:</div>
+      <div style="height:26mm; display:flex; align-items:flex-end; overflow:hidden;">
+        <img id="pdf-assinatura-cligest" src="" alt="Assinatura" style="max-width:58mm; max-height:24mm; object-fit:contain; display:block;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { auth, db } from './firebase.js?v=2';
+  import { signInWithEmailAndPassword, signOut, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+  import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+  let userEmail = "";
+  let eAdmin = false;
+  let histFiltro = 'todos';
+  let filtroAtual = 'todos';
+  let todosPedidos = [];
+  let unsubPedidos = null;
+  let unsubDocs = null;
+
+  // THEME
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('theme-toggle');
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    html.classList.add('dark-mode');
+    themeToggle.textContent = 'light_mode';
+  }
+  themeToggle.addEventListener('click', () => {
+    const dark = html.classList.toggle('dark-mode');
+    themeToggle.textContent = dark ? 'light_mode' : 'dark_mode';
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  });
+
+  // SNACKBAR
+  function showSnack(msg, type = 'default') {
+    const el = document.getElementById('snackbar');
+    const ic = document.getElementById('snack-icon');
+    document.getElementById('snack-msg').textContent = msg;
+    el.className = '';
+    ic.textContent = type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info';
+    if (type !== 'default') el.classList.add(type);
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show', 'success', 'error'), 3200);
+  }
+
+  // TABS
+  window.mostrarTab = (nome, btn) => {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + nome).classList.add('active');
+    btn.classList.add('active');
+  };
+
+  // FILTRO RECECAO
+  window.filtrarRec = (estado, btn) => {
+    filtroAtual = estado;
+    document.querySelectorAll('#tab-rececao .btn-filter').forEach(b => b.className = 'btn-filter');
+    if (estado === 'todos') btn.classList.add('active-all');
+    else if (estado === 'pendente') btn.classList.add('active-pend');
+    else btn.classList.add('active-aprov');
+    renderRececao(todosPedidos);
+  };
+
+  // LOGIN
+  document.getElementById('form-login').onsubmit = async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btn-entrar');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">hourglass_top</span> A autenticar...';
+    try {
+      await signInWithEmailAndPassword(auth,
+        document.getElementById('l-email').value.trim(),
+        document.getElementById('l-password').value);
+    } catch (authError) {
+      console.error("Erro critico capturado no Firebase Auth:", authError.code, authError.message);
+      showSnack('Erro de Autenticacao: ' + authError.code, 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">login</span> ENTRAR';
+    }
+  };
+
+  document.getElementById('btn-forgot').onclick = () => {
+    const email = document.getElementById('l-email').value.trim();
+    if (!email || !email.includes('@')) { alert('Introduza o seu e-mail no campo acima primeiro.'); return; }
+    sendPasswordResetEmail(auth, email)
+      .then(() => alert('Link enviado! Verifique o seu e-mail.'))
+      .catch(() => alert('Erro ao enviar. Verifique o endereco.'));
+  };
+
+  document.getElementById('btn-logout').onclick = () => signOut(auth);
+
+  // AUTH STATE
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      userEmail = user.email.toLowerCase();
+      const listaAdmins = [
+        'carlos.martins@alivasaude.com',
+        'vera.fontes@alivasaude.com',
+        'ana.baiao@alivasaude.com',
+      ];
+      
+      eAdmin = listaAdmins.includes(userEmail);
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('app-screen').classList.remove('hidden');
+      
+      const nomeCurto = userEmail.split('@')[0];
+      document.getElementById('user-badge').textContent = nomeCurto;
+      document.getElementById('user-role').style.display = eAdmin ? 'block' : 'none';
+      
+      const configEmailEl = document.getElementById('config-user-email');
+      if (configEmailEl) configEmailEl.textContent = userEmail;
+
+      if (eAdmin) document.getElementById('nav-admin').classList.remove('hidden');
+      
+      iniciarPedidos();
+      carregarDocumentos();
+    } else {
+      document.getElementById('login-screen').classList.remove('hidden');
+      document.getElementById('app-screen').classList.add('hidden');
+      document.getElementById('nav-admin').classList.add('hidden');
+      if (unsubPedidos) { unsubPedidos(); unsubPedidos = null; }
+      if (unsubDocs) { unsubDocs(); unsubDocs = null; }
+    }
+  });
+
+  // FORM ENVIO
+  document.getElementById('form-rececao').onsubmit = async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btn-submit-rececao');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">hourglass_top</span> A processar...';
+    try {
+      let anexosUrls = [];
+      const files = document.getElementById('f-anexo').files;
+      
+      if (files.length > 0) {
+        showSnack(`A fazer upload de ${files.length} anexo(s)...`);
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (file.size > 5 * 1024 * 1024) {
+            showSnack(`O ficheiro ${file.name} é muito grande. Max. 5MB.`, 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">send</span> Enviar Pedido';
+            return;
+          }
+          try {
+            const base64 = await new Promise((res, rej) => {
+              const r = new FileReader();
+              r.onload = () => res(r.result.split(',')[1]);
+              r.onerror = rej;
+              r.readAsDataURL(file);
+            });
+            const resp = await fetch('https://script.google.com/macros/s/AKfycbw15VjPIeLAt15c8GO6hT6tKUwVjc_M1lk6RL3t0tbNd5oqadYIpPOfWHpyevnlb76DOA/exec', {
+              method: 'POST', body: JSON.stringify({ fileName: file.name, mimeType: file.type, base64 })
+            });
+            const result = await resp.json();
+            if (result.success) { 
+              anexosUrls.push(result.url); 
+            } else {
+              showSnack(`Aviso: falha no upload de ${file.name}.`, 'error');
+            }
+          } catch (upErr) {
+            console.error(upErr);
+            showSnack(`Aviso: falha ao ligar ao Drive para ${file.name}.`, 'error');
+          }
+        }
+        if (anexosUrls.length > 0) showSnack('Anexos guardados!', 'success');
+      }
+
+      await addDoc(collection(db, 'pedidos'), {
+        nome: document.getElementById('f-nome').value.trim(),
+        contacto: document.getElementById('f-contacto').value.trim(),
+        nascimento: document.getElementById('f-nascimento').value,
+        sexo: document.getElementById('f-sexo').value,
+        dataExame: document.getElementById('f-data-exame').value,
+        exame: document.getElementById('f-exame').value.trim(),
+        hipotese: document.getElementById('f-hipotese').value.trim(),
+        medico: document.getElementById('f-medico').value.trim(),
+        anexosUrls: anexosUrls, 
+        anexoUrl: anexosUrls.length > 0 ? anexosUrls[0] : '',
+        status: 'pendente', instituicao: '',
+        criadoPor: userEmail, timestamp: serverTimestamp()
+      });
+
+      showSnack('Pedido enviado com sucesso!', 'success');
+      e.target.reset();
+    } catch (err) {
+      console.error(err);
+      showSnack('Erro: ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">send</span> Enviar Pedido';
+    }
+  };
+
+  // CARREGAR PEDIDOS DO FIRESTORE
+  function iniciarPedidos() {
+    const q = query(collection(db, 'pedidos'), orderBy('timestamp', 'desc'));
+    unsubPedidos = onSnapshot(q, (snap) => {
+      todosPedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderRececao(todosPedidos);
+      renderHistorico(todosPedidos);
+      if (eAdmin) renderAdmin(todosPedidos);
+    }, (err) => {
+      console.error("Erro nas permissões/regras ao ler pedidos:", err.code, err.message);
+      showSnack('Erro de base de dados: ' + err.message, 'error');
+    });
+  }
+
+  function esc(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  function renderRececao(lista) {
+    const container = document.getElementById('lista-rececao');
+    let filtrada = filtroAtual === 'todos' ? lista : lista.filter(p => p.status === filtroAtual);
+    
+    // Agora o bloco tem a mensagem para o utilizador
+    if (!filtrada.length) {
+      container.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">inbox</span>Nenhum pedido encontrado.</div>';
+      return; // Importante para parar a execução aqui
+    } // A chaveta fecha AQUI, antes de começar o .map()
+    
+    container.innerHTML = filtrada.map(p => {
+      const isPend = p.status === 'pendente';
+      const clinica = p.instituicao ? ' <span style="color:var(--text-muted); font-size:11px; font-weight:400;">· ' + esc(p.instituicao) + '</span>' : '';
+      
+      let anexo = '';
+      if (p.anexosUrls && p.anexosUrls.length > 0) {
+        anexo = p.anexosUrls.map((url, i) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="anexo-link" style="margin-right:6px;"><span class="material-symbols-rounded">attach_file</span>Anexo ${i+1}</a>`).join('');
+      } else if (p.anexoUrl) {
+        anexo = `<a href="${esc(p.anexoUrl)}" target="_blank" rel="noopener noreferrer" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Ver Anexo</a>`;
+      }
+
+      // CORREÇÃO: Removido onclick e adicionadas classes btn-gerar-guia
+      const pdfBtn = !isPend ? `<button class="btn-outline btn-gerar-guia" data-id="${p.id}" data-inst="${esc(p.instituicao)}"><span class="material-symbols-rounded" style="font-size:15px;">picture_as_pdf</span>Gerar PDF</button>` : '';
+      return '<div class="card card-' + esc(p.status) + '">' +
+        '<div class="pedido-header"><span class="material-symbols-rounded">person</span>' + esc(p.nome) + clinica + '</div>' +
+        '<div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>' + esc(p.exame) + '</div>' +
+        (p.hipotese ? '<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>' + esc(p.hipotese) + '</div>' : '') +
+        '<div class="pedido-footer"><span class="status-badge status-' + esc(p.status) + '">' + esc(p.status) + '</span>' +
+        (p.aprovadoPor ? '<span style="font-size:11px; color:var(--text-muted);">✓ ' + esc(p.aprovadoPor) + '</span>' : '') + '</div>' +
+        ((anexo || pdfBtn) ? '<div class="pedido-actions">' + anexo + pdfBtn + '</div>' : '') +
+        '</div>';
+    }).join('');
+  }
+
+  function renderAdmin(lista) {
+    const container = document.getElementById('lista-admin');
+    if (!container) return;
+    const pendentes = lista.filter(p => p.status === 'pendente');
+
+    if (!pendentes.length) {
+      container.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">check_circle</span>Sem pedidos pendentes.</div>';
+      return;
+    }
+
+    container.innerHTML = pendentes.map(p => {
+      const anexo = p.anexoUrl ? '<a href="' + esc(p.anexoUrl) + '" target="_blank" rel="noopener" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Anexo</a>' : '';
+      
+      // CORREÇÃO: Botão de edição adicionado
+      return `<div class="card card-pendente">
+        <div class="pedido-header"><span class="material-symbols-rounded">person</span>${esc(p.nome || '')}
+        <span style="font-size:11px; color:var(--text-muted); font-weight:400;">· ${esc(p.medico || '')}</span></div>
+        <div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>${esc(p.exame || '')}</div>
+        ${p.hipotese ? `<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>${esc(p.hipotese)}</div>` : ''}
+        <div class="approve-row">
+          <select id="sel-${p.id}"><option value="Vitrea">Vitrea</option><option value="Cligest">Cligest</option></select>
+          <button class="btn-main btn-aprovar" data-id="${p.id}" style="width:auto; margin:0; padding:10px 18px; font-size:13px;">
+            <span class="material-symbols-rounded" style="font-size:16px;">task_alt</span>Aprovar
+          </button>
+          
+          <button class="btn-outline btn-editar" data-id="${p.id}" style="padding:10px 14px; margin:0; color:var(--text-muted); border-color:var(--border);">
+            <span class="material-symbols-rounded" style="font-size:16px;">edit</span>Editar
+          </button>
+          
+          ${anexo}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderHistorico(items){
+    const wrap = document.getElementById('lista-historico');
+    if (!wrap) return;
+    const q = (document.getElementById('hist-search')?.value || '').toLowerCase().trim();
+    
+    let filtradosGerais = items;
+
+    const data = filtradosGerais.filter(p =>
+      within2Months(p.timestamp) && 
+      (histFiltro === 'todos' || String(p.status || '').toLowerCase() === histFiltro) && 
+      (!q || String(p.nome || '').toLowerCase().includes(q))
+    );
+
+    if(!data.length){ 
+      wrap.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">history</span>Nenhum historico encontrado.</div>'; 
+      return; 
+    }
+
+    // CORREÇÃO: Removidos os onclicks, adicionadas as classes btn-gerar-guia e btn-reverter
+    wrap.innerHTML = data.map(p => `
+      <div class="card card-${String(p.status || '').toLowerCase()}">
+        <div class="pedido-header"><span class="material-symbols-rounded">person</span>${esc(p.nome || 'Sem nome')}</div>
+        <div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>${esc(p.exame || 'Sem exame')}</div>
+        <div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">event</span>Criado em: ${fmtDate(p.timestamp)}</div>
+        <div class="pedido-footer">
+          <span class="status-badge status-${String(p.status || '').toLowerCase()}">${esc(p.status || '')}</span>
+          <span>${esc(p.instituicao || '')}</span>
+        </div>
+        ${String(p.status || '').toLowerCase() === 'aprovado' ? `
+        <div class="pedido-actions">
+          <button class="btn-outline btn-gerar-guia" data-id="${p.id}" data-inst="${esc(p.instituicao || '')}">
+            <span class="material-symbols-rounded" style="font-size:16px;">picture_as_pdf</span>Gerar PDF
+          </button>
+          ${eAdmin ? `
+          <button class="btn-outline btn-reverter" style="color: #d93025; border-color: #d93025;" data-id="${p.id}">
+            <span class="material-symbols-rounded" style="font-size:16px;">undo</span>Reverter
+          </button>` : ''}
+        </div>` : ''}
+      </div>`).join('');
+  }
+
+  window.filtrarHistorico = (estado, btn) => {
+    histFiltro = estado;
+    document.querySelectorAll('#tab-historico .btn-filter').forEach(b => b.className = 'btn-filter');
+    btn.classList.add(estado === 'todos' ? 'active-all' : estado === 'pendente' ? 'active-pend' : 'active-aprov');
+    renderHistorico(todosPedidos);
+  }
+
+  // --- FUNÇÕES DE LÓGICA (APROVAR, REVERTER, PDF, EDITAR) ---
+  
+  async function aprovarPedido(id) {
+    const instituicao = document.getElementById('sel-' + id).value;
+    try {
+        const pedidoRef = doc(db, 'pedidos', id);
+        await updateDoc(pedidoRef, {
+            status: 'aprovado',
+            instituicao: instituicao,
+            aprovadoPor: userEmail
+        });
+        showSnack('Pedido aprovado com sucesso!', 'success');
+    } catch (err) {
+        showSnack('Erro ao aprovar: ' + err.message, 'error');
+    }
+  }
+
+  async function reverterPedido(id) {
+    try {
+        const pedidoRef = doc(db, 'pedidos', id);
+        await updateDoc(pedidoRef, {
+            status: 'pendente',
+            instituicao: '',
+            aprovadoPor: ''
+        });
+        showSnack('Pedido revertido para pendente!', 'success');
+    } catch (err) {
+        showSnack('Erro ao reverter: ' + err.message, 'error');
+    }
+  }
+
+  async function editarPedido(id) {
+    const pedido = todosPedidos.find(p => p.id === id);
+    if (!pedido) {
+      showSnack('Erro: Pedido não encontrado.', 'error');
+      return;
+    }
+
+    const novoExame = prompt("Editar Exame Requerido:", pedido.exame);
+
+    if (novoExame !== null && novoExame.trim() !== "" && novoExame !== pedido.exame) {
+      try {
+          const pedidoRef = doc(db, 'pedidos', id);
+          await updateDoc(pedidoRef, {
+              exame: novoExame.trim()
+          });
+          showSnack('Pedido atualizado com sucesso!', 'success');
+      } catch (err) {
+          showSnack('Erro ao editar: ' + err.message, 'error');
+      }
+    }
+  }
+
+  async function gerarGuia(id, instituicao) {
+    console.log("A preparar PDF para o pedido:", id, "na instituição:", instituicao);
+    showSnack('A preparar o documento PDF...', 'info');
+    
+    // 1. Procurar os dados do pedido na variável global todosPedidos
+    const pedido = todosPedidos.find(p => p.id === id);
+    if (!pedido) {
+      showSnack('Erro: Pedido não encontrado na base de dados.', 'error');
+      return;
+    }
+
+    // Função auxiliar para converter datas de YYYY-MM-DD para DD/MM/YYYY
+    const formatarData = (dataStr) => {
+      if (!dataStr) return '';
+      const partes = dataStr.split('-');
+      if (partes.length === 3) return `${partes[2]}/${partes[1]}/${partes[0]}`;
+      return dataStr;
+    };
+
+    const dataAtual = new Date().toLocaleDateString('pt-PT');
+    const dataExameFmt = formatarData(pedido.dataExame);
+    const dataNascFmt = formatarData(pedido.nascimento);
+
+    let element;
+    let filename = `Guia_${pedido.nome.replace(/\s+/g, '_')}_${instituicao}.pdf`;
+
+    // NOVO: 2. Buscar assinatura em Base64 ao Firestore
+    try {
+      const configRef = doc(db, 'configuracoes', 'direcao');
+      const configSnap = await getDoc(configRef);
+      
+      if (configSnap.exists() && configSnap.data().assinatura_base64) {
+        const assinaturaB64 = configSnap.data().assinatura_base64;
+        // Injeta a string base64 diretamente nas tags img
+        document.getElementById('pdf-assinatura-vitrea').src = assinaturaB64;
+        document.getElementById('pdf-assinatura-cligest').src = assinaturaB64;
+      } else {
+        console.warn("Documento de configuração não encontrado ou sem assinatura.");
+      }
+    } catch (err) {
+      console.error("Aviso: Não foi possível carregar a assinatura do Firestore", err);
+    }
+
+    // 3. Selecionar o template e preencher os dados dependendo da Instituição
+    if (instituicao.toLowerCase() === 'vitrea') {
+      element = document.getElementById('pdf-template-vitrea');
+      document.getElementById('v-nome').textContent = pedido.nome || '';
+      document.getElementById('v-contacto').textContent = pedido.contacto || '';
+      document.getElementById('v-dataAut').textContent = dataAtual;
+      document.getElementById('v-dataReal').textContent = dataExameFmt;
+      document.getElementById('v-exame').textContent = pedido.exame || '';
+    } 
+    else if (instituicao.toLowerCase() === 'cligest') {
+      element = document.getElementById('pdf-template-cligest');
+      document.getElementById('c-medico').textContent = pedido.medico || '';
+      document.getElementById('c-nome').textContent = pedido.nome || '';
+      document.getElementById('c-nascimento').textContent = dataNascFmt;
+      document.getElementById('c-sexo').textContent = pedido.sexo || '';
+      document.getElementById('c-exame').textContent = pedido.exame || '';
+      document.getElementById('c-hipotese').textContent = pedido.hipotese || '';
+      document.getElementById('c-dataReal').textContent = dataAtual;
+    } 
+    else {
+      showSnack('Erro: Instituição inválida ou não selecionada.', 'error');
+      return;
+    }
+
+    // 4. Tornar o template visível temporariamente para o html2pdf o conseguir ler
+    element.style.display = 'block';
+
+    // 5. Configurações do html2pdf (Ajustadas para corrigir o corte)
+    const opt = {
+      margin:       0,
+      filename:     filename,
+      image:        { type: 'jpeg', quality: 1 },
+      html2canvas:  { 
+        scale: 2, 
+        useCORS: true,
+        scrollY: 0, 
+        scrollX: 0
+      },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // 6. Gerar o PDF, descarregar e voltar a esconder o template
+    try {
+      window.scrollTo(0, 0); // Força o ecrã para o topo para evitar que o PDF saia em branco/cortado
+      
+      await html2pdf().set(opt).from(element).save();
+      element.style.display = 'none';
+      showSnack('PDF gerado com sucesso!', 'success');
+    } catch (err) {
+      console.error("Erro na geração do PDF:", err);
+      element.style.display = 'none';
+      showSnack('Erro interno ao gerar PDF.', 'error');
+    }
+  }
+
+  // --- FUNÇÃO PARA REDEFINIR PALAVRA-PASSE NAS DEFINIÇÕES ---
+  window.alterarPassword = () => {
+    // Verifica se o e-mail do utilizador está carregado
+    if (!userEmail) {
+      showSnack('Erro: Não foi possível identificar o seu e-mail.', 'error');
+      return;
+    }
+    
+    // Usa a mesma função do Firebase que o ecrã de login usa
+    sendPasswordResetEmail(auth, userEmail)
+      .then(() => {
+        showSnack('Link enviado! Verifique a sua caixa de entrada.', 'success');
+      })
+      .catch((error) => {
+        console.error(error);
+        showSnack('Erro ao enviar link de recuperação.', 'error');
+      });
+  };
+  
+  // --- FUNÇÕES DE APOIO ---
+  function within2Months(timestamp) {
+    if (!timestamp || typeof timestamp.toDate !== 'function') return false;
+    const date = timestamp.toDate();
+    const now = new Date();
+    const twoMonthsAgo = new Date();
+    twoMonthsAgo.setMonth(now.getMonth() - 2);
+    return date >= twoMonthsAgo;
+  }
+
+  function fmtDate(timestamp) {
+    if (!timestamp || typeof timestamp.toDate !== 'function') return 'Data inválida';
+    const date = timestamp.toDate();
+    return date.toLocaleDateString('pt-PT');
+  }
+  
+  // MÓDULO DOCUMENTOS (REAL-TIME SNAPSHOT)
+  function carregarDocumentos(){
+    const q = query(collection(db, 'documentos'), orderBy('ordem', 'asc'));
+    unsubDocs = onSnapshot(q, (snap) => {
+      const wrap = document.getElementById('lista-documentos');
+      if(!wrap) return;
+      if(snap.empty){ wrap.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">folder_open</span>Sem documentos carregados.</div>'; return; }
+      
+      const docs = [];
+      snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
+      
+      const agrupados = {};
+      docs.forEach(x => {
+        if (x.ativo === false) return;
+        const catNome = x.categoria || 'Outros';
+        if (!agrupados[catNome]) {
+          let catIcone = 'folder';
+          const catLower = catNome.toLowerCase();
+          if (catLower.includes('prepara')) catIcone = 'radiology';
+          else if (catLower.includes('protocol')) catIcone = 'assignment';
+          else if (catLower.includes('contact')) catIcone = 'contact_phone';
+          agrupados[catNome] = { titulo: catNome, icone: catIcone, items: [] };
+        }
+        agrupados[catNome].items.push(x);
+      });
+      
+      let out = '';
+      Object.values(agrupados).forEach(grupo => {
+        out += `<div class="form-card" style="border-left-color: var(--secondary); margin-bottom: 12px; padding: 14px 18px;">
+          <div class="section-title" style="margin-top:0; font-size:14px; border-bottom:1px solid var(--border); padding-bottom:6px;">
+            <span class="material-symbols-rounded">${grupo.icone}</span> ${esc(grupo.titulo)}
+          </div>
+          ${grupo.items.map(x => `
+            <a class="anexo-link" href="${esc(x.url || '')}" target="_blank" rel="noopener noreferrer" style="display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid var(--bg); text-decoration:none; color:var(--text-main); font-weight:normal;">
+              <span style="display:flex; align-items:center; gap:8px;">
+                <span class="material-symbols-rounded" style="font-size:18px; color:var(--text-muted);">${esc(x.icone || 'description')}</span>
+                ${esc(x.titulo || 'Sem título')}
+              </span>
+              <span class="material-symbols-rounded" style="font-size:16px; color:var(--primary);">open_in_new</span>
+            </a>
+          `).join('')}
+        </div>`;
+      });
+      wrap.innerHTML = out || '<div class="empty-state"><span class="material-symbols-rounded">folder_open</span>Sem documentos ativos de momento.</div>';
+    }, (err) => {
+      console.error("Erro a carregar documentos:", err);
+      const wrap = document.getElementById('lista-documentos');
+      if(wrap) wrap.innerHTML = `<div class="empty-state"><span class="material-symbols-rounded" style="color: #d93025;">error</span>Erro ao carregar documentos.</div>`;
+    });
+  }
+
+  // --- DELEGAÇÃO DE EVENTOS PARA OS BOTÕES (A MÁGICA ACONTECE AQUI) ---
+  document.addEventListener('click', (e) => {
+    
+    const btnAprov = e.target.closest('.btn-aprovar');
+    if (btnAprov) {
+        aprovarPedido(btnAprov.dataset.id);
+        return;
+    }
+
+    const btnEditar = e.target.closest('.btn-editar');
+    if (btnEditar) {
+        editarPedido(btnEditar.dataset.id);
+        return;
+    }
+
+    const btnGerar = e.target.closest('.btn-gerar-guia');
+    if (btnGerar) {
+        gerarGuia(btnGerar.dataset.id, btnGerar.dataset.inst);
+        return;
+    }
+
+    const btnReverter = e.target.closest('.btn-reverter');
+    if (btnReverter) {
+        reverterPedido(btnReverter.dataset.id);
+        return;
+    }
+  });
+
+  // --- PASSO 4: Código que preenche a lista (Tem de ficar antes de fechar o script!) ---
+  document.addEventListener('DOMContentLoaded', () => {
+    const datalistCID = document.getElementById('lista-cid');
+    
+    if (typeof listaCompletaCID !== 'undefined') {
+      listaCompletaCID.forEach(diagnostico => {
+        const option = document.createElement('option');
+        option.value = diagnostico;
+        datalistCID.appendChild(option);
+      });
+      console.log(`Lista CID-10 carregada com sucesso: ${listaCompletaCID.length} códigos.`);
+    } else {
+      console.warn("Ficheiro cid10.js não encontrado ou lista vazia.");
+    }
+  });
+
+</script>
+
+<script src="cid10.js"></script>
+
+</body>
+</html>
