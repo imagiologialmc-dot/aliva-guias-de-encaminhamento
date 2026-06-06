@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Encaminhamentos – Aliva Saúde</title>
+  <title>Informação Clínica – Aliva Saúde</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2AA8A8">
   <link rel="apple-touch-icon" href="icon-192.png">
@@ -64,6 +64,12 @@
     .btn-icon-round { background: rgba(255,255,255,0.18); border: none; color: white; padding: 6px 10px; border-radius: 20px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; cursor: pointer; }
     .btn-icon-round:hover { background: rgba(255,255,255,0.3); }
 
+    /* STATE TOGGLES (NEW) */
+    .btn-toggle { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; white-space: nowrap; }
+    .btn-toggle .material-symbols-rounded { font-size: 14px; }
+    .btn-toggle.active { background: #e6f4ea; border-color: #1e8e3e; color: #1e8e3e; }
+    :root.dark-mode .btn-toggle.active { background: rgba(30,142,62,0.15); border-color: #34A853; color: #34A853; }
+
     /* HEADER */
     .app-header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
     .header-left { display: flex; align-items: center; gap: 10px; }
@@ -96,6 +102,7 @@
     .card { background: var(--surface); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; box-shadow: var(--card-shadow); border-left: 4px solid var(--border); text-align: left; transition: background 0.3s; }
     .card-pendente { border-left-color: #FFD700; }
     .card-aprovado { border-left-color: var(--primary); }
+    .card-finalizado { border-left-color: #888888; opacity: 0.85; }
     .pedido-header { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .pedido-header .material-symbols-rounded { font-size: 16px; }
     .pedido-corpo { font-size: 14px; margin-bottom: 6px; color: var(--text-main); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
@@ -103,12 +110,20 @@
     .pedido-footer { font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 6px; }
     .pedido-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
 
-    /* STATUS BADGES */
+    /* BADGES */
     .status-badge { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; gap: 4px; text-transform: uppercase; }
     .status-pendente { background: #fff3cd; color: #856404; }
     .status-aprovado { background: #d1e7dd; color: #0f5132; }
+    .status-finalizado { background: #e2e3e5; color: #383d41; }
+    
+    .badge-urgente { color: #d93025; font-size: 9px; font-weight: 800; border: 1.5px solid #d93025; padding: 2px 6px; border-radius: 6px; margin-left: 4px; }
+    .badge-guia { background: #e6f4ea; color: #1e8e3e; font-size: 9px; font-weight: 800; padding: 3px 6px; border-radius: 6px; margin-left: 4px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid #1e8e3e; }
+    
     :root.dark-mode .status-pendente { background: rgba(255,200,0,0.15); color: #FFD700; }
     :root.dark-mode .status-aprovado { background: rgba(42,168,168,0.15); color: #4DD0E1; }
+    :root.dark-mode .status-finalizado { background: rgba(255,255,255,0.1); color: #ccc; }
+    :root.dark-mode .badge-urgente { color: #ff6b6b; border-color: #ff6b6b; }
+    :root.dark-mode .badge-guia { background: rgba(30,142,62,0.15); color: #34A853; border-color: #34A853; }
 
     /* FILTER PILLS */
     .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -117,6 +132,7 @@
     .btn-filter.active-all { background: var(--primary); color: white; border-color: var(--primary); }
     .btn-filter.active-pend { background: #fff3cd; color: #856404; border-color: #ffc107; }
     .btn-filter.active-aprov { background: #d1e7dd; color: #0f5132; border-color: var(--primary); }
+    .btn-filter.active-fin { background: #6c757d; color: #ffffff; border-color: #6c757d; }
     :root.dark-mode .btn-filter.active-pend { background: rgba(255,200,0,0.15); color: #FFD700; border-color: #FFD700; }
     :root.dark-mode .btn-filter.active-aprov { background: rgba(42,168,168,0.15); color: #4DD0E1; border-color: #4DD0E1; }
 
@@ -158,8 +174,8 @@
 <div id="login-screen">
   <img id="login-logo-img" src="icon-512.png" alt="Aliva Saude" onerror="this.style.display='none'; document.getElementById('login-logo-fallback').style.display='block';">
   <span id="login-logo-fallback" class="material-symbols-rounded" style="font-size:72px; color:#fff; margin-bottom:18px;">local_hospital</span>
-  <div class="login-app-name brand-text">Elo Aliva Saúde</div>
-  <div class="login-subtitle">Encaminhamento de Actos Medicos / Exames</div>
+  <div class="login-app-name brand-text">Informação Clínica</div>
+  <div class="login-subtitle">Elo Aliva Saúde - Imagiologia</div>
   <div class="login-box">
     <form id="form-login">
       <input type="email" id="l-email" required placeholder="E-mail institucional" autocomplete="email">
@@ -176,7 +192,7 @@
   <header class="app-header">
     <div class="header-left">
       <img class="header-logo" src="icon-512.png" alt="Aliva" onerror="this.style.display='none'">
-      <span class="header-title brand-text">Elo Aliva Saúde</span>
+      <span class="header-title brand-text">Informação Clínica</span>
     </div>
     <div class="header-right">
       <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.1; margin-right: 4px;">
@@ -221,6 +237,21 @@
           <input type="date" id="f-data-exame" required>
         </div>
       </div>
+      
+      <div class="form-row">
+        <div>
+          <div class="form-label"><span class="material-symbols-rounded">mail</span> E-mail do Paciente (Opcional)</div>
+          <input type="email" id="f-email" placeholder="exemplo@email.com">
+        </div>
+        <div>
+          <div class="form-label"><span class="material-symbols-rounded">priority_high</span> Prioridade</div>
+          <select id="f-prioridade" required>
+            <option value="Normal" selected>Normal</option>
+            <option value="Urgente">Urgente</option>
+          </select>
+        </div>
+      </div>
+
       <div class="form-label"><span class="material-symbols-rounded">radiology</span> Exame Requerido</div>
       <input type="text" id="f-exame" required placeholder="Pesquise por código interno ou nome..." list="lista-exames" autocomplete="off">
       <div style="font-size:11px; color:var(--text-muted); margin-top:-6px; margin-bottom:12px; line-height:1.4;">
@@ -397,16 +428,17 @@
     </div>
   </div>
 
-  <div id="tab-historico" class="tab-content">
-    <div class="section-title"><span class="material-symbols-rounded">history</span> Historico de Guias</div>
+  <div id="tab-dashboard" class="tab-content">
+    <div class="section-title"><span class="material-symbols-rounded">dashboard</span> Dashboard de Exames</div>
     <div class="form-card" style="border-left-color: var(--border);">
       <div class="filter-row" style="margin-top:0;">
-        <button class="btn-filter active-all" id="hist-all" onclick="filtrarHistorico('todos', this)"><span class="material-symbols-rounded">filter_list</span> Todos</button>
-        <button class="btn-filter" id="hist-pend" onclick="filtrarHistorico('pendente', this)"><span class="material-symbols-rounded">pending_actions</span> Pendentes</button>
-        <button class="btn-filter" id="hist-aprov" onclick="filtrarHistorico('aprovado', this)"><span class="material-symbols-rounded">task_alt</span> Aprovados</button>
+        <button class="btn-filter active-all" id="dash-all" onclick="filtrarDashboard('todos', this)"><span class="material-symbols-rounded">filter_list</span> Todos</button>
+        <button class="btn-filter" id="dash-pend" onclick="filtrarDashboard('pendente', this)"><span class="material-symbols-rounded">pending_actions</span> Pend.</button>
+        <button class="btn-filter" id="dash-aprov" onclick="filtrarDashboard('aprovado', this)"><span class="material-symbols-rounded">task_alt</span> Aprov.</button>
+        <button class="btn-filter" id="dash-fin" onclick="filtrarDashboard('finalizado', this)"><span class="material-symbols-rounded">inventory_2</span> Arq.</button>
       </div>
-      <input id="hist-search" type="text" placeholder="Pesquisar por nome do paciente" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:var(--bg); color:var(--text-main); margin-bottom:12px; font-family:inherit; font-size:14px; outline:none;">
-      <div id="lista-historico"><div class="empty-state"><span class="material-symbols-rounded">history</span>Nenhum historico encontrado.</div></div>
+      <input id="dash-search" type="text" placeholder="Pesquisar por nome do paciente" oninput="window.atualizarBusca()" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:var(--bg); color:var(--text-main); margin-bottom:12px; font-family:inherit; font-size:14px; outline:none;">
+      <div id="lista-dashboard"><div class="empty-state"><span class="material-symbols-rounded">search</span>Nenhum exame encontrado.</div></div>
     </div>
   </div>
 
@@ -440,8 +472,8 @@
     <button class="nav-btn hidden" id="nav-admin" onclick="mostrarTab('admin', this)">
       <span class="material-symbols-rounded icon">fact_check</span>Aprovacao
     </button>
-    <button class="nav-btn" id="nav-historico" onclick="mostrarTab('historico', this)">
-      <span class="material-symbols-rounded icon">history</span>Historico
+    <button class="nav-btn" id="nav-dashboard" onclick="mostrarTab('dashboard', this)">
+      <span class="material-symbols-rounded icon">dashboard</span>Dashboard
     </button>
     <button class="nav-btn" id="nav-docs" onclick="mostrarTab('documentos', this)">
       <span class="material-symbols-rounded icon">description</span>Documentos
@@ -525,7 +557,7 @@
 
   let userEmail = "";
   let eAdmin = false;
-  let histFiltro = 'todos';
+  let dashFiltro = 'todos';
   let filtroAtual = 'todos';
   let todosPedidos = [];
   let unsubPedidos = null;
@@ -586,7 +618,6 @@
         document.getElementById('l-email').value.trim(),
         document.getElementById('l-password').value);
     } catch (authError) {
-      console.error("Erro critico capturado no Firebase Auth:", authError.code, authError.message);
       showSnack('Erro de Autenticacao: ' + authError.code, 'error');
       btn.disabled = false;
       btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">login</span> ENTRAR';
@@ -678,12 +709,13 @@
             showSnack(`Aviso: falha ao ligar ao Drive para ${file.name}.`, 'error');
           }
         }
-        if (anexosUrls.length > 0) showSnack('Anexos guardados!', 'success');
       }
 
       await addDoc(collection(db, 'pedidos'), {
         nome: document.getElementById('f-nome').value.trim(),
         contacto: document.getElementById('f-contacto').value.trim(),
+        emailPaciente: document.getElementById('f-email').value.trim(),
+        prioridade: document.getElementById('f-prioridade').value,
         nascimento: document.getElementById('f-nascimento').value,
         sexo: document.getElementById('f-sexo').value,
         dataExame: document.getElementById('f-data-exame').value,
@@ -693,6 +725,7 @@
         anexosUrls: anexosUrls, 
         anexoUrl: anexosUrls.length > 0 ? anexosUrls[0] : '',
         status: 'pendente', instituicao: '',
+        guiaEmitida: false, imagensRececionadas: false, relatorioEmitido: false,
         criadoPor: userEmail, timestamp: serverTimestamp()
       });
 
@@ -713,10 +746,9 @@
     unsubPedidos = onSnapshot(q, (snap) => {
       todosPedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderRececao(todosPedidos);
-      renderHistorico(todosPedidos);
+      renderDashboard(todosPedidos);
       if (eAdmin) renderAdmin(todosPedidos);
     }, (err) => {
-      console.error("Erro nas permissões/regras ao ler pedidos:", err.code, err.message);
       showSnack('Erro de base de dados: ' + err.message, 'error');
     });
   }
@@ -726,19 +758,27 @@
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
   }
 
+  function fmtDate(timestamp) {
+    if (!timestamp || typeof timestamp.toDate !== 'function') return 'Data inválida';
+    return timestamp.toDate().toLocaleDateString('pt-PT');
+  }
+
   function renderRececao(lista) {
     const container = document.getElementById('lista-rececao');
-    let filtrada = filtroAtual === 'todos' ? lista : lista.filter(p => p.status === filtroAtual);
+    // Filtra sempre os finalizados para não aparecerem na Receção
+    let ativa = lista.filter(p => p.status !== 'finalizado');
+    let filtrada = filtroAtual === 'todos' ? ativa : ativa.filter(p => p.status === filtroAtual);
     
-    // Agora o bloco tem a mensagem para o utilizador
     if (!filtrada.length) {
-      container.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">inbox</span>Nenhum pedido encontrado.</div>';
-      return; // Importante para parar a execução aqui
-    } // A chaveta fecha AQUI, antes de começar o .map()
+      container.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">inbox</span>Nenhum pedido ativo encontrado.</div>';
+      return; 
+    } 
     
     container.innerHTML = filtrada.map(p => {
       const isPend = p.status === 'pendente';
       const clinica = p.instituicao ? ' <span style="color:var(--text-muted); font-size:11px; font-weight:400;">· ' + esc(p.instituicao) + '</span>' : '';
+      const tagUrgente = p.prioridade === 'Urgente' ? '<span class="badge-urgente">URGENTE</span>' : '';
+      const tagGuia = p.guiaEmitida ? '<span class="badge-guia"><span class="material-symbols-rounded" style="font-size:11px;">check_circle</span>GUIA EMITIDA</span>' : '';
       
       let anexo = '';
       if (p.anexosUrls && p.anexosUrls.length > 0) {
@@ -747,11 +787,12 @@
         anexo = `<a href="${esc(p.anexoUrl)}" target="_blank" rel="noopener noreferrer" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Ver Anexo</a>`;
       }
 
-      // CORREÇÃO: Removido onclick e adicionadas classes btn-gerar-guia
-      const pdfBtn = !isPend ? `<button class="btn-outline btn-gerar-guia" data-id="${p.id}" data-inst="${esc(p.instituicao)}"><span class="material-symbols-rounded" style="font-size:15px;">picture_as_pdf</span>Gerar PDF</button>` : '';
+      const pdfBtn = (!isPend && p.status !== 'finalizado') ? `<button class="btn-outline btn-gerar-guia" data-id="${p.id}" data-inst="${esc(p.instituicao)}"><span class="material-symbols-rounded" style="font-size:15px;">picture_as_pdf</span>Gerar PDF</button>` : '';
+      
       return '<div class="card card-' + esc(p.status) + '">' +
-        '<div class="pedido-header"><span class="material-symbols-rounded">person</span>' + esc(p.nome) + clinica + '</div>' +
+        '<div class="pedido-header"><span class="material-symbols-rounded">person</span>' + esc(p.nome) + tagUrgente + tagGuia + clinica + '</div>' +
         '<div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>' + esc(p.exame) + '</div>' +
+        '<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">calendar_today</span>Pedido criado a: ' + fmtDate(p.timestamp) + '</div>' +
         (p.hipotese ? '<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>' + esc(p.hipotese) + '</div>' : '') +
         '<div class="pedido-footer"><span class="status-badge status-' + esc(p.status) + '">' + esc(p.status) + '</span>' +
         (p.aprovadoPor ? '<span style="font-size:11px; color:var(--text-muted);">✓ ' + esc(p.aprovadoPor) + '</span>' : '') + '</div>' +
@@ -772,10 +813,10 @@
 
     container.innerHTML = pendentes.map(p => {
       const anexo = p.anexoUrl ? '<a href="' + esc(p.anexoUrl) + '" target="_blank" rel="noopener" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Anexo</a>' : '';
+      const tagUrgente = p.prioridade === 'Urgente' ? '<span class="badge-urgente">URGENTE</span>' : '';
       
-      // CORREÇÃO: Botão de edição adicionado
       return `<div class="card card-pendente">
-        <div class="pedido-header"><span class="material-symbols-rounded">person</span>${esc(p.nome || '')}
+        <div class="pedido-header"><span class="material-symbols-rounded">person</span>${esc(p.nome || '')} ${tagUrgente}
         <span style="font-size:11px; color:var(--text-muted); font-weight:400;">· ${esc(p.medico || '')}</span></div>
         <div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>${esc(p.exame || '')}</div>
         ${p.hipotese ? `<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>${esc(p.hipotese)}</div>` : ''}
@@ -784,45 +825,59 @@
           <button class="btn-main btn-aprovar" data-id="${p.id}" style="width:auto; margin:0; padding:10px 18px; font-size:13px;">
             <span class="material-symbols-rounded" style="font-size:16px;">task_alt</span>Aprovar
           </button>
-          
           <button class="btn-outline btn-editar" data-id="${p.id}" style="padding:10px 14px; margin:0; color:var(--text-muted); border-color:var(--border);">
             <span class="material-symbols-rounded" style="font-size:16px;">edit</span>Editar
           </button>
-          
           ${anexo}
         </div>
       </div>`;
     }).join('');
   }
 
-  function renderHistorico(items){
-    const wrap = document.getElementById('lista-historico');
+  window.atualizarBusca = () => {
+    renderDashboard(todosPedidos);
+  };
+
+  function renderDashboard(items){
+    const wrap = document.getElementById('lista-dashboard');
     if (!wrap) return;
-    const q = (document.getElementById('hist-search')?.value || '').toLowerCase().trim();
+    const q = (document.getElementById('dash-search')?.value || '').toLowerCase().trim();
     
     let filtradosGerais = items;
 
     const data = filtradosGerais.filter(p =>
       within2Months(p.timestamp) && 
-      (histFiltro === 'todos' || String(p.status || '').toLowerCase() === histFiltro) && 
+      (dashFiltro === 'todos' || String(p.status || '').toLowerCase() === dashFiltro) && 
       (!q || String(p.nome || '').toLowerCase().includes(q))
     );
 
     if(!data.length){ 
-      wrap.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">history</span>Nenhum historico encontrado.</div>'; 
+      wrap.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">search</span>Nenhum exame encontrado.</div>'; 
       return; 
     }
 
-    // CORREÇÃO: Removidos os onclicks, adicionadas as classes btn-gerar-guia e btn-reverter
     wrap.innerHTML = data.map(p => `
       <div class="card card-${String(p.status || '').toLowerCase()}">
-        <div class="pedido-header"><span class="material-symbols-rounded">person</span>${esc(p.nome || 'Sem nome')}</div>
+        <div class="pedido-header">
+          <span class="material-symbols-rounded">person</span>${esc(p.nome || 'Sem nome')}
+          ${p.prioridade === 'Urgente' ? '<span class="badge-urgente">URGENTE</span>' : ''}
+        </div>
         <div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>${esc(p.exame || 'Sem exame')}</div>
         <div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">event</span>Criado em: ${fmtDate(p.timestamp)}</div>
-        <div class="pedido-footer">
+        <div class="pedido-footer" style="margin-bottom:8px;">
           <span class="status-badge status-${String(p.status || '').toLowerCase()}">${esc(p.status || '')}</span>
           <span>${esc(p.instituicao || '')}</span>
         </div>
+        
+        <div style="display:flex; flex-wrap:wrap; gap:6px; padding-top:10px; border-top:1px dashed var(--border);">
+          <button class="btn-toggle btn-imagens ${p.imagensRececionadas ? 'active' : ''}" data-id="${p.id}" data-val="${p.imagensRececionadas}">
+            <span class="material-symbols-rounded">${p.imagensRececionadas ? 'check_circle' : 'radio_button_unchecked'}</span> Imagens Rececionadas
+          </button>
+          <button class="btn-toggle btn-relatorio ${p.relatorioEmitido ? 'active' : ''}" data-id="${p.id}" data-val="${p.relatorioEmitido}">
+            <span class="material-symbols-rounded">${p.relatorioEmitido ? 'task_alt' : 'article'}</span> Relatório Emitido
+          </button>
+        </div>
+
         ${String(p.status || '').toLowerCase() === 'aprovado' ? `
         <div class="pedido-actions">
           <button class="btn-outline btn-gerar-guia" data-id="${p.id}" data-inst="${esc(p.instituicao || '')}">
@@ -836,11 +891,14 @@
       </div>`).join('');
   }
 
-  window.filtrarHistorico = (estado, btn) => {
-    histFiltro = estado;
-    document.querySelectorAll('#tab-historico .btn-filter').forEach(b => b.className = 'btn-filter');
-    btn.classList.add(estado === 'todos' ? 'active-all' : estado === 'pendente' ? 'active-pend' : 'active-aprov');
-    renderHistorico(todosPedidos);
+  window.filtrarDashboard = (estado, btn) => {
+    dashFiltro = estado;
+    document.querySelectorAll('#tab-dashboard .btn-filter').forEach(b => b.className = 'btn-filter');
+    if (estado === 'todos') btn.classList.add('active-all');
+    else if (estado === 'pendente') btn.classList.add('active-pend');
+    else if (estado === 'aprovado') btn.classList.add('active-aprov');
+    else btn.classList.add('active-fin');
+    renderDashboard(todosPedidos);
   }
 
   // --- FUNÇÕES DE LÓGICA (APROVAR, REVERTER, PDF, EDITAR) ---
@@ -848,8 +906,7 @@
   async function aprovarPedido(id) {
     const instituicao = document.getElementById('sel-' + id).value;
     try {
-        const pedidoRef = doc(db, 'pedidos', id);
-        await updateDoc(pedidoRef, {
+        await updateDoc(doc(db, 'pedidos', id), {
             status: 'aprovado',
             instituicao: instituicao,
             aprovadoPor: userEmail
@@ -862,11 +919,13 @@
 
   async function reverterPedido(id) {
     try {
-        const pedidoRef = doc(db, 'pedidos', id);
-        await updateDoc(pedidoRef, {
+        await updateDoc(doc(db, 'pedidos', id), {
             status: 'pendente',
             instituicao: '',
-            aprovadoPor: ''
+            aprovadoPor: '',
+            guiaEmitida: false,
+            imagensRececionadas: false,
+            relatorioEmitido: false
         });
         showSnack('Pedido revertido para pendente!', 'success');
     } catch (err) {
@@ -876,19 +935,11 @@
 
   async function editarPedido(id) {
     const pedido = todosPedidos.find(p => p.id === id);
-    if (!pedido) {
-      showSnack('Erro: Pedido não encontrado.', 'error');
-      return;
-    }
-
+    if (!pedido) return;
     const novoExame = prompt("Editar Exame Requerido:", pedido.exame);
-
     if (novoExame !== null && novoExame.trim() !== "" && novoExame !== pedido.exame) {
       try {
-          const pedidoRef = doc(db, 'pedidos', id);
-          await updateDoc(pedidoRef, {
-              exame: novoExame.trim()
-          });
+          await updateDoc(doc(db, 'pedidos', id), { exame: novoExame.trim() });
           showSnack('Pedido atualizado com sucesso!', 'success');
       } catch (err) {
           showSnack('Erro ao editar: ' + err.message, 'error');
@@ -897,17 +948,10 @@
   }
 
   async function gerarGuia(id, instituicao) {
-    console.log("A preparar PDF para o pedido:", id, "na instituição:", instituicao);
     showSnack('A preparar o documento PDF...', 'info');
-    
-    // 1. Procurar os dados do pedido na variável global todosPedidos
     const pedido = todosPedidos.find(p => p.id === id);
-    if (!pedido) {
-      showSnack('Erro: Pedido não encontrado na base de dados.', 'error');
-      return;
-    }
+    if (!pedido) return;
 
-    // Função auxiliar para converter datas de YYYY-MM-DD para DD/MM/YYYY
     const formatarData = (dataStr) => {
       if (!dataStr) return '';
       const partes = dataStr.split('-');
@@ -916,120 +960,83 @@
     };
 
     const dataAtual = new Date().toLocaleDateString('pt-PT');
-    const dataExameFmt = formatarData(pedido.dataExame);
-    const dataNascFmt = formatarData(pedido.nascimento);
-
     let element;
     let filename = `Guia_${pedido.nome.replace(/\s+/g, '_')}_${instituicao}.pdf`;
 
-    // NOVO: 2. Buscar assinatura em Base64 ao Firestore
     try {
-      const configRef = doc(db, 'configuracoes', 'direcao');
-      const configSnap = await getDoc(configRef);
-      
+      const configSnap = await getDoc(doc(db, 'configuracoes', 'direcao'));
       if (configSnap.exists() && configSnap.data().assinatura_base64) {
         const assinaturaB64 = configSnap.data().assinatura_base64;
-        // Injeta a string base64 diretamente nas tags img
         document.getElementById('pdf-assinatura-vitrea').src = assinaturaB64;
         document.getElementById('pdf-assinatura-cligest').src = assinaturaB64;
-      } else {
-        console.warn("Documento de configuração não encontrado ou sem assinatura.");
       }
     } catch (err) {
-      console.error("Aviso: Não foi possível carregar a assinatura do Firestore", err);
+      console.warn("Aviso: Não carregou assinatura", err);
     }
 
-    // 3. Selecionar o template e preencher os dados dependendo da Instituição
     if (instituicao.toLowerCase() === 'vitrea') {
       element = document.getElementById('pdf-template-vitrea');
       document.getElementById('v-nome').textContent = pedido.nome || '';
       document.getElementById('v-contacto').textContent = pedido.contacto || '';
       document.getElementById('v-dataAut').textContent = dataAtual;
-      document.getElementById('v-dataReal').textContent = dataExameFmt;
+      document.getElementById('v-dataReal').textContent = formatarData(pedido.dataExame);
       document.getElementById('v-exame').textContent = pedido.exame || '';
     } 
     else if (instituicao.toLowerCase() === 'cligest') {
       element = document.getElementById('pdf-template-cligest');
       document.getElementById('c-medico').textContent = pedido.medico || '';
       document.getElementById('c-nome').textContent = pedido.nome || '';
-      document.getElementById('c-nascimento').textContent = dataNascFmt;
+      document.getElementById('c-nascimento').textContent = formatarData(pedido.nascimento);
       document.getElementById('c-sexo').textContent = pedido.sexo || '';
       document.getElementById('c-exame').textContent = pedido.exame || '';
       document.getElementById('c-hipotese').textContent = pedido.hipotese || '';
       document.getElementById('c-dataReal').textContent = dataAtual;
     } 
     else {
-      showSnack('Erro: Instituição inválida ou não selecionada.', 'error');
+      showSnack('Erro: Instituição inválida.', 'error');
       return;
     }
 
-    // 4. Tornar o template visível temporariamente para o html2pdf o conseguir ler
     element.style.display = 'block';
 
-    // 5. Configurações do html2pdf (Ajustadas para corrigir o corte)
     const opt = {
       margin:       0,
       filename:     filename,
       image:        { type: 'jpeg', quality: 1 },
-      html2canvas:  { 
-        scale: 2, 
-        useCORS: true,
-        scrollY: 0, 
-        scrollX: 0
-      },
+      html2canvas:  { scale: 2, useCORS: true, scrollY: 0, scrollX: 0 },
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    // 6. Gerar o PDF, descarregar e voltar a esconder o template
     try {
-      window.scrollTo(0, 0); // Força o ecrã para o topo para evitar que o PDF saia em branco/cortado
-      
+      window.scrollTo(0, 0); 
       await html2pdf().set(opt).from(element).save();
       element.style.display = 'none';
-      showSnack('PDF gerado com sucesso!', 'success');
+      
+      // MARCA GUIA EMITIDA APÓS GERAR O PDF
+      await updateDoc(doc(db, 'pedidos', id), { guiaEmitida: true });
+      showSnack('PDF gerado e Guia marcada como emitida!', 'success');
     } catch (err) {
-      console.error("Erro na geração do PDF:", err);
+      console.error(err);
       element.style.display = 'none';
       showSnack('Erro interno ao gerar PDF.', 'error');
     }
   }
 
-  // --- FUNÇÃO PARA REDEFINIR PALAVRA-PASSE NAS DEFINIÇÕES ---
   window.alterarPassword = () => {
-    // Verifica se o e-mail do utilizador está carregado
-    if (!userEmail) {
-      showSnack('Erro: Não foi possível identificar o seu e-mail.', 'error');
-      return;
-    }
-    
-    // Usa a mesma função do Firebase que o ecrã de login usa
+    if (!userEmail) return;
     sendPasswordResetEmail(auth, userEmail)
-      .then(() => {
-        showSnack('Link enviado! Verifique a sua caixa de entrada.', 'success');
-      })
-      .catch((error) => {
-        console.error(error);
-        showSnack('Erro ao enviar link de recuperação.', 'error');
-      });
+      .then(() => showSnack('Link enviado! Verifique a sua caixa de entrada.', 'success'))
+      .catch((err) => showSnack('Erro ao enviar link de recuperação.', 'error'));
   };
   
-  // --- FUNÇÕES DE APOIO ---
   function within2Months(timestamp) {
     if (!timestamp || typeof timestamp.toDate !== 'function') return false;
     const date = timestamp.toDate();
-    const now = new Date();
     const twoMonthsAgo = new Date();
-    twoMonthsAgo.setMonth(now.getMonth() - 2);
+    twoMonthsAgo.setMonth(new Date().getMonth() - 2);
     return date >= twoMonthsAgo;
   }
-
-  function fmtDate(timestamp) {
-    if (!timestamp || typeof timestamp.toDate !== 'function') return 'Data inválida';
-    const date = timestamp.toDate();
-    return date.toLocaleDateString('pt-PT');
-  }
   
-  // MÓDULO DOCUMENTOS (REAL-TIME SNAPSHOT)
   function carregarDocumentos(){
     const q = query(collection(db, 'documentos'), orderBy('ordem', 'asc'));
     unsubDocs = onSnapshot(q, (snap) => {
@@ -1073,54 +1080,53 @@
         </div>`;
       });
       wrap.innerHTML = out || '<div class="empty-state"><span class="material-symbols-rounded">folder_open</span>Sem documentos ativos de momento.</div>';
-    }, (err) => {
-      console.error("Erro a carregar documentos:", err);
-      const wrap = document.getElementById('lista-documentos');
-      if(wrap) wrap.innerHTML = `<div class="empty-state"><span class="material-symbols-rounded" style="color: #d93025;">error</span>Erro ao carregar documentos.</div>`;
     });
   }
 
-  // --- DELEGAÇÃO DE EVENTOS PARA OS BOTÕES (A MÁGICA ACONTECE AQUI) ---
-  document.addEventListener('click', (e) => {
+  // --- DELEGAÇÃO DE EVENTOS PARA OS BOTÕES ---
+  document.addEventListener('click', async (e) => {
     
     const btnAprov = e.target.closest('.btn-aprovar');
-    if (btnAprov) {
-        aprovarPedido(btnAprov.dataset.id);
-        return;
-    }
+    if (btnAprov) { aprovarPedido(btnAprov.dataset.id); return; }
 
     const btnEditar = e.target.closest('.btn-editar');
-    if (btnEditar) {
-        editarPedido(btnEditar.dataset.id);
-        return;
-    }
+    if (btnEditar) { editarPedido(btnEditar.dataset.id); return; }
 
     const btnGerar = e.target.closest('.btn-gerar-guia');
-    if (btnGerar) {
-        gerarGuia(btnGerar.dataset.id, btnGerar.dataset.inst);
-        return;
-    }
+    if (btnGerar) { gerarGuia(btnGerar.dataset.id, btnGerar.dataset.inst); return; }
 
     const btnReverter = e.target.closest('.btn-reverter');
-    if (btnReverter) {
-        reverterPedido(btnReverter.dataset.id);
-        return;
+    if (btnReverter) { reverterPedido(btnReverter.dataset.id); return; }
+
+    // DASHBOARD TOGGLES
+    const btnImg = e.target.closest('.btn-imagens');
+    if (btnImg) {
+      const id = btnImg.dataset.id;
+      const estadoAtual = btnImg.dataset.val === 'true';
+      await updateDoc(doc(db, 'pedidos', id), { imagensRececionadas: !estadoAtual });
+      showSnack(!estadoAtual ? 'Imagens marcadas como rececionadas.' : 'Imagens desmarcadas.', 'info');
+      return;
+    }
+
+    const btnRel = e.target.closest('.btn-relatorio');
+    if (btnRel) {
+      const id = btnRel.dataset.id;
+      const estadoAtual = btnRel.dataset.val === 'true';
+      const novoStatus = !estadoAtual ? 'finalizado' : 'aprovado';
+      await updateDoc(doc(db, 'pedidos', id), { relatorioEmitido: !estadoAtual, status: novoStatus });
+      showSnack(!estadoAtual ? 'Relatório emitido. Exame arquivado!' : 'Marcação removida. Exame revertido.', 'success');
+      return;
     }
   });
 
-  // --- PASSO 4: Código que preenche a lista (Tem de ficar antes de fechar o script!) ---
   document.addEventListener('DOMContentLoaded', () => {
     const datalistCID = document.getElementById('lista-cid');
-    
     if (typeof listaCompletaCID !== 'undefined') {
       listaCompletaCID.forEach(diagnostico => {
         const option = document.createElement('option');
         option.value = diagnostico;
         datalistCID.appendChild(option);
       });
-      console.log(`Lista CID-10 carregada com sucesso: ${listaCompletaCID.length} códigos.`);
-    } else {
-      console.warn("Ficheiro cid10.js não encontrado ou lista vazia.");
     }
   });
 
