@@ -1,4 +1,3 @@
-// Ficheiro: cid10.js
 const listaCompletaCID = [
   // --- SINTOMAS GERAIS E INESPECÍFICOS (R) ---
   "R05 - Tosse",
@@ -7,6 +6,8 @@ const listaCompletaCID = [
   "R10.4 - Outras dores abdominais e as não especificadas",
   "R11 - Náusea e vómitos",
   "R31 - Hematúria não especificada",
+  "R32 - Incontinência urinária não especificada",
+  "R33 - Retenção urinária",
   "R42 - Tontura e instabilidade",
   "R51 - Cefaleia (Dor de cabeça)",
   "R55 - Síncope e colapso",
@@ -91,19 +92,43 @@ const listaCompletaCID = [
   "K81.9 - Colecistite, não especificada",
   "K85.9 - Pancreatite aguda, não especificada",
 
-  // --- GENITURINÁRIO E GINECOLOGIA ---
+  // --- RENAL, UROLOGIA MASCULINA E GINECOLOGIA ---
+  // Rins e Vias Urinárias
   "N13.3 - Outras hidronefroses e as não especificadas",
+  "N17.9 - Insuficiência renal aguda, não especificada",
+  "N18.9 - Doença renal crónica, não especificada",
   "N20.0 - Cálculo do rim",
   "N20.1 - Cálculo do uréter",
+  "N20.2 - Cálculo do rim com cálculo do uréter",
+  "N20.9 - Cálculo urinário, não especificado (Litíase urinária)",
+  "N21.0 - Cálculo na bexiga",
   "N23 - Cólica nefrética não especificada",
+  "N28.1 - Cisto do rim, adquirido",
   "N28.9 - Transtorno do rim e do uréter, não especificado",
   "N39.0 - Infeção do trato urinário (ITU), de localização não especificada",
-  "N40 - Hiperplasia da próstata",
+  "Q61.9 - Doença cística do rim, não especificada",
+  // Masculino
+  "N40 - Hiperplasia da próstata (HBP)",
+  "N41.9 - Doença inflamatória da próstata, não especificada (Prostatite)",
+  "N43.3 - Hidrocelo, não especificado",
+  "N44.9 - Torção do testículo e do epidídimo",
+  "N45.9 - Orquite, epididimite e orquiepididimite sem abcesso",
+  "N47 - Prepúcio redundante, fimose e parafimose",
+  // Feminino
   "N60.9 - Displasia mamária benigna, não especificada",
   "N63 - Nódulo mamário não especificado",
+  "N70.9 - Salpingite e ooforite, não especificadas (Anexite)",
+  "N73.9 - Doença inflamatória pélvica feminina, não especificada (DIP)",
   "N80.9 - Endometriose, não especificada",
+  "N81.9 - Prolapso genital feminino, não especificado",
   "N83.2 - Outros cistos ovarianos e os não especificados",
+  "N84.0 - Pólipo do corpo do útero (Pólipo endometrial)",
+  "N85.0 - Hiperplasia glandular do endométrio",
+  "N92.6 - Menstruação irregular, não especificada",
+  "N93.9 - Sangramento uterino e vaginal anormal, não especificado",
+  "N94.6 - Dismenorreia não especificada",
   "D25.9 - Leiomioma do útero, não especificado (Mioma)",
+  "O00.9 - Gravidez ectópica, não especificada",
 
   // --- VASCULAR E CARDIOLOGIA ---
   "I50.9 - Insuficiência cardíaca, não especificada",
@@ -117,6 +142,8 @@ const listaCompletaCID = [
   "E04.1 - Nódulo tiroideu simples",
   "E04.9 - Bócio não tóxico, não especificado",
   "E11.9 - Diabetes mellitus não insulinodependente, sem complicações",
+  "E78.0 - Hipercolesterolemia pura",
+  "E79.0 - Hiperuricemia sem sinais de artrite inflamatória ou doença tofácea",
 
   // --- ONCOLOGIA (TUMORES MALIGNOS) ---
   "C18.9 - Neoplasia maligna do cólon, não especificada",
@@ -142,8 +169,6 @@ const listaCompletaCID = [
   "Z12.5 - Exame de rastreio especial para neoplasia da próstata",
   "Z36.9 - Rastreio pré-natal, não especificado (Ecografia obstétrica)",
 
-  // Adições:
-  "E78.0 - Hipercolesterolemia pura",
-  "E79.0 - Hiperuricemia sem sinais de artrite inflamatória ou doença tofácea",
+  // Adições Finais:
   "J84.9 - Doença pulmonar intersticial, não especificada"
 ];
