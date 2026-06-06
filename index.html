@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Encaminhamentos – Aliva Saúde – Aliva Saúde</title>
+  <title>Encaminhamentos – Aliva Saúde</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2AA8A8">
   <link rel="apple-touch-icon" href="icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes"> <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="mobile-web-app-capable" content="yes"> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
@@ -64,7 +65,7 @@
     .btn-icon-round { background: rgba(255,255,255,0.18); border: none; color: white; padding: 6px 10px; border-radius: 20px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; cursor: pointer; }
     .btn-icon-round:hover { background: rgba(255,255,255,0.3); }
 
-    /* STATE TOGGLES (NEW) */
+    /* STATE TOGGLES */
     .btn-toggle { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; white-space: nowrap; }
     .btn-toggle .material-symbols-rounded { font-size: 14px; }
     .btn-toggle.active { background: #e6f4ea; border-color: #1e8e3e; color: #1e8e3e; }
@@ -192,7 +193,7 @@
   <header class="app-header">
     <div class="header-left">
       <img class="header-logo" src="icon-512.png" alt="Aliva" onerror="this.style.display='none'">
-      <span class="header-title brand-text">Encaminhamentos – Aliva Saúde</span>
+      <span class="header-title brand-text">Encaminhamentos</span>
     </div>
     <div class="header-right">
       <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.1; margin-right: 4px;">
@@ -255,71 +256,17 @@
       <div class="form-label"><span class="material-symbols-rounded">radiology</span> Exame Requerido</div>
       <input type="text" id="f-exame" required placeholder="Pesquise por código interno ou nome..." list="lista-exames" autocomplete="off">
       <div style="font-size:11px; color:var(--text-muted); margin-top:-6px; margin-bottom:12px; line-height:1.4;">
-        * Nota: Pode pesquisar pelo nome ou pelo código interno da Aliva. Estes códigos são exclusivos para facilitar a pesquisa (diferentes dos códigos das clínicas parceiras).
+        * Nota: Pode pesquisar pelo nome ou pelo código interno da Aliva. Estes códigos são exclusivos para facilitar a pesquisa.
       </div>
       
-      <datalist id="lista-exames">
-        <option value="64000001 - TC do Crânio">
-        <option value="64000002 - TC do Tórax">
-        <option value="64000004 - TC dos Membros Inferiores">
-        <option value="64000008 - TC da Coluna Lombo-Sagrada">
-        <option value="64000009 - TC Mandíbula">
-        <option value="64000010 - TC dos Seios Perinasais">
-        <option value="64000011 - Uro TC">
-        <option value="64000012 - TC da Coluna Cervical">
-        <option value="64000015 - TC das Órbitas">
-        <option value="64000016 - TC da Sela Turca ou Hipófise">
-        <option value="64000017 - TC do Pescoço">
-        <option value="64000019 - TC da Articulação Tibio-Társica">
-        <option value="64000020 - TC da Mão">
-        <option value="64000021 - Angio TC de Crânio">
-        <option value="64000022 - Angio TC das Coronárias">
-        <option value="64000027 - TC Abdominal">
-        <option value="64000028 - TC Pélvico">
-        <option value="64000029 - TC da Coluna Dorsal">
-        <option value="64000031 - TC do Maxilar">
-        <option value="64000032 - TC do Cavum">
-        <option value="64000033 - TC do Joelho">
-        <option value="64000034 - TC dos Joelhos com Medição TAGT">
-        <option value="64000035 - TC dos Colos Femurais + Joelhos + Tibio-Társicas (Medição)">
-        <option value="64000036 - TC do Pé">
-        <option value="64000037 - TC do Punho">
-        <option value="64000038 - TC das Articulações Sacro-Ilíacas">
-        <option value="64000039 - TC da Articulação Coxo-Femural">
-        <option value="64000040 - TC da Bacia">
-        <option value="64000041 - TC da Anca">
-        <option value="64000042 - TC do Cotovelo">
-        <option value="64000043 - TC do Ombro">
-        <option value="64000044 - TC dos Ouvidos e/ou CAIs ou Âng. Pontocerebelosos">
-        <option value="64000045 - TC da Coluna Sacro-Coccígea">
-        <option value="64000046 - TC da Charneira Cranio-Vertebral">
-        <option value="64000047 - Angio TC Pélvico">
-        <option value="64000048 - Angio TC Abdómen">
-        <option value="64000049 - Angio TC Tórax">
-        <option value="64000050 - Angio TC Troncos Supra-Aórticos">
-        <option value="64000051 - Angio TC Membros Inferiores">
-        <option value="64000052 - Angio TC Membro Superior">
-        <option value="64000053 - Angio TC Aorta Torácica">
-        <option value="64000054 - Angio TC Aorta Abdominal">
-        <option value="64000055 - Score de Cálcio">
-        <option value="64000056 - TC da Grelha Costal">
-        <option value="64000058 - TC Abdómen + TC Pélvico">
-        <option value="64000059 - TC da Perna">
-        <option value="64000060 - TC Face">
-        <option value="64000061 - TC Articulações Têmporo-Mandibulares">
-        <option value="64000062 - Dentalscan">
-        <option value="64000063 - TC do Joelho com Medição TAGT">
-        <option value="64000064 - TC do Braço">
-        <option value="64000065 - Sedação em TC">
-        <option value="64000066 - TC Esterno">
-      </datalist>
+      <datalist id="lista-exames"></datalist>
 
-      <div class="form-label"><span class="material-symbols-rounded">diagnosis</span> Hipotese Diagnostica (ICD 10)</div>
+      <div class="form-label"><span class="material-symbols-rounded">diagnosis</span> Hipótese Diagnóstica (ICD 10)</div>
       <input type="text" id="f-hipotese" required placeholder="Pesquise o código ou diagnóstico..." list="lista-cid" autocomplete="off">
       
       <datalist id="lista-cid"></datalist>
       
-      <div class="form-label"><span class="material-symbols-rounded">stethoscope</span> Medico Prescritor</div>
+      <div class="form-label"><span class="material-symbols-rounded">stethoscope</span> Médico Prescritor</div>
       <input type="text" id="f-medico" required placeholder="Pesquise o nome do médico..." list="lista-medicos" autocomplete="off">
       
       <datalist id="lista-medicos">
@@ -396,7 +343,7 @@
         <option value="Yudelsy Quiala">
       </datalist>
       
-      <div class="form-label"><span class="material-symbols-rounded">attach_file</span> Anexar Prescricao / Relatorio</div>
+      <div class="form-label"><span class="material-symbols-rounded">attach_file</span> Anexar Prescrição / Relatório</div>
       <input type="file" id="f-anexo" accept="image/*,.pdf" multiple style="margin-bottom:12px;">
       
       <button type="submit" class="btn-main" id="btn-submit-rececao" style="margin-top:4px;">
@@ -422,7 +369,7 @@
   </div>
 
   <div id="tab-admin" class="tab-content">
-    <div class="section-title"><span class="material-symbols-rounded">verified_user</span> Pedidos Pendentes de Aprovacao</div>
+    <div class="section-title"><span class="material-symbols-rounded">verified_user</span> Pedidos Pendentes de Aprovação</div>
     <div id="lista-admin">
       <div class="empty-state"><span class="material-symbols-rounded">check_circle</span>Sem pedidos pendentes.</div>
     </div>
@@ -467,19 +414,19 @@
 
   <nav class="bottom-nav">
     <button class="nav-btn active" id="nav-rececao" onclick="mostrarTab('rececao', this)">
-      <span class="material-symbols-rounded icon">add_circle</span>Rececao
+      <span class="material-symbols-rounded icon">add_circle</span>Recepção
     </button>
     <button class="nav-btn hidden" id="nav-admin" onclick="mostrarTab('admin', this)">
-      <span class="material-symbols-rounded icon">fact_check</span>Aprovacao
+      <span class="material-symbols-rounded icon">fact_check</span>Aprovação
     </button>
-    <button class="nav-btn" id="nav-dashboard" onclick="mostrarTab('dashboard', this)">
+    <button class="nav-btn hidden" id="nav-dashboard" onclick="mostrarTab('dashboard', this)">
       <span class="material-symbols-rounded icon">dashboard</span>Dashboard
     </button>
     <button class="nav-btn" id="nav-docs" onclick="mostrarTab('documentos', this)">
       <span class="material-symbols-rounded icon">description</span>Documentos
     </button>
     <button class="nav-btn" id="nav-config" onclick="mostrarTab('config', this)">
-      <span class="material-symbols-rounded icon">settings</span>Definicoes
+      <span class="material-symbols-rounded icon">settings</span>Definições
     </button>
   </nav>
 </div>
@@ -538,7 +485,7 @@
       <div style="display:grid; grid-template-columns:auto 1fr auto 1fr; align-items:center; column-gap:6px; margin-bottom:8px;"><div style="font-weight:700;">Data de Nascimento:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-nascimento"></span></div><div style="font-weight:700; padding-left:6px;">Sexo:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-sexo"></span></div></div>
       <div style="font-size:10.5pt; font-weight:700; margin:0 0 6px;">Exame de Tomografia Computorizada</div>
       <div id="c-exame" style="background:#cfe0f5; padding:8px; min-height:38px; margin-bottom:6px; white-space:pre-wrap; display:flex; align-items:center; font-weight:700;"></div>
-      <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:6px; margin-bottom:8px;"><div style="font-weight:700;">Hipotese Diagnostica (ICD 10):</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-hipotese"></span></div></div>
+      <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:6px; margin-bottom:8px;"><div style="font-weight:700;">Hipótese Diagnóstica (ICD 10):</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-hipotese"></span></div></div>
       <div style="font-size:10.5pt; font-weight:700; margin:0 0 6px;">Declaracao de Responsabilidade Clinica</div>
       <div style="font-size:8.9pt; line-height:1.38; text-align:justify; margin-bottom:8px;">A entidade solicitante declara que o exame acima indicado foi prescrito por medico devidamente habilitado, apos avaliacao clinica do paciente. A indicacao clinica, a escolha do exame e a pertinencia da sua realizacao sao da inteira responsabilidade da unidade solicitante e do medico prescritor. A Clinica Vida atuara exclusivamente como unidade executora do exame de imagiologia, nao sendo responsavel pela decisao clinica que motivou o pedido do exame.</div>
       <div style="display:grid; grid-template-columns:auto 1fr auto 1fr; align-items:center; column-gap:6px; margin-bottom:8px;"><div style="font-weight:700;">Local:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;">Luanda</div><div style="font-weight:700; padding-left:6px;">Data:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-dataReal"></span></div></div>
@@ -553,10 +500,11 @@
 <script type="module">
   import { auth, db } from './firebase.js?v=2';
   import { signInWithEmailAndPassword, signOut, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-  import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+  import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, updateDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
   let userEmail = "";
   let eAdmin = false;
+  let eIntermedio = false;
   let dashFiltro = 'todos';
   let filtroAtual = 'todos';
   let todosPedidos = [];
@@ -597,7 +545,7 @@
     btn.classList.add('active');
   };
 
-  // FILTRO RECECAO
+  // FILTRO RECEÇÃO
   window.filtrarRec = (estado, btn) => {
     filtroAtual = estado;
     document.querySelectorAll('#tab-rececao .btn-filter').forEach(b => b.className = 'btn-filter');
@@ -618,7 +566,7 @@
         document.getElementById('l-email').value.trim(),
         document.getElementById('l-password').value);
     } catch (authError) {
-      showSnack('Erro de Autenticacao: ' + authError.code, 'error');
+      showSnack('Erro de Autenticação: ' + authError.code, 'error');
       btn.disabled = false;
       btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">login</span> ENTRAR';
     }
@@ -629,22 +577,30 @@
     if (!email || !email.includes('@')) { alert('Introduza o seu e-mail no campo acima primeiro.'); return; }
     sendPasswordResetEmail(auth, email)
       .then(() => alert('Link enviado! Verifique o seu e-mail.'))
-      .catch(() => alert('Erro ao enviar. Verifique o endereco.'));
+      .catch(() => alert('Erro ao enviar. Verifique o endereço.'));
   };
 
   document.getElementById('btn-logout').onclick = () => signOut(auth);
 
-  // AUTH STATE
-  onAuthStateChanged(auth, (user) => {
+  // AUTH STATE E NÍVEIS DE ACESSO
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       userEmail = user.email.toLowerCase();
-      const listaAdmins = [
-        'carlos.martins@alivasaude.com',
-        'vera.fontes@alivasaude.com',
-        'ana.baiao@alivasaude.com',
-      ];
+      eAdmin = false;
+      eIntermedio = false;
+
+      // Buscar os perfis dinamicamente ao Firebase
+      try {
+        const configSnap = await getDoc(doc(db, 'configuracoes', 'acessos'));
+        if (configSnap.exists()) {
+          const dados = configSnap.data();
+          if (dados.admins && dados.admins.includes(userEmail)) eAdmin = true;
+          if (dados.intermedios && dados.intermedios.includes(userEmail)) eIntermedio = true;
+        }
+      } catch (err) {
+        console.warn("Erro ao ler os níveis de acesso", err);
+      }
       
-      eAdmin = listaAdmins.includes(userEmail);
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('app-screen').classList.remove('hidden');
       
@@ -655,7 +611,17 @@
       const configEmailEl = document.getElementById('config-user-email');
       if (configEmailEl) configEmailEl.textContent = userEmail;
 
-      if (eAdmin) document.getElementById('nav-admin').classList.remove('hidden');
+      // Gestão das Abas consoante o Nível (Tier)
+      if (eAdmin) {
+        document.getElementById('nav-admin').classList.remove('hidden');
+        document.getElementById('nav-dashboard').classList.remove('hidden');
+      } else if (eIntermedio) {
+        document.getElementById('nav-admin').classList.add('hidden');
+        document.getElementById('nav-dashboard').classList.remove('hidden');
+      } else {
+        document.getElementById('nav-admin').classList.add('hidden');
+        document.getElementById('nav-dashboard').classList.add('hidden');
+      }
       
       iniciarPedidos();
       carregarDocumentos();
@@ -663,6 +629,7 @@
       document.getElementById('login-screen').classList.remove('hidden');
       document.getElementById('app-screen').classList.add('hidden');
       document.getElementById('nav-admin').classList.add('hidden');
+      document.getElementById('nav-dashboard').classList.add('hidden');
       if (unsubPedidos) { unsubPedidos(); unsubPedidos = null; }
       if (unsubDocs) { unsubDocs(); unsubDocs = null; }
     }
@@ -725,7 +692,7 @@
         anexosUrls: anexosUrls, 
         anexoUrl: anexosUrls.length > 0 ? anexosUrls[0] : '',
         status: 'pendente', instituicao: '',
-        guiaEmitida: false, imagensRececionadas: false, relatorioEmitido: false,
+        guiaEmitida: false, imagensRecepcionadas: false, relatorioEmitido: false,
         criadoPor: userEmail, timestamp: serverTimestamp()
       });
 
@@ -760,12 +727,12 @@
 
   function fmtDate(timestamp) {
     if (!timestamp || typeof timestamp.toDate !== 'function') return 'Data inválida';
-    return timestamp.toDate().toLocaleDateString('pt-PT');
+    const d = timestamp.toDate();
+    return d.toLocaleDateString('pt-PT') + ' às ' + d.toLocaleTimeString('pt-PT', {hour: '2-digit', minute:'2-digit'});
   }
 
   function renderRececao(lista) {
     const container = document.getElementById('lista-rececao');
-    // Filtra sempre os finalizados para não aparecerem na Receção
     let ativa = lista.filter(p => p.status !== 'finalizado');
     let filtrada = filtroAtual === 'todos' ? ativa : ativa.filter(p => p.status === filtroAtual);
     
@@ -828,6 +795,9 @@
           <button class="btn-outline btn-editar" data-id="${p.id}" style="padding:10px 14px; margin:0; color:var(--text-muted); border-color:var(--border);">
             <span class="material-symbols-rounded" style="font-size:16px;">edit</span>Editar
           </button>
+          <button class="btn-outline btn-eliminar" data-id="${p.id}" style="padding:10px 14px; margin:0; color:#d93025; border-color:#d93025;" title="Eliminar Pedido">
+            <span class="material-symbols-rounded" style="font-size:16px;">delete</span>
+          </button>
           ${anexo}
         </div>
       </div>`;
@@ -870,8 +840,8 @@
         </div>
         
         <div style="display:flex; flex-wrap:wrap; gap:6px; padding-top:10px; border-top:1px dashed var(--border);">
-          <button class="btn-toggle btn-imagens ${p.imagensRececionadas ? 'active' : ''}" data-id="${p.id}" data-val="${p.imagensRececionadas}">
-            <span class="material-symbols-rounded">${p.imagensRececionadas ? 'check_circle' : 'radio_button_unchecked'}</span> Imagens Rececionadas
+          <button class="btn-toggle btn-imagens ${p.imagensRecepcionadas ? 'active' : ''}" data-id="${p.id}" data-val="${p.imagensRecepcionadas}">
+            <span class="material-symbols-rounded">${p.imagensRecepcionadas ? 'check_circle' : 'radio_button_unchecked'}</span> Imagens Recepcionadas
           </button>
           <button class="btn-toggle btn-relatorio ${p.relatorioEmitido ? 'active' : ''}" data-id="${p.id}" data-val="${p.relatorioEmitido}">
             <span class="material-symbols-rounded">${p.relatorioEmitido ? 'task_alt' : 'article'}</span> Relatório Emitido
@@ -901,7 +871,7 @@
     renderDashboard(todosPedidos);
   }
 
-  // --- FUNÇÕES DE LÓGICA (APROVAR, REVERTER, PDF, EDITAR) ---
+  // --- FUNÇÕES DE LÓGICA (APROVAR, REVERTER, EDITAR, ELIMINAR, PDF) ---
   
   async function aprovarPedido(id) {
     const instituicao = document.getElementById('sel-' + id).value;
@@ -924,7 +894,7 @@
             instituicao: '',
             aprovadoPor: '',
             guiaEmitida: false,
-            imagensRececionadas: false,
+            imagensRecepcionadas: false,
             relatorioEmitido: false
         });
         showSnack('Pedido revertido para pendente!', 'success');
@@ -944,6 +914,15 @@
       } catch (err) {
           showSnack('Erro ao editar: ' + err.message, 'error');
       }
+    }
+  }
+
+  async function eliminarPedido(id) {
+    try {
+        await deleteDoc(doc(db, 'pedidos', id));
+        showSnack('Pedido eliminado permanentemente!', 'success');
+    } catch (err) {
+        showSnack('Erro ao eliminar: ' + err.message, 'error');
     }
   }
 
@@ -1092,33 +1071,61 @@
     const btnEditar = e.target.closest('.btn-editar');
     if (btnEditar) { editarPedido(btnEditar.dataset.id); return; }
 
+    const btnEliminar = e.target.closest('.btn-eliminar');
+    if (btnEliminar) { 
+      if (confirm('Tem a certeza que deseja eliminar este pedido? Esta ação não pode ser revertida.')) {
+        eliminarPedido(btnEliminar.dataset.id); 
+      }
+      return; 
+    }
+
     const btnGerar = e.target.closest('.btn-gerar-guia');
     if (btnGerar) { gerarGuia(btnGerar.dataset.id, btnGerar.dataset.inst); return; }
 
     const btnReverter = e.target.closest('.btn-reverter');
     if (btnReverter) { reverterPedido(btnReverter.dataset.id); return; }
 
-    // DASHBOARD TOGGLES
+    // DASHBOARD TOGGLES COM DUPLA VALIDAÇÃO PARA ARQUIVO
     const btnImg = e.target.closest('.btn-imagens');
     if (btnImg) {
       const id = btnImg.dataset.id;
-      const estadoAtual = btnImg.dataset.val === 'true';
-      await updateDoc(doc(db, 'pedidos', id), { imagensRececionadas: !estadoAtual });
-      showSnack(!estadoAtual ? 'Imagens marcadas como rececionadas.' : 'Imagens desmarcadas.', 'info');
+      const pedido = todosPedidos.find(x => x.id === id);
+      if(!pedido) return;
+      
+      const novoEstadoImg = !(pedido.imagensRecepcionadas === true);
+      const stRelatorio = (pedido.relatorioEmitido === true);
+      const novoStatus = (novoEstadoImg && stRelatorio) ? 'finalizado' : 'aprovado';
+
+      await updateDoc(doc(db, 'pedidos', id), { 
+        imagensRecepcionadas: novoEstadoImg,
+        status: novoStatus
+      });
+      showSnack(novoEstadoImg ? 'Imagens marcadas como recepcionadas.' : 'Imagens desmarcadas.', 'info');
+      if (novoStatus === 'finalizado') showSnack('Exame concluído e arquivado!', 'success');
       return;
     }
 
     const btnRel = e.target.closest('.btn-relatorio');
     if (btnRel) {
       const id = btnRel.dataset.id;
-      const estadoAtual = btnRel.dataset.val === 'true';
-      const novoStatus = !estadoAtual ? 'finalizado' : 'aprovado';
-      await updateDoc(doc(db, 'pedidos', id), { relatorioEmitido: !estadoAtual, status: novoStatus });
-      showSnack(!estadoAtual ? 'Relatório emitido. Exame arquivado!' : 'Marcação removida. Exame revertido.', 'success');
+      const pedido = todosPedidos.find(x => x.id === id);
+      if(!pedido) return;
+
+      const novoEstadoRel = !(pedido.relatorioEmitido === true);
+      const stImg = (pedido.imagensRecepcionadas === true);
+      const novoStatus = (stImg && novoEstadoRel) ? 'finalizado' : 'aprovado';
+
+      await updateDoc(doc(db, 'pedidos', id), { 
+        relatorioEmitido: novoEstadoRel, 
+        status: novoStatus 
+      });
+      showSnack(novoEstadoRel ? 'Relatório emitido.' : 'Marcação removida. Exame revertido.', 'success');
+      if (novoStatus === 'finalizado') showSnack('Exame concluído e arquivado!', 'success');
       return;
     }
   });
 
+  // CARREGAR LISTAS EXTERNAS NO ARRANQUE
   document.addEventListener('DOMContentLoaded', () => {
     const datalistCID = document.getElementById('lista-cid');
     if (typeof listaCompletaCID !== 'undefined') {
@@ -1128,10 +1135,20 @@
         datalistCID.appendChild(option);
       });
     }
+
+    const datalistExames = document.getElementById('lista-exames');
+    if (typeof listaCompletaExames !== 'undefined') {
+      listaCompletaExames.forEach(exame => {
+        const option = document.createElement('option');
+        option.value = exame;
+        datalistExames.appendChild(option);
+      });
+    }
   });
 
 </script>
 
+<script src="exames.js"></script>
 <script src="cid10.js"></script>
 
 </body>
