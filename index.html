@@ -104,7 +104,7 @@
     .card-pendente { border-left-color: #FFD700; }
     .card-aprovado { border-left-color: var(--primary); }
     .card-finalizado { border-left-color: #888888; opacity: 0.85; }
-    .pedido-header { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+    .pedido-header { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: space-between; }
     .pedido-header .material-symbols-rounded { font-size: 16px; }
     .pedido-corpo { font-size: 14px; margin-bottom: 6px; color: var(--text-main); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .pedido-corpo .material-symbols-rounded { font-size: 16px; color: var(--text-muted); }
@@ -269,12 +269,7 @@
       <div class="form-label"><span class="material-symbols-rounded">stethoscope</span> Médico Prescritor</div>
       <input type="text" id="f-medico" required placeholder="Pesquise o nome do médico..." list="lista-medicos" autocomplete="off">
       
-      <datalist id="lista-medicos">
-        <option value="Ana Maria Dias">
-        <option value="Constantina Stela António">
-        <option value="Filomena Coelho">
-        <option value="Sandra Martins">
-        </datalist>
+      <datalist id="lista-medicos"></datalist>
       
       <div class="form-label"><span class="material-symbols-rounded">attach_file</span> Anexar Prescrição / Relatório</div>
       <input type="file" id="f-anexo" accept="image/*,.pdf" multiple style="margin-bottom:12px;">
@@ -319,17 +314,17 @@
       </div>
 
       <div class="form-row-3" style="margin-bottom: 12px;">
-        <select id="dash-filtro-prioridade" onchange="window.atualizarBusca()" style="padding: 10px; border-radius: 8px; font-size: 12px; background: var(--bg); color: var(--text-main); border: 1px solid var(--border);">
+        <select id="dash-filtro-prioridade" onchange="window.atualizarBusca()" style="padding: 10px; border-radius: 8px; font-size: 12px; background: var(--bg); color: var(--text-main); border: 1px solid var(--border); outline:none;">
           <option value="todos">Prioridade: Todas</option>
           <option value="urgente">Urgentes</option>
           <option value="normal">Normais</option>
         </select>
-        <select id="dash-filtro-imagem" onchange="window.atualizarBusca()" style="padding: 10px; border-radius: 8px; font-size: 12px; background: var(--bg); color: var(--text-main); border: 1px solid var(--border);">
+        <select id="dash-filtro-imagem" onchange="window.atualizarBusca()" style="padding: 10px; border-radius: 8px; font-size: 12px; background: var(--bg); color: var(--text-main); border: 1px solid var(--border); outline:none;">
           <option value="todos">Imagens: Todas</option>
           <option value="com">Recepcionadas</option>
           <option value="sem">Pendentes</option>
         </select>
-        <select id="dash-filtro-relatorio" onchange="window.atualizarBusca()" style="padding: 10px; border-radius: 8px; font-size: 12px; background: var(--bg); color: var(--text-main); border: 1px solid var(--border);">
+        <select id="dash-filtro-relatorio" onchange="window.atualizarBusca()" style="padding: 10px; border-radius: 8px; font-size: 12px; background: var(--bg); color: var(--text-main); border: 1px solid var(--border); outline:none;">
           <option value="todos">Relatórios: Todos</option>
           <option value="com">Emitidos</option>
           <option value="sem">Pendentes</option>
@@ -356,6 +351,11 @@
         <span class="material-symbols-rounded" style="font-size:18px;">lock_reset</span> Redefinir Palavra-passe
       </button>
       <p style="font-size:11px; color:var(--text-muted); margin-top:8px;">* Será enviado um link seguro para o seu e-mail para escolher uma nova palavra-passe.</p>
+    </div>
+
+    <div class="section-title" style="margin-top: 16px;"><span class="material-symbols-rounded">admin_panel_settings</span> Administração</div>
+    <div class="form-card" style="border-left-color: var(--border);">
+      <p style="font-size:14px; color:var(--text-muted); line-height:1.6;">Gestão de assinaturas, listagem de médicos parceiros e parametrizações técnicas. Em desenvolvimento.</p>
     </div>
   </div>
 
@@ -386,24 +386,60 @@
 <div id="pdf-wrapper" aria-hidden="true">
   <div class="pdoc" id="pdf-template-vitrea" style="display:none; padding:20mm; font-family:Arial,Helvetica,sans-serif; font-size:10pt; line-height:1.5; color:#000; background:#fff;">
     <div style="margin-bottom:20px;">
-      <h1 style="font-size:14pt; font-weight:bold; margin:0 0 10px;">VITREA - GUIA DE EXAME</h1>
-      <div style="font-size:10pt; color:#333;">Centro de diagnóstico por imagem e cirurgia de ambulatório</div>
+      <img src="vitrea-logo.jpg" alt="Vitrea" style="height:50px; margin-bottom:5px;" onerror="this.style.display='none'">
+      <div style="font-size:10pt; color:#333;">Centro de diagnostico por imagem e cirurgia de ambulatorio</div>
     </div>
+    <h1 style="font-size:11pt; font-weight:bold; margin:0 0 25px; line-height:1.3;">TERMO DE RESPONSABILIDADE E AUTORIZACAO PARA A REALIZACAO DE EXAMES NA VITREA</h1>
     <div style="margin-bottom:25px; font-size:10pt;">
       <div style="border-bottom:1px solid #000; padding:6px 0; display:flex;"><strong style="width:290px;">NOME COMPLETO DO PACIENTE:</strong><span id="v-nome"></span></div>
-      <div style="border-bottom:1px solid #000; padding:6px 0; display:flex;"><strong style="width:290px;">CONTACTO:</strong><span id="v-contacto"></span></div>
+      <div style="border-bottom:1px solid #000; padding:6px 0; display:flex;"><strong style="width:290px;">CONTACTO TELEFONICO DO PACIENTE:</strong><span id="v-contacto"></span></div>
+      <div style="border-bottom:1px solid #000; padding:6px 0; display:flex;"><strong style="width:290px;">DATA AUTORIZACAO:</strong><span id="v-dataAut"></span></div>
       <div style="border-bottom:1px solid #000; padding:6px 0; display:flex;"><strong style="width:290px;">DATA DA REALIZACAO DO EXAME:</strong><span id="v-dataReal"></span></div>
       <div style="border-bottom:1px solid #000; padding:6px 0; display:flex;"><strong style="width:290px;">EXAME REQUERIDO:</strong><span id="v-exame"></span></div>
+      <div style="border-bottom:1px solid #000; padding:6px 0; display:flex; height:29px; align-items:center;"><strong style="width:290px;">CODIGO DO EXAME (VITREA)</strong></div>
     </div>
+    <div style="text-align:center; margin-bottom:25px;">
+      <div style="font-weight:bold; font-size:11pt; margin-bottom:5px;">PARCEIRO PARA A AREA DE IMAGIOLOGIA</div>
+      <div style="font-size:9.5pt; line-height:1.4;">RADIOLOGIA-RX, RADIOLOGIA DE INTERVENCAO, ECOGRAFIA DOPLLER,<br>ECOCARDIOGRAMA, ELETROCARDIOGRAMA, MAPA, HOLTER, PROVA DE ESFORCO<br>ANGIO TAC CORONARIO, TOMOGRAFIA AXIAL COMPUTORIZADA.</div>
+    </div>
+    <p style="text-align:justify; font-size:10pt; line-height:1.5; margin-bottom:15px;">A Aliva Saude autoriza a realizacao do ato medico acima descrito e responsabiliza-se pelo seu pagamento a Vitrea, nos termos do contrato estabelecido entre as duas instituicoes.</p>
+    <p style="text-align:justify; font-size:10pt; line-height:1.5; margin-bottom:35px;"><strong>Procedimento:</strong> A Aliva Saude, compromete-se a enviar o termo de responsabilidade preenchido em todos os campos, para o endereco de correio eletronico, <a href="mailto:administrativo@vitreasaude.com" style="color:#000; text-decoration:underline;">administrativo@vitreasaude.com</a> em data previa a realizacao do exame.</p>
+    <div style="display:flex; gap:40px; justify-content:space-between; margin-bottom:30px;">
+      <div style="flex:1;">
+        <div style="font-size:9pt; font-weight:bold; text-align:center; margin-bottom:5px; height:28px; display:flex; align-items:flex-end; justify-content:center;"><span>Assinatura e carimbo do<br>responsavel que autoriza o exame</span></div>
+        <div style="height:100px; border:1px solid #000; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+          <img id="pdf-assinatura-vitrea" src="" alt="Assinatura" style="max-height:90px; max-width:95%; object-fit:contain; mix-blend-mode:multiply;">
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:9pt; font-weight:bold; text-align:center; margin-bottom:5px; height:28px; display:flex; align-items:flex-end; justify-content:center;"><span>Assinatura do Paciente<br>Assinar na data da realizacao do exame</span></div>
+        <div style="height:100px; border:1px solid #000; display:flex; align-items:flex-end; padding:10px; box-sizing:border-box;"><div style="font-size:10pt; font-weight:bold;">Data: ____/____/______</div></div>
+      </div>
+    </div>
+    <div style="font-size:8.5pt; text-align:justify; line-height:1.4;"><strong>Nota:</strong> Este termo de responsabilidade nao dispensa a entrega da requisicao medica por parte do paciente no momento da realizacao do exame.</div>
   </div>
 
   <div class="pdoc" id="pdf-template-cligest" style="display:none; padding:15mm 14mm 8mm; font-family:Arial,Helvetica,sans-serif; font-size:9.2pt; line-height:1.22; color:#111; background:#fff; overflow:hidden; page-break-inside:avoid; box-sizing:border-box;">
     <div style="width:100%; margin:0 auto;">
-      <h1 style="font-size:12pt; font-weight:700; text-align:center; margin:0 0 3px; line-height:1.1;">CLIGEST - Pedido de Exame</h1>
+      <h1 style="font-size:12pt; font-weight:700; text-align:center; margin:0 0 3px; line-height:1.1;">Pedido de Tomografia Computorizada (TC)</h1>
+      <div style="font-size:9.2pt; text-align:center; color:#444; margin:0 0 6px;">Unidade Executora: CLIGEST - Clinica Vida &nbsp;|&nbsp; Departamento de Imagiologia</div>
+      <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:6px; margin-bottom:4px;"><div style="font-weight:700;">Entidade Solicitante:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;">Aliva Saude</div></div>
+      <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:6px; margin-bottom:4px;"><div style="font-weight:700;">Morada:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;">Rua Amilcar Cabral N3, Luanda</div></div>
+      <div style="display:grid; grid-template-columns:auto 1fr auto 1fr; align-items:center; column-gap:6px; margin-bottom:4px;"><div style="font-weight:700;">Telefone:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;">938 351 173</div><div style="font-weight:700; padding-left:6px;">E-mail:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;">imagiologia@alivasaude.com</div></div>
+      <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:6px; margin-bottom:8px;"><div style="font-weight:700;">Medico Solicitante:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-medico"></span></div></div>
       <div style="font-size:10.5pt; font-weight:700; margin:0 0 6px;">Identificacao do Paciente</div>
       <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:6px; margin-bottom:4px;"><div style="font-weight:700;">Nome:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-nome"></span></div></div>
+      <div style="display:grid; grid-template-columns:auto 1fr auto 1fr; align-items:center; column-gap:6px; margin-bottom:8px;"><div style="font-weight:700;">Data de Nascimento:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-nascimento"></span></div><div style="font-weight:700; padding-left:6px;">Sexo:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-sexo"></span></div></div>
+      <div style="font-size:10.5pt; font-weight:700; margin:0 0 6px;">Exame de Tomografia Computorizada</div>
       <div id="c-exame" style="background:#cfe0f5; padding:8px; min-height:38px; margin-bottom:6px; white-space:pre-wrap; display:flex; align-items:center; font-weight:700;"></div>
-      <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:6px; margin-bottom:8px;"><div style="font-weight:700;">Data:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-dataReal"></span></div></div>
+      <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:6px; margin-bottom:8px;"><div style="font-weight:700;">Hipótese Diagnóstica (ICD 10):</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-hipotese"></span></div></div>
+      <div style="font-size:10.5pt; font-weight:700; margin:0 0 6px;">Declaracao de Responsabilidade Clinica</div>
+      <div style="font-size:8.9pt; line-height:1.38; text-align:justify; margin-bottom:8px;">A entidade solicitante declara que o exame acima indicado foi prescrito por medico devidamente habilitado, apos avaliacao clinica do paciente. A indicacao clinica, a escolha do exame e a pertinencia da sua realizacao sao da inteira responsabilidade da unidade solicitante e do medico prescritor. A Clinica Vida atuara exclusivamente como unidade executora do exame de imagiologia, nao sendo responsavel pela decisao clinica que motivou o pedido do exame.</div>
+      <div style="display:grid; grid-template-columns:auto 1fr auto 1fr; align-items:center; column-gap:6px; margin-bottom:8px;"><div style="font-weight:700;">Local:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;">Luanda</div><div style="font-weight:700; padding-left:6px;">Data:</div><div style="background:#cfe0f5; padding:6px 8px; min-height:28px; display:flex; align-items:center;"><span id="c-dataReal"></span></div></div>
+      <div style="font-size:9.6pt; font-weight:700; margin-bottom:6px;">Assinatura e Carimbo do Medico:</div>
+      <div style="height:26mm; display:flex; align-items:flex-end; overflow:hidden;">
+        <img id="pdf-assinatura-cligest" src="" alt="Assinatura" style="max-width:58mm; max-height:24mm; object-fit:contain; display:block;">
+      </div>
     </div>
   </div>
 </div>
@@ -413,7 +449,7 @@
   import { signInWithEmailAndPassword, signOut, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
   import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, updateDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-  // URL do teu novo Web App (substituído automaticamente)
+  // URL do teu Web App Google Apps Script para Backup
   const webAppBackupURL = "https://script.google.com/macros/s/AKfycbxl9YdWAWxoXQtUV_aJZ4qHDY_6aeQKRVSaT-VSjRykna35H_CMEFK0A93P0tJc0elw/exec";
 
   let userEmail = "";
@@ -459,6 +495,7 @@
     btn.classList.add('active');
   };
 
+  // FILTRO RECEÇÃO
   window.filtrarRec = (estado, btn) => {
     filtroAtual = estado;
     document.querySelectorAll('#tab-rececao .btn-filter').forEach(b => b.className = 'btn-filter');
@@ -468,7 +505,7 @@
     renderRececao(todosPedidos);
   };
 
-  // MUDANÇA: Lógica do "Smart Login"
+  // SMART LOGIN
   document.getElementById('form-login').onsubmit = async (e) => {
     e.preventDefault();
     const btn = document.getElementById('btn-entrar');
@@ -500,6 +537,7 @@
 
   document.getElementById('btn-logout').onclick = () => signOut(auth);
 
+  // AUTH STATE E NÍVEIS DE ACESSO
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       userEmail = user.email.toLowerCase();
@@ -513,7 +551,9 @@
           if (dados.admins && dados.admins.includes(userEmail)) eAdmin = true;
           if (dados.intermedios && dados.intermedios.includes(userEmail)) eIntermedio = true;
         }
-      } catch (err) { }
+      } catch (err) {
+        console.warn("Erro ao ler os níveis de acesso", err);
+      }
       
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('app-screen').classList.remove('hidden');
@@ -521,7 +561,9 @@
       const nomeCurto = userEmail.split('@')[0];
       document.getElementById('user-badge').textContent = nomeCurto;
       document.getElementById('user-role').style.display = eAdmin ? 'block' : 'none';
-      if (document.getElementById('config-user-email')) document.getElementById('config-user-email').textContent = userEmail;
+      
+      const configEmailEl = document.getElementById('config-user-email');
+      if (configEmailEl) configEmailEl.textContent = userEmail;
 
       if (eAdmin) {
         document.getElementById('nav-admin').classList.remove('hidden');
@@ -533,26 +575,62 @@
         document.getElementById('nav-admin').classList.add('hidden');
         document.getElementById('nav-dashboard').classList.add('hidden');
       }
+      
       iniciarPedidos();
+      carregarDocumentos();
     } else {
       document.getElementById('login-screen').classList.remove('hidden');
       document.getElementById('app-screen').classList.add('hidden');
       document.getElementById('nav-admin').classList.add('hidden');
       document.getElementById('nav-dashboard').classList.add('hidden');
       if (unsubPedidos) { unsubPedidos(); unsubPedidos = null; }
+      if (unsubDocs) { unsubDocs(); unsubDocs = null; }
     }
   });
 
-  // RESTANTE LÓGICA EXISTENTE DO APP (Envios de pedido, Receção, etc...)
+  // UPLOAD E ENVIO DO PEDIDO DE RECEÇÃO (Restauração da Lógica Original)
   document.getElementById('form-rececao').onsubmit = async (e) => {
     e.preventDefault();
     const btn = document.getElementById('btn-submit-rececao');
     btn.disabled = true;
-    
-    // Simplificação para foco da resposta: Assume-se a mesma logica de upload...
-    let anexosUrls = [];
-    
+    btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">hourglass_top</span> A processar...';
     try {
+      let anexosUrls = [];
+      const files = document.getElementById('f-anexo').files;
+      
+      if (files.length > 0) {
+        showSnack(`A fazer upload de ${files.length} anexo(s)...`);
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (file.size > 5 * 1024 * 1024) {
+            showSnack(`O ficheiro ${file.name} é muito grande. Max. 5MB.`, 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">send</span> Enviar Pedido';
+            return;
+          }
+          try {
+            const base64 = await new Promise((res, rej) => {
+              const r = new FileReader();
+              r.onload = () => res(r.result.split(',')[1]);
+              r.onerror = rej;
+              r.readAsDataURL(file);
+            });
+            const resp = await fetch('https://script.google.com/macros/s/AKfycbw15VjPIeLAt15c8GO6hT6tKUwVjc_M1lk6RL3t0tbNd5oqadYIpPOfWHpyevnlb76DOA/exec', {
+              method: 'POST', body: JSON.stringify({ fileName: file.name, mimeType: file.type, base64 })
+            });
+            const result = await resp.json();
+            if (result.success) { 
+              anexosUrls.push(result.url); 
+            } else {
+              showSnack(`Aviso: falha no upload de ${file.name}.`, 'error');
+            }
+          } catch (upErr) {
+            console.error(upErr);
+            showSnack(`Aviso: falha ao ligar ao Drive para ${file.name}.`, 'error');
+          }
+        }
+      }
+
       await addDoc(collection(db, 'pedidos'), {
         nome: document.getElementById('f-nome').value.trim(),
         contacto: document.getElementById('f-contacto').value.trim(),
@@ -570,15 +648,19 @@
         guiaEmitida: false, imagensRecepcionadas: false, relatorioEmitido: false,
         criadoPor: userEmail, timestamp: serverTimestamp()
       });
+
       showSnack('Pedido enviado com sucesso!', 'success');
       e.target.reset();
     } catch (err) {
+      console.error(err);
       showSnack('Erro: ' + err.message, 'error');
     } finally {
       btn.disabled = false;
+      btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">send</span> Enviar Pedido';
     }
   };
 
+  // CARREGAR PEDIDOS DO FIRESTORE
   function iniciarPedidos() {
     const q = query(collection(db, 'pedidos'), orderBy('timestamp', 'desc'));
     unsubPedidos = onSnapshot(q, (snap) => {
@@ -586,6 +668,8 @@
       renderRececao(todosPedidos);
       renderDashboard(todosPedidos);
       if (eAdmin) renderAdmin(todosPedidos);
+    }, (err) => {
+      showSnack('Erro de base de dados: ' + err.message, 'error');
     });
   }
 
@@ -601,11 +685,76 @@
   }
 
   function renderRececao(lista) {
-     // Lógica visual mantida como o teu original
+    const container = document.getElementById('lista-rececao');
+    let ativa = lista.filter(p => p.status !== 'finalizado');
+    let filtrada = filtroAtual === 'todos' ? ativa : ativa.filter(p => p.status === filtroAtual);
+    
+    if (!filtrada.length) {
+      container.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">inbox</span>Nenhum pedido ativo encontrado.</div>';
+      return; 
+    } 
+    
+    container.innerHTML = filtrada.map(p => {
+      const isPend = p.status === 'pendente';
+      const clinica = p.instituicao ? ' <span style="color:var(--text-muted); font-size:11px; font-weight:400;">· ' + esc(p.instituicao) + '</span>' : '';
+      const tagUrgente = p.prioridade === 'Urgente' ? '<span class="badge-urgente">URGENTE</span>' : '';
+      const tagGuia = p.guiaEmitida ? '<span class="badge-guia"><span class="material-symbols-rounded" style="font-size:11px;">check_circle</span>GUIA EMITIDA</span>' : '';
+      
+      let anexo = '';
+      if (p.anexosUrls && p.anexosUrls.length > 0) {
+        anexo = p.anexosUrls.map((url, i) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="anexo-link" style="margin-right:6px;"><span class="material-symbols-rounded">attach_file</span>Anexo ${i+1}</a>`).join('');
+      } else if (p.anexoUrl) {
+        anexo = `<a href="${esc(p.anexoUrl)}" target="_blank" rel="noopener noreferrer" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Ver Anexo</a>`;
+      }
+
+      const pdfBtn = (!isPend && p.status !== 'finalizado') ? `<button class="btn-outline btn-gerar-guia" data-id="${p.id}" data-inst="${esc(p.instituicao)}"><span class="material-symbols-rounded" style="font-size:15px;">picture_as_pdf</span>Gerar PDF</button>` : '';
+      
+      return '<div class="card card-' + esc(p.status) + '">' +
+        '<div class="pedido-header"><div><span class="material-symbols-rounded">person</span>' + esc(p.nome) + tagUrgente + tagGuia + clinica + '</div></div>' +
+        '<div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>' + esc(p.exame) + '</div>' +
+        '<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">calendar_today</span>Pedido criado a: ' + fmtDate(p.timestamp) + '</div>' +
+        (p.hipotese ? '<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>' + esc(p.hipotese) + '</div>' : '') +
+        '<div class="pedido-footer"><span class="status-badge status-' + esc(p.status) + '">' + esc(p.status) + '</span>' +
+        (p.aprovadoPor ? '<span style="font-size:11px; color:var(--text-muted);">✓ ' + esc(p.aprovadoPor) + '</span>' : '') + '</div>' +
+        ((anexo || pdfBtn) ? '<div class="pedido-actions">' + anexo + pdfBtn + '</div>' : '') +
+        '</div>';
+    }).join('');
   }
 
   function renderAdmin(lista) {
-     // Lógica visual mantida
+    const container = document.getElementById('lista-admin');
+    if (!container) return;
+    const pendentes = lista.filter(p => p.status === 'pendente');
+
+    if (!pendentes.length) {
+      container.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">check_circle</span>Sem pedidos pendentes.</div>';
+      return;
+    }
+
+    container.innerHTML = pendentes.map(p => {
+      const anexo = p.anexoUrl ? '<a href="' + esc(p.anexoUrl) + '" target="_blank" rel="noopener" class="anexo-link"><span class="material-symbols-rounded">attach_file</span>Anexo</a>' : '';
+      const tagUrgente = p.prioridade === 'Urgente' ? '<span class="badge-urgente">URGENTE</span>' : '';
+      
+      return `<div class="card card-pendente">
+        <div class="pedido-header"><div><span class="material-symbols-rounded">person</span>${esc(p.nome || '')} ${tagUrgente}
+        <span style="font-size:11px; color:var(--text-muted); font-weight:400;">· ${esc(p.medico || '')}</span></div></div>
+        <div class="pedido-corpo"><span class="material-symbols-rounded">radiology</span>${esc(p.exame || '')}</div>
+        ${p.hipotese ? `<div class="pedido-corpo" style="font-size:12px; color:var(--text-muted);"><span class="material-symbols-rounded">diagnosis</span>${esc(p.hipotese)}</div>` : ''}
+        <div class="approve-row">
+          <select id="sel-${p.id}"><option value="Vitrea">Vitrea</option><option value="Cligest">Cligest</option></select>
+          <button class="btn-main btn-aprovar" data-id="${p.id}" style="width:auto; margin:0; padding:10px 18px; font-size:13px;">
+            <span class="material-symbols-rounded" style="font-size:16px;">task_alt</span>Aprovar
+          </button>
+          <button class="btn-outline btn-editar" data-id="${p.id}" style="padding:10px 14px; margin:0; color:var(--text-muted); border-color:var(--border);">
+            <span class="material-symbols-rounded" style="font-size:16px;">edit</span>Editar
+          </button>
+          <button class="btn-outline btn-eliminar" data-id="${p.id}" style="padding:10px 14px; margin:0; color:#d93025; border-color:#d93025;" title="Eliminar Pedido">
+            <span class="material-symbols-rounded" style="font-size:16px;">delete</span>
+          </button>
+          ${anexo}
+        </div>
+      </div>`;
+    }).join('');
   }
 
   window.atualizarBusca = () => {
@@ -630,12 +779,11 @@
     return date >= twoMonthsAgo;
   }
 
-  // MUDANÇA: Novo Dashboard com Filtros Múltiplos, Anexos e Exibição de ID
+  // NOVO DASHBOARD COM FILTROS AVANÇADOS, ANEXOS E ID
   function renderDashboard(items){
     const wrap = document.getElementById('lista-dashboard');
     if (!wrap) return;
     
-    // Captura dos Filtros Novos
     const q = (document.getElementById('dash-search')?.value || '').toLowerCase().trim();
     const fPrio = document.getElementById('dash-filtro-prioridade')?.value || 'todos';
     const fImg = document.getElementById('dash-filtro-imagem')?.value || 'todos';
@@ -662,12 +810,11 @@
     });
 
     if(!data.length){ 
-      wrap.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">search</span>Nenhum exame encontrado com estes filtros.</div>'; 
+      wrap.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">search</span>Nenhum exame encontrado.</div>'; 
       return; 
     }
 
     wrap.innerHTML = data.map(p => {
-      // Lógica de Anexos
       let anexoHtml = '';
       if (p.anexosUrls && p.anexosUrls.length > 0) {
         anexoHtml = p.anexosUrls.map((url, i) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="anexo-link" style="margin-right:6px;"><span class="material-symbols-rounded">attach_file</span>Anexo ${i+1}</a>`).join('');
@@ -707,10 +854,10 @@
           ${anexoHtml}
           ${String(p.status || '').toLowerCase() === 'aprovado' ? `
             <button class="btn-outline btn-gerar-guia" data-id="${p.id}" data-inst="${esc(p.instituicao || '')}">
-              <span class="material-symbols-rounded" style="font-size:16px;">picture_as_pdf</span>Gerar Guia
+              <span class="material-symbols-rounded" style="font-size:16px;">picture_as_pdf</span>Gerar PDF
             </button>
           ` : ''}
-          ${eAdmin && String(p.status || '').toLowerCase() === 'aprovado' ? `
+          ${eAdmin ? `
             <button class="btn-outline btn-reverter" style="color: #d93025; border-color: #d93025;" data-id="${p.id}">
               <span class="material-symbols-rounded" style="font-size:16px;">undo</span>Reverter
             </button>` : ''}
@@ -719,28 +866,110 @@
     }).join('');
   }
 
-  // MUDANÇA: Geração do PDF + Envio para o Google Drive e Sheets
+  // FUNÇÕES DE LÓGICA (APROVAR, REVERTER, EDITAR, ELIMINAR, PDF)
+  async function aprovarPedido(id) {
+    const instituicao = document.getElementById('sel-' + id).value;
+    try {
+        await updateDoc(doc(db, 'pedidos', id), {
+            status: 'aprovado',
+            instituicao: instituicao,
+            aprovadoPor: userEmail
+        });
+        showSnack('Pedido aprovado com sucesso!', 'success');
+    } catch (err) {
+        showSnack('Erro ao aprovar: ' + err.message, 'error');
+    }
+  }
+
+  async function reverterPedido(id) {
+    try {
+        await updateDoc(doc(db, 'pedidos', id), {
+            status: 'pendente',
+            instituicao: '',
+            aprovadoPor: '',
+            guiaEmitida: false,
+            imagensRecepcionadas: false,
+            relatorioEmitido: false
+        });
+        showSnack('Pedido revertido para pendente!', 'success');
+    } catch (err) {
+        showSnack('Erro ao reverter: ' + err.message, 'error');
+    }
+  }
+
+  async function editarPedido(id) {
+    const pedido = todosPedidos.find(p => p.id === id);
+    if (!pedido) return;
+    const novoExame = prompt("Editar Exame Requerido:", pedido.exame);
+    if (novoExame !== null && novoExame.trim() !== "" && novoExame !== pedido.exame) {
+      try {
+          await updateDoc(doc(db, 'pedidos', id), { exame: novoExame.trim() });
+          showSnack('Pedido atualizado com sucesso!', 'success');
+      } catch (err) {
+          showSnack('Erro ao editar: ' + err.message, 'error');
+      }
+    }
+  }
+
+  async function eliminarPedido(id) {
+    try {
+        await deleteDoc(doc(db, 'pedidos', id));
+        showSnack('Pedido eliminado permanentemente!', 'success');
+    } catch (err) {
+        showSnack('Erro ao eliminar: ' + err.message, 'error');
+    }
+  }
+
+  // GERAR PDF COM BACKUP NO DRIVE E SHEETS
   async function gerarGuia(id, instituicao) {
     showSnack('A preparar o documento PDF e a enviar cópia...', 'info');
     const pedido = todosPedidos.find(p => p.id === id);
     if (!pedido) return;
 
+    const formatarData = (dataStr) => {
+      if (!dataStr) return '';
+      const partes = dataStr.split('-');
+      if (partes.length === 3) return `${partes[2]}/${partes[1]}/${partes[0]}`;
+      return dataStr;
+    };
+
     const dataAtual = new Date().toLocaleDateString('pt-PT');
     let element;
     let filename = `Guia_${pedido.nome.replace(/\s+/g, '_')}_${instituicao}.pdf`;
+
+    try {
+      const configSnap = await getDoc(doc(db, 'configuracoes', 'direcao'));
+      if (configSnap.exists() && configSnap.data().assinatura_base64) {
+        const assinaturaB64 = configSnap.data().assinatura_base64;
+        document.getElementById('pdf-assinatura-vitrea').src = assinaturaB64;
+        document.getElementById('pdf-assinatura-cligest').src = assinaturaB64;
+      }
+    } catch (err) {
+      console.warn("Aviso: Não carregou assinatura", err);
+    }
 
     if (instituicao.toLowerCase() === 'vitrea') {
       element = document.getElementById('pdf-template-vitrea');
       document.getElementById('v-nome').textContent = pedido.nome || '';
       document.getElementById('v-contacto').textContent = pedido.contacto || '';
-      document.getElementById('v-dataReal').textContent = dataAtual;
+      document.getElementById('v-dataAut').textContent = dataAtual;
+      document.getElementById('v-dataReal').textContent = formatarData(pedido.dataExame);
       document.getElementById('v-exame').textContent = pedido.exame || '';
-    } else {
+    } 
+    else if (instituicao.toLowerCase() === 'cligest') {
       element = document.getElementById('pdf-template-cligest');
+      document.getElementById('c-medico').textContent = pedido.medico || '';
       document.getElementById('c-nome').textContent = pedido.nome || '';
+      document.getElementById('c-nascimento').textContent = formatarData(pedido.nascimento);
+      document.getElementById('c-sexo').textContent = pedido.sexo || '';
       document.getElementById('c-exame').textContent = pedido.exame || '';
+      document.getElementById('c-hipotese').textContent = pedido.hipotese || '';
       document.getElementById('c-dataReal').textContent = dataAtual;
     } 
+    else {
+      showSnack('Erro: Instituição inválida.', 'error');
+      return;
+    }
 
     element.style.display = 'block';
 
@@ -748,23 +977,20 @@
       margin:       0,
       filename:     filename,
       image:        { type: 'jpeg', quality: 1 },
-      html2canvas:  { scale: 2, useCORS: true },
+      html2canvas:  { scale: 2, useCORS: true, scrollY: 0, scrollX: 0 },
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     try {
       window.scrollTo(0, 0); 
       
-      // 1. Gera o PDF para Download local
       const worker = html2pdf().set(opt).from(element);
       await worker.save();
       
-      // 2. Extrai Base64 para Backup
       const pdfDataUri = await worker.outputPdf('datauristring');
       const base64Data = pdfDataUri.split(',')[1];
       element.style.display = 'none';
 
-      // 3. Envia os dados para o Apps Script (Sem interromper o utilizador)
       fetch(webAppBackupURL, {
         method: 'POST',
         body: JSON.stringify({
@@ -785,9 +1011,8 @@
         .then(r => console.log("Backup guardado com sucesso", r))
         .catch(e => console.error("Erro no backup:", e));
       
-      // 4. Marca como Guia Emitida no Firebase
       await updateDoc(doc(db, 'pedidos', id), { guiaEmitida: true });
-      showSnack('Download iniciado e backup gerado!', 'success');
+      showSnack('Download concluído e Backup gerado!', 'success');
 
     } catch (err) {
       console.error(err);
@@ -796,24 +1021,157 @@
     }
   }
 
-  // Delegação de eventos
+  window.alterarPassword = () => {
+    if (!userEmail) return;
+    sendPasswordResetEmail(auth, userEmail)
+      .then(() => showSnack('Link enviado! Verifique a sua caixa de entrada.', 'success'))
+      .catch((err) => showSnack('Erro ao enviar link de recuperação.', 'error'));
+  };
+
+  function carregarDocumentos(){
+    const q = query(collection(db, 'documentos'), orderBy('ordem', 'asc'));
+    unsubDocs = onSnapshot(q, (snap) => {
+      const wrap = document.getElementById('lista-documentos');
+      if(!wrap) return;
+      if(snap.empty){ wrap.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">folder_open</span>Sem documentos carregados.</div>'; return; }
+      
+      const docs = [];
+      snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
+      
+      const agrupados = {};
+      docs.forEach(x => {
+        if (x.ativo === false) return;
+        const catNome = x.categoria || 'Outros';
+        if (!agrupados[catNome]) {
+          let catIcone = 'folder';
+          const catLower = catNome.toLowerCase();
+          if (catLower.includes('prepara')) catIcone = 'radiology';
+          else if (catLower.includes('protocol')) catIcone = 'assignment';
+          else if (catLower.includes('contact')) catIcone = 'contact_phone';
+          agrupados[catNome] = { titulo: catNome, icone: catIcone, items: [] };
+        }
+        agrupados[catNome].items.push(x);
+      });
+      
+      let out = '';
+      Object.values(agrupados).forEach(grupo => {
+        out += `<div class="form-card" style="border-left-color: var(--secondary); margin-bottom: 12px; padding: 14px 18px;">
+          <div class="section-title" style="margin-top:0; font-size:14px; border-bottom:1px solid var(--border); padding-bottom:6px;">
+            <span class="material-symbols-rounded">${grupo.icone}</span> ${esc(grupo.titulo)}
+          </div>
+          ${grupo.items.map(x => `
+            <a class="anexo-link" href="${esc(x.url || '')}" target="_blank" rel="noopener noreferrer" style="display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid var(--bg); text-decoration:none; color:var(--text-main); font-weight:normal;">
+              <span style="display:flex; align-items:center; gap:8px;">
+                <span class="material-symbols-rounded" style="font-size:18px; color:var(--text-muted);">${esc(x.icone || 'description')}</span>
+                ${esc(x.titulo || 'Sem título')}
+              </span>
+              <span class="material-symbols-rounded" style="font-size:16px; color:var(--primary);">open_in_new</span>
+            </a>
+          `).join('')}
+        </div>`;
+      });
+      wrap.innerHTML = out || '<div class="empty-state"><span class="material-symbols-rounded">folder_open</span>Sem documentos ativos de momento.</div>';
+    });
+  }
+
+  // DELEGAÇÃO DE EVENTOS PARA OS BOTÕES
   document.addEventListener('click', async (e) => {
+    
+    const btnAprov = e.target.closest('.btn-aprovar');
+    if (btnAprov) { aprovarPedido(btnAprov.dataset.id); return; }
+
+    const btnEditar = e.target.closest('.btn-editar');
+    if (btnEditar) { editarPedido(btnEditar.dataset.id); return; }
+
+    const btnEliminar = e.target.closest('.btn-eliminar');
+    if (btnEliminar) { 
+      if (confirm('Tem a certeza que deseja eliminar este pedido? Esta ação não pode ser revertida.')) {
+        eliminarPedido(btnEliminar.dataset.id); 
+      }
+      return; 
+    }
+
     const btnGerar = e.target.closest('.btn-gerar-guia');
     if (btnGerar) { gerarGuia(btnGerar.dataset.id, btnGerar.dataset.inst); return; }
 
+    const btnReverter = e.target.closest('.btn-reverter');
+    if (btnReverter) { reverterPedido(btnReverter.dataset.id); return; }
+
     const btnImg = e.target.closest('.btn-imagens');
     if (btnImg) {
-      const p = todosPedidos.find(x => x.id === btnImg.dataset.id);
-      await updateDoc(doc(db, 'pedidos', p.id), { imagensRecepcionadas: !p.imagensRecepcionadas });
+      const id = btnImg.dataset.id;
+      const pedido = todosPedidos.find(x => x.id === id);
+      if(!pedido) return;
+      
+      const novoEstadoImg = !(pedido.imagensRecepcionadas === true);
+      const stRelatorio = (pedido.relatorioEmitido === true);
+      const novoStatus = (novoEstadoImg && stRelatorio) ? 'finalizado' : 'aprovado';
+
+      await updateDoc(doc(db, 'pedidos', id), { 
+        imagensRecepcionadas: novoEstadoImg,
+        status: novoStatus
+      });
+      showSnack(novoEstadoImg ? 'Imagens marcadas como recepcionadas.' : 'Imagens desmarcadas.', 'info');
+      if (novoStatus === 'finalizado') showSnack('Exame concluído e arquivado!', 'success');
+      return;
     }
 
     const btnRel = e.target.closest('.btn-relatorio');
     if (btnRel) {
-      const p = todosPedidos.find(x => x.id === btnRel.dataset.id);
-      await updateDoc(doc(db, 'pedidos', p.id), { relatorioEmitido: !p.relatorioEmitido });
+      const id = btnRel.dataset.id;
+      const pedido = todosPedidos.find(x => x.id === id);
+      if(!pedido) return;
+
+      const novoEstadoRel = !(pedido.relatorioEmitido === true);
+      const stImg = (pedido.imagensRecepcionadas === true);
+      const novoStatus = (stImg && novoEstadoRel) ? 'finalizado' : 'aprovado';
+
+      await updateDoc(doc(db, 'pedidos', id), { 
+        relatorioEmitido: novoEstadoRel, 
+        status: novoStatus 
+      });
+      showSnack(novoEstadoRel ? 'Relatório emitido.' : 'Marcação removida. Exame revertido.', 'success');
+      if (novoStatus === 'finalizado') showSnack('Exame concluído e arquivado!', 'success');
+      return;
+    }
+  });
+
+  // CARREGAR LISTAS EXTERNAS NO ARRANQUE
+  document.addEventListener('DOMContentLoaded', () => {
+    const datalistCID = document.getElementById('lista-cid');
+    if (typeof listaCompletaCID !== 'undefined') {
+      listaCompletaCID.forEach(diagnostico => {
+        const option = document.createElement('option');
+        option.value = diagnostico;
+        datalistCID.appendChild(option);
+      });
+    }
+
+    const datalistExames = document.getElementById('lista-exames');
+    if (typeof listaCompletaExames !== 'undefined') {
+      listaCompletaExames.forEach(exame => {
+        const option = document.createElement('option');
+        option.value = exame;
+        datalistExames.appendChild(option);
+      });
+    }
+
+    // MUDANÇA: Injetar médicos do ficheiro externo
+    const datalistMedicos = document.getElementById('lista-medicos');
+    if (typeof listaCompletaMedicos !== 'undefined') {
+      listaCompletaMedicos.forEach(medico => {
+        const option = document.createElement('option');
+        option.value = medico;
+        datalistMedicos.appendChild(option);
+      });
     }
   });
 
 </script>
+
+<script src="exames.js"></script>
+<script src="cid10.js"></script>
+<script src="medicos.js"></script>
+
 </body>
 </html>
