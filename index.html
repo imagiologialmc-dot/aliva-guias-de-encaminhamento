@@ -691,7 +691,7 @@
 
   function renderRececao(lista) {
     const container = document.getElementById('lista-rececao');
-    let ativa = lista.filter(p => p.status !== 'finalizado');
+    let ativa = lista.filter(p => p.status !== 'finalizado' && p.imagensRecepcionadas !== true);
     let filtrada = filtroAtual === 'todos' ? ativa : ativa.filter(p => p.status === filtroAtual);
     
     if (!filtrada.length) {
@@ -835,7 +835,7 @@
       <div class="card card-${String(p.status || '').toLowerCase()}">
         <div class="pedido-header">
           <div>
-            <span class="material-symbols-rounded">person</span>${esc(p.nome || 'Sem nome')}
+            <span class="material-symbols-rounded">person</span>${esc(p.nome || 'Sem nome')} <strong style="color:var(--text-muted); font-size:12px;">#${esc(p.idInterno || 'S/ID')}</strong>
             ${p.prioridade === 'Urgente' ? '<span class="badge-urgente">URGENTE</span>' : ''}
           </div>
         </div>
