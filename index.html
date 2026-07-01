@@ -619,7 +619,7 @@
               r.onerror = rej;
               r.readAsDataURL(file);
             });
-            const resp = await fetch('https://script.google.com/macros/s/AKfycbw15VjPIeLAt15c8GO6hT6tKUwVjc_M1lk6RL3t0tbNd5oqadYIpPOfWHpyevnlb76DOA/exec', {
+            const resp = await fetch('https://script.google.com/macros/s/AKfycbxfH6HqX_cx_RUdSZ0xVBEQq_yDl8akTgiNrtOoFJbBh1USTsXroApklrLVxTQb2jyk/exec', {
               method: 'POST', body: JSON.stringify({ fileName: file.name, mimeType: file.type, base64 })
             });
             const result = await resp.json();
